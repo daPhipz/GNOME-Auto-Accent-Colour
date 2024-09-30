@@ -11,6 +11,8 @@ export default class AutoAccentColourExtension extends Extension {
         const _accent = _gsettings.get_string('accent-color')
 
         Main.notify('Accent Color', _accent)
+
+        _gsettings.set_string('accent-color', 'pink')
     }
 
     disable() {
