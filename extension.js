@@ -35,18 +35,14 @@ async function getDominantColour(extensionPath) {
     try {
         const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
         const _backgroundUri = _backgroundSettings.get_string('picture-uri')
-
-        // const _wallpaperColour = await execCommand([
-        //     extensionPath + '/venv/bin/python',
-        //     extensionPath + '/tools/get-color.py',
-        //     _backgroundUri
-        // ])
+        const _backgroundLocation = _backgroundUri.replace('file://', '')
 
         const _wallpaperColour = await execCommand([
-            'ls', '/'
+            extensionPath + '/venv/bin/python',
+            extensionPath + '/tools/get-colour.py',
+            _backgroundLocation
         ])
 
-        console.log(typeof(_wallpaperColour))
         console.log('Wallpaper colour: ' + _wallpaperColour)
 
         Main.notify("test", _wallpaperColour)
