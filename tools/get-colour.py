@@ -8,6 +8,6 @@ def main(image_path):
 
 if __name__ == "__main__":
     if len(sys.argv) == 2:
-        print(main(sys.argv[1]))
+        print(main(sys.argv[1]), file=sys.stdout)
     else:
         print("Usage: 'python get-color.py path/to/image'")

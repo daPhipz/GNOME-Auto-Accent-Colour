@@ -6,29 +6,50 @@ import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/ex
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 
+// Thank you to andy.holmes on StackOverflow for this Promise wrapper
+// https://stackoverflow.com/a/61150669
+function execCommand(argv, input = null, cancellable = null) {
+    let flags = Gio.SubprocessFlags.STDOUT_PIPE;
+
+    if (input !== null)
+        flags |= Gio.SubprocessFlags.STDIN_PIPE;
+
+    let proc = new Gio.Subprocess({
+        argv: argv,
+        flags: flags
+    });
+    proc.init(cancellable);
+
+    return new Promise((resolve, reject) => {
+        proc.communicate_utf8_async(input, cancellable, (proc, res) => {
+            try {
+                resolve(proc.communicate_utf8_finish(res)[1]);
+            } catch (e) {
+                reject(e);
+            }
+        });
+    });
+}
+
 async function getDominantColour(extensionPath) {
     try {
         const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
         const _backgroundUri = _backgroundSettings.get_string('picture-uri')
 
-        const proc = Gio.Subprocess.new(
-            [
-                extensionPath + '/venv/bin/python',
-                extensionPath + '/tools/get-color.py',
-                _backgroundUri
-            ],
-            Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE
-        )
+        // const _wallpaperColour = await execCommand([
+        //     extensionPath + '/venv/bin/python',
+        //     extensionPath + '/tools/get-color.py',
+        //     _backgroundUri
+        // ])
 
-        const [stdout, stderr] = await proc.communicate_utf8_async(null, null)
-        // THE ABOVE LINE IS CAUSING PROBLEMS
+        const _wallpaperColour = await execCommand([
+            'ls', '/'
+        ])
 
-        Main.notify("test", "got here")
+        console.log(typeof(_wallpaperColour))
+        console.log('Wallpaper colour: ' + _wallpaperColour)
 
-        if (proc.get_successful())
-            Main.notify('Overall colour', stdout)
-        else
-            throw new Error(stderr)
+        Main.notify("test", _wallpaperColour)
     } catch (e) {
         logError(e)
     }
@@ -43,7 +64,7 @@ export default class AutoAccentColourExtension extends Extension {
 
         //Main.notify('Accent Color', _accent)
 
-        _gsettings.set_string('accent-color', 'pink')
+        //_gsettings.set_string('accent-color', 'pink')
     }
 
     disable() {
