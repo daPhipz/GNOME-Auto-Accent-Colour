@@ -1,7 +1,6 @@
 // TODO: Experiment with ColorThief palettes
 // TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
 // TODO: Reorganise functions
-// TODO: Refactor variable names
 // TODO: Run script on background and color-scheme change
 // TODO: Add Extensions store page support
 // TODO: Add checker/installer for Python venv
@@ -65,68 +64,68 @@ function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
 }
 
 function getClosestAccentColour(r, g, b) {
-    let _shortestDistance = Number.MAX_VALUE
-    let _closestAccent = ''
+    let shortestDistance = Number.MAX_VALUE
+    let closestAccent = ''
 
     for (let accent of accentColours) {
-        let _squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
+        let squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
             accent.r, accent.g, accent.b)
 
-        if (_squaredEuclideanDistance < _shortestDistance) {
-            _shortestDistance = _squaredEuclideanDistance
-            _closestAccent = accent.name
+        if (squaredEuclideanDistance < shortestDistance) {
+            shortestDistance = squaredEuclideanDistance
+            closestAccent = accent.name
         }
     }
 
-    console.log("Closest accent: " + _closestAccent)
+    console.log("Closest accent: " + closestAccent)
 
-    return _closestAccent
+    return closestAccent
 }
 
 // TODO: check for existance of imagemagick
 async function convert(imagePath, extensionPath) {
-    const _cacheDir = extensionPath + '/cached/'
-    await execCommand(['mkdir', _cacheDir])
-    await execCommand(['magick', imagePath, _cacheDir + '/converted_bg.jpg'])
+    const cacheDir = extensionPath + '/cached/'
+    await execCommand(['mkdir', cacheDir])
+    await execCommand(['magick', imagePath, cacheDir + '/converted_bg.jpg'])
 }
 
 async function getDominantColour(extensionPath, backgroundSettings, interfaceSettings) {
     try {
-        const _colorScheme = interfaceSettings.get_string('color-scheme')
-        const _backgroundUriKey = (
-            _colorScheme == 'prefer-dark' ? 'picture-uri-dark' : 'picture-uri'
+        const colorScheme = interfaceSettings.get_string('color-scheme')
+        const backgroundUriKey = (
+        	colorScheme == 'prefer-dark' ? 'picture-uri-dark' : 'picture-uri'
         )
-        const _backgroundUri = backgroundSettings.get_string(_backgroundUriKey)
-        const _backgroundPath = _backgroundUri.replace('file://', '')
-        const _backgroundFileExtension = _backgroundPath.split('.').pop()
-        let _rasterPath = ''
+        const backgroundUri = backgroundSettings.get_string(backgroundUriKey)
+        const backgroundPath = backgroundUri.replace('file://', '')
+        const backgroundFileExtension = backgroundPath.split('.').pop()
+        let rasterPath = ''
 
-        if (['svg', 'jxl'].includes(_backgroundFileExtension)) {
-            await convert(_backgroundPath, extensionPath)
-            _rasterPath = extensionPath + '/cached/converted_bg.jpg'
+        if (['svg', 'jxl'].includes(backgroundFileExtension)) {
+            await convert(backgroundPath, extensionPath)
+        	rasterPath = extensionPath + '/cached/converted_bg.jpg'
         } else {
-            _rasterPath = _backgroundPath
+            rasterPath = backgroundPath
         }
 
-        const _wallpaperColourStr = await execCommand([
+        const wallpaperColourStr = await execCommand([
             extensionPath + '/venv/bin/python',
             extensionPath + '/tools/get-colour.py',
-            _rasterPath
+            rasterPath
         ])
-        console.log('Wallpaper colour: ' + _wallpaperColourStr)
+        console.log('Wallpaper colour: ' + wallpaperColourStr)
 
 
-        const _wallpaperColourTuple = _wallpaperColourStr
+        const wallpaperColourTuple = wallpaperColourStr
             .replace(/\(|\)|\n/g, '')
             .split(',')
-        for (let i in _wallpaperColourTuple) {
-            _wallpaperColourTuple[i] = Number(_wallpaperColourTuple[i])
+        for (let i in wallpaperColourTuple) {
+            wallpaperColourTuple[i] = Number(wallpaperColourTuple[i])
         }
-        console.log('Parsed R: ' + _wallpaperColourTuple[0])
-        console.log('Parsed G: ' + _wallpaperColourTuple[1])
-        console.log('Parsed B: ' + _wallpaperColourTuple[2])
+        console.log('Parsed R: ' + wallpaperColourTuple[0])
+        console.log('Parsed G: ' + wallpaperColourTuple[1])
+        console.log('Parsed B: ' + wallpaperColourTuple[2])
 
-        return _wallpaperColourTuple
+        return wallpaperColourTuple
     } catch (e) {
         logError(e)
     }
@@ -149,10 +148,12 @@ async function applyClosestAccent(
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
-        const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-		const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+        const backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+		const interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
 
-        applyClosestAccent(this.path, _backgroundSettings, _interfaceSettings)
+        applyClosestAccent(this.path, backgroundSettings, interfaceSettings)
+
+
     }
 
     disable() {
