@@ -132,23 +132,27 @@ async function getDominantColour(extensionPath, backgroundSettings, interfaceSet
     }
 }
 
-async function applyClosestAccent(extensionPath) {
-    const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-    const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
-
+async function applyClosestAccent(
+	extensionPath,
+	backgroundSettings,
+	interfaceSettings
+) {
     const [wall_r, wall_g, wall_b] = await getDominantColour(
         extensionPath,
-        _backgroundSettings,
-        _interfaceSettings
+        backgroundSettings,
+        interfaceSettings
     )
     const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
-    _interfaceSettings.set_string('accent-color', closestAccent)
+    interfaceSettings.set_string('accent-color', closestAccent)
 }
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
-        applyClosestAccent(this.path)
+        const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+		const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+
+        applyClosestAccent(this.path, _backgroundSettings, _interfaceSettings)
     }
 
     disable() {
