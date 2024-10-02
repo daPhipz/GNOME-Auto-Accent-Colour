@@ -1,4 +1,4 @@
-// TODO: Test svg background support
+// TODO: Fix svg and jxl background support
 // TODO: Experiment with ColorThief palettes
 // TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
 // TODO: Reorganise functions
