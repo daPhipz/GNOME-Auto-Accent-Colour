@@ -114,6 +114,7 @@ async function getDominantColour(extensionPath) {
     }
 }
 
+// TODO: restore commented code, using wall_r, wall_g, etc.
 async function applyClosestAccent(extensionPath) {
     //const [wall_r, wall_g, wall_b] = getDominantColour(extensionPath)
     const wall = await getDominantColour(extensionPath)
