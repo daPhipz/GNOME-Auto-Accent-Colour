@@ -1,4 +1,3 @@
-// TODO: Fix svg and jxl background support
 // TODO: Experiment with ColorThief palettes
 // TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
 // TODO: Reorganise functions
@@ -84,16 +83,32 @@ function getClosestAccentColour(r, g, b) {
     return _closestAccent
 }
 
+// TODO: check for existance of imagemagick
+async function convert(imagePath, extensionPath) {
+    const _cacheDir = extensionPath + '/cached/'
+    await execCommand(['mkdir', _cacheDir])
+    await execCommand(['magick', imagePath, _cacheDir + '/converted_bg.jpg'])
+}
+
 async function getDominantColour(extensionPath) {
     try {
         const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
         const _backgroundUri = _backgroundSettings.get_string('picture-uri')
-        const _backgroundLocation = _backgroundUri.replace('file://', '')
+        const _backgroundPath = _backgroundUri.replace('file://', '')
+        const _backgroundFileExtension = _backgroundPath.split('.').pop()
+        let _rasterPath = ''
+
+        if (['svg', 'jxl'].includes(_backgroundFileExtension)) {
+            await convert(_backgroundPath, extensionPath)
+            _rasterPath = extensionPath + '/cached/converted_bg.jpg'
+        } else {
+            _rasterPath = _backgroundPath
+        }
 
         const _wallpaperColourStr = await execCommand([
             extensionPath + '/venv/bin/python',
             extensionPath + '/tools/get-colour.py',
-            _backgroundLocation
+            _rasterPath
         ])
         console.log('Wallpaper colour: ' + _wallpaperColourStr)
 
