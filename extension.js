@@ -1,3 +1,12 @@
+// TODO: Test svg background support
+// TODO: Experiment with ColorThief palettes
+// TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
+// TODO: Reorganise functions
+// TODO: Refactor variable names
+// TODO: Run script on background and color-scheme change
+// TODO: Add Extensions store page support
+// TODO: Add checker/installer for Python venv
+
 import St from 'gi://St'
 import Gio from 'gi://Gio'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
