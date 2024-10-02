@@ -151,9 +151,41 @@ export default class AutoAccentColourExtension extends Extension {
         const backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
 		const interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
 
-        applyClosestAccent(this.path, backgroundSettings, interfaceSettings)
+		const extensionPath = this.path
 
+		console.log('Background settings: ' + typeof(backgroundSettings))
 
+		function setAccent() {
+			applyClosestAccent(extensionPath, backgroundSettings, interfaceSettings)
+		}
+
+        setAccent()
+
+		// Watch for light background change
+		backgroundSettings.connect(
+			'changed::picture-uri',
+			(settings, key) => {
+				console.log('Picture URI changed.')
+				setAccent()
+			}
+		)
+
+		// Watch for dark background change
+		backgroundSettings.connect(
+			'changed::picture-uri-dark',
+			(settings, key) => {
+				console.log('Dark picture URI changed.')
+				setAccent()
+			}
+		)
+
+        // Watch for light/dark theme change
+		interfaceSettings.connect(
+			'changed::color-scheme',
+			(settings, key) => {
+				console.log('Changed colour scheme')
+			}
+		)
     }
 
     disable() {
