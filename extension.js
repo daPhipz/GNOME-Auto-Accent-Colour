@@ -32,7 +32,8 @@ function execCommand(argv, input = null, cancellable = null) {
 }
 
 class AccentColour {
-    constructor(r, g, b) {
+    constructor(name, r, g, b) {
+        this.name = name,
         this.r = r
         this.g = g
         this.b = b
@@ -40,15 +41,15 @@ class AccentColour {
 }
 
 const accentColours = [
-    new AccentColour(53, 131, 227), // Blue
-    new AccentColour(33, 144, 164), // Teal
-    new AccentColour(58, 148, 74), // Green
-    new AccentColour(200, 136, 0), // Yellow
-    new AccentColour(237, 91, 0), // Orange
-    new AccentColour(230, 45, 66), // Red
-    new AccentColour(213, 97, 153), // Pink
-    new AccentColour(145, 65, 172), // Purple
-    new AccentColour(111, 131, 150) // Slate
+    new AccentColour("blue", 53, 131, 227), // Blue
+    new AccentColour("teal", 33, 144, 164), // Teal
+    new AccentColour("green", 58, 148, 74), // Green
+    new AccentColour("yellow", 200, 136, 0), // Yellow
+    new AccentColour("orange", 237, 91, 0), // Orange
+    new AccentColour("red", 230, 45, 66), // Red
+    new AccentColour("pink", 213, 97, 153), // Pink
+    new AccentColour("purple", 145, 65, 172), // Purple
+    new AccentColour("slate", 111, 131, 150) // Slate
 ]
 
 function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
@@ -57,7 +58,7 @@ function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
 
 function getClosestAccentColour(r, g, b) {
     let _shortestDistance = Number.MAX_VALUE
-    let _closestAccent = new AccentColour(0, 0, 0)
+    let _closestAccent = ''
 
     for (accent of accentColours) {
         let _squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
@@ -65,11 +66,11 @@ function getClosestAccentColour(r, g, b) {
 
         if (_squaredEuclideanDistance < _shortestDistance) {
             _shortestDistance = _squaredEuclideanDistance
-            _closestAccent = accent
+            _closestAccent = accent.name
         }
     }
 
-    console.log("Closest accent colour: ")
+    console.log("Closest accent: " + _closestAccent)
 }
 
 async function getDominantColour(extensionPath) {
