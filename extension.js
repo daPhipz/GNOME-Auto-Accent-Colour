@@ -90,10 +90,17 @@ async function convert(imagePath, extensionPath) {
     await execCommand(['magick', imagePath, _cacheDir + '/converted_bg.jpg'])
 }
 
+// TODO: Hoist settings variables
 async function getDominantColour(extensionPath) {
     try {
         const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-        const _backgroundUri = _backgroundSettings.get_string('picture-uri')
+        const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+
+        const _colorScheme = _interfaceSettings.get_string('color-scheme')
+        const _backgroundUriKey = (
+            _colorScheme == 'prefer-dark' ? 'picture-uri-dark' : 'picture-uri'
+        )
+        const _backgroundUri = _backgroundSettings.get_string(_backgroundUriKey)
         const _backgroundPath = _backgroundUri.replace('file://', '')
         const _backgroundFileExtension = _backgroundPath.split('.').pop()
         let _rasterPath = ''
