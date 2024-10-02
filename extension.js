@@ -31,6 +31,30 @@ function execCommand(argv, input = null, cancellable = null) {
     });
 }
 
+class AccentColour {
+    constructor(r, g, b) {
+        this.r = r
+        this.g = g
+        this.b = b
+    }
+}
+
+const accentColours = [
+    new AccentColour(53, 131, 227), // Blue
+    new AccentColour(33, 144, 164), // Teal
+    new AccentColour(58, 148, 74), // Green
+    new AccentColour(200, 136, 0), // Yellow
+    new AccentColour(237, 91, 0), // Orange
+    new AccentColour(230, 45, 66), // Red
+    new AccentColour(213, 97, 153), // Pink
+    new AccentColour(145, 65, 172), // Purple
+    new AccentColour(111, 131, 150) // Slate
+]
+
+function getClosestAccentColour(r, g, b) {
+
+}
+
 async function getDominantColour(extensionPath) {
     try {
         const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
