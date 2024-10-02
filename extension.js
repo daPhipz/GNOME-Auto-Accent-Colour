@@ -71,6 +71,8 @@ function getClosestAccentColour(r, g, b) {
     }
 
     console.log("Closest accent: " + _closestAccent)
+
+    return _closestAccent
 }
 
 async function getDominantColour(extensionPath) {
@@ -79,19 +81,31 @@ async function getDominantColour(extensionPath) {
         const _backgroundUri = _backgroundSettings.get_string('picture-uri')
         const _backgroundLocation = _backgroundUri.replace('file://', '')
 
-        const _wallpaperColour = await execCommand([
+        const _wallpaperColourStr = await execCommand([
             extensionPath + '/venv/bin/python',
             extensionPath + '/tools/get-colour.py',
             _backgroundLocation
         ])
+        console.log('Wallpaper colour: ' + _wallpaperColourStr)
 
-        console.log('Wallpaper colour: ' + _wallpaperColour)
 
-        Main.notify("test", _wallpaperColour)
+        const _wallpaperColourTuple = _wallpaperColourStr
+            .replace(/\(|\)|\n/g, '')
+            .split(',')
+        for (let i in _wallpaperColourTuple) {
+            _wallpaperColourTuple[i] = Number(_wallpaperColourTuple[i])
+        }
+        console.log('Parsed R: ' + _wallpaperColourTuple[0])
+        console.log('Parsed G: ' + _wallpaperColourTuple[1])
+        console.log('Parsed B: ' + _wallpaperColourTuple[2])
+
+        return _wallpaperColourTuple
     } catch (e) {
         logError(e)
     }
 }
+
+
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
