@@ -114,11 +114,9 @@ async function getDominantColour(extensionPath) {
     }
 }
 
-// TODO: restore commented code, using wall_r, wall_g, etc.
 async function applyClosestAccent(extensionPath) {
-    //const [wall_r, wall_g, wall_b] = getDominantColour(extensionPath)
-    const wall = await getDominantColour(extensionPath)
-    const closestAccent = getClosestAccentColour(wall[0], wall[1], wall[2])
+    const [wall_r, wall_g, wall_b] = await getDominantColour(extensionPath)
+    const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
     const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA });
     _interfaceSettings.set_string('accent-color', closestAccent)
