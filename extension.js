@@ -51,8 +51,25 @@ const accentColours = [
     new AccentColour(111, 131, 150) // Slate
 ]
 
-function getClosestAccentColour(r, g, b) {
+function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
+    return (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
+}
 
+function getClosestAccentColour(r, g, b) {
+    let _shortestDistance = Number.MAX_VALUE
+    let _closestAccent = new AccentColour(0, 0, 0)
+
+    for (accent of accentColours) {
+        let _squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
+            accent.r, accent.g, accent.b)
+
+        if (_squaredEuclideanDistance < _shortestDistance) {
+            _shortestDistance = _squaredEuclideanDistance
+            _closestAccent = accent
+        }
+    }
+
+    console.log("Closest accent colour: ")
 }
 
 async function getDominantColour(extensionPath) {
