@@ -60,7 +60,7 @@ function getClosestAccentColour(r, g, b) {
     let _shortestDistance = Number.MAX_VALUE
     let _closestAccent = ''
 
-    for (accent of accentColours) {
+    for (let accent of accentColours) {
         let _squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
             accent.r, accent.g, accent.b)
 
@@ -105,14 +105,18 @@ async function getDominantColour(extensionPath) {
     }
 }
 
+async function applyClosestAccent(extensionPath) {
+    //const [wall_r, wall_g, wall_b] = getDominantColour(extensionPath)
+    const wall = await getDominantColour(extensionPath)
+    const closestAccent = getClosestAccentColour(wall[0], wall[1], wall[2])
 
+    const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA });
+    _interfaceSettings.set_string('accent-color', closestAccent)
+}
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
-        getDominantColour(this.path)
-
-        const _gsettings = new Gio.Settings({ schema: INTERFACE_SCHEMA });
-        const _accent = _gsettings.get_string('accent-color')
+        applyClosestAccent(this.path)
     }
 
     disable() {
