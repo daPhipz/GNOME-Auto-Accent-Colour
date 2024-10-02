@@ -90,17 +90,13 @@ async function convert(imagePath, extensionPath) {
     await execCommand(['magick', imagePath, _cacheDir + '/converted_bg.jpg'])
 }
 
-// TODO: Hoist settings variables
-async function getDominantColour(extensionPath) {
+async function getDominantColour(extensionPath, backgroundSettings, interfaceSettings) {
     try {
-        const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-        const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
-
-        const _colorScheme = _interfaceSettings.get_string('color-scheme')
+        const _colorScheme = interfaceSettings.get_string('color-scheme')
         const _backgroundUriKey = (
             _colorScheme == 'prefer-dark' ? 'picture-uri-dark' : 'picture-uri'
         )
-        const _backgroundUri = _backgroundSettings.get_string(_backgroundUriKey)
+        const _backgroundUri = backgroundSettings.get_string(_backgroundUriKey)
         const _backgroundPath = _backgroundUri.replace('file://', '')
         const _backgroundFileExtension = _backgroundPath.split('.').pop()
         let _rasterPath = ''
@@ -137,10 +133,16 @@ async function getDominantColour(extensionPath) {
 }
 
 async function applyClosestAccent(extensionPath) {
-    const [wall_r, wall_g, wall_b] = await getDominantColour(extensionPath)
+    const _backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+    const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+
+    const [wall_r, wall_g, wall_b] = await getDominantColour(
+        extensionPath,
+        _backgroundSettings,
+        _interfaceSettings
+    )
     const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
-    const _interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA });
     _interfaceSettings.set_string('accent-color', closestAccent)
 }
 
