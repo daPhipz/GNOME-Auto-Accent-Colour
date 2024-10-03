@@ -86,9 +86,13 @@ function getClosestAccentColour(r, g, b) {
 
 // TODO: check for existance of imagemagick
 async function convert(imagePath, extensionPath) {
-	const cacheDir = extensionPath + '/cached/'
-	await execCommand(['mkdir', cacheDir])
-	await execCommand(['magick', imagePath, cacheDir + '/converted_bg.jpg'])
+	try {
+		const cacheDir = extensionPath + '/cached/'
+		await execCommand(['mkdir', cacheDir])
+		await execCommand(['magick', imagePath, cacheDir + '/converted_bg.jpg'])
+	} catch (e) {
+		logError(e)
+	}
 }
 
 async function getDominantColour(extensionPath, backgroundPath) {
