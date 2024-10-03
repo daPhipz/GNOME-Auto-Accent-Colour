@@ -91,14 +91,8 @@ async function convert(imagePath, extensionPath) {
     await execCommand(['magick', imagePath, cacheDir + '/converted_bg.jpg'])
 }
 
-async function getDominantColour(extensionPath, backgroundSettings, interfaceSettings) {
+async function getDominantColour(extensionPath, backgroundPath) {
     try {
-        const colorScheme = interfaceSettings.get_string('color-scheme')
-        const backgroundUriKey = (
-        	colorScheme == 'prefer-dark' ? 'picture-uri-dark' : 'picture-uri'
-        )
-        const backgroundUri = backgroundSettings.get_string(backgroundUriKey)
-        const backgroundPath = backgroundUri.replace('file://', '')
         const backgroundFileExtension = backgroundPath.split('.').pop()
         let rasterPath = ''
 
@@ -135,33 +129,32 @@ async function getDominantColour(extensionPath, backgroundSettings, interfaceSet
 
 async function applyClosestAccent(
 	extensionPath,
-	backgroundSettings,
-	interfaceSettings,
+	backgroundPath,
 	onFinish
 ) {
     const [wall_r, wall_g, wall_b] = await getDominantColour(
         extensionPath,
-        backgroundSettings,
-        interfaceSettings
+        backgroundPath
     )
     const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
-    interfaceSettings.set_string('accent-color', closestAccent)
-    onFinish()
+    onFinish(closestAccent)
 }
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
-        this._backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-		this._interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
-
-		const extensionPath = this.path
-		const backgroundSettings = this._backgroundSettings
-		const interfaceSettings = this._interfaceSettings
-
+    	const extensionPath = this.path
 		const iconsPath = extensionPath + '/icons/'
-		//const normalIcon = Gio.icon_new_for_string(iconsPath + 'color-symbolic.svg')
-		//const waitIcon = Gio.icon_new_for_string(iconsPath + 'color-wait-symbolic.svg')
+
+        this._backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+        const backgroundSettings = this._backgroundSettings
+		function getBackgroundUri() { return backgroundSettings.get_string('picture-uri') }
+		function getDarkBackgroundUri() { return backgroundSettings.get_string('picture-uri-dark') }
+
+        this._interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+		const interfaceSettings = this._interfaceSettings
+		function getColorScheme() { return interfaceSettings.get_string('color-scheme') }
+		function setAccentColor(colorName) { interfaceSettings.set_string('accent-color', colorName) }
 
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
         const indicator = this._indicator
@@ -181,11 +174,18 @@ export default class AutoAccentColourExtension extends Extension {
 		function setAccent() {
 		    indicator.remove_child(normalIcon)
 		    indicator.add_child(waitIcon)
+
+		    const backgroundPath = (
+		        getColorScheme() === 'prefer-dark' ? getDarkBackgroundUri() : getBackgroundUri()
+	        ).replace('file://', '')
+
 			applyClosestAccent(
 			    extensionPath,
-			    backgroundSettings,
+			    backgroundPath,
 			    interfaceSettings,
-			    function() {
+			    (accentColor) => {
+			        setAccentColor(accentColor)
+
         			indicator.remove_child(waitIcon)
 			        indicator.add_child(normalIcon)
 			    }
