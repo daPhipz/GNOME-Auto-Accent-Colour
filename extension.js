@@ -182,9 +182,9 @@ export default class AutoAccentColourExtension extends Extension {
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
-				function(msg) {
-					console.log('New accent: ' + msg)
-					interfaceSettings.set_string('accent-color', msg)
+				function(newAccent) {
+					console.log('New accent: ' + newAccent)
+					interfaceSettings.set_string('accent-color', newAccent)
 					indicator.remove_child(waitIcon)
 					indicator.add_child(normalIcon)
 				}
