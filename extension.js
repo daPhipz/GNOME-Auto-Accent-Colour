@@ -4,6 +4,7 @@
 // TODO: Run script on background and color-scheme change
 // TODO: Add Extensions store page support
 // TODO: Add checker/installer for Python venv
+// TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
