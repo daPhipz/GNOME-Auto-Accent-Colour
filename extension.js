@@ -14,7 +14,21 @@ import {Extension, gettext as _} from
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
+const COLOR_SCHEME = 'color-scheme'
+const PREFER_DARK = 'prefer-dark'
+const ACCENT_COLOR = 'accent-color'
+const BLUE = 'blue'
+const TEAL = 'teal'
+const GREEN = 'green'
+const YELLOW = 'yellow'
+const ORANGE = 'orange'
+const RED = 'red'
+const PINK = 'pink'
+const PURPLE = 'purple'
+const SLATE = 'slate'
 const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
+const PICTURE_URI = 'picture-uri'
+const PICTURE_URI_DARK = 'picture-uri-dark'
 
 // Thank you to andy.holmes on StackOverflow for this Promise wrapper
 // https://stackoverflow.com/a/61150669
@@ -51,15 +65,15 @@ class AccentColour {
 }
 
 const accentColours = [
-	new AccentColour("blue", 53, 131, 227), // Blue
-	new AccentColour("teal", 33, 144, 164), // Teal
-	new AccentColour("green", 58, 148, 74), // Green
-	new AccentColour("yellow", 200, 136, 0), // Yellow
-	new AccentColour("orange", 237, 91, 0), // Orange
-	new AccentColour("red", 230, 45, 66), // Red
-	new AccentColour("pink", 213, 97, 153), // Pink
-	new AccentColour("purple", 145, 65, 172), // Purple
-	new AccentColour("slate", 111, 131, 150) // Slate
+	new AccentColour(BLUE, 53, 131, 227),
+	new AccentColour(TEAL, 33, 144, 164),
+	new AccentColour(GREEN, 58, 148, 74),
+	new AccentColour(YELLOW, 200, 136, 0),
+	new AccentColour(ORANGE, 237, 91, 0),
+	new AccentColour(RED, 230, 45, 66),
+	new AccentColour(PINK, 213, 97, 153),
+	new AccentColour(PURPLE, 145, 65, 172),
+	new AccentColour(SLATE, 111, 131, 150)
 ]
 
 function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
@@ -158,19 +172,19 @@ export default class AutoAccentColourExtension extends Extension {
 		})
 		const backgroundSettings = this._backgroundSettings
 		function getBackgroundUri() {
-			return backgroundSettings.get_string('picture-uri')
+			return backgroundSettings.get_string(PICTURE_URI)
 		}
 		function getDarkBackgroundUri() {
-			return backgroundSettings.get_string('picture-uri-dark')
+			return backgroundSettings.get_string(PICTURE_URI_DARK)
 		}
 
 		this._interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
 		const interfaceSettings = this._interfaceSettings
 		function getColorScheme() {
-			return interfaceSettings.get_string('color-scheme')
+			return interfaceSettings.get_string(COLOR_SCHEME)
 		}
 		function setAccentColor(colorName) {
-			interfaceSettings.set_string('accent-color', colorName)
+			interfaceSettings.set_string(ACCENT_COLOR, colorName)
 		}
 
 		this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
@@ -195,7 +209,7 @@ export default class AutoAccentColourExtension extends Extension {
 			indicator.add_child(waitIcon)
 
 			const backgroundPath = (
-				getColorScheme() === 'prefer-dark' ?
+				getColorScheme() === PREFER_DARK ?
 					getDarkBackgroundUri() : getBackgroundUri()
 			).replace('file://', '')
 
@@ -217,7 +231,7 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri',
 			() => {
-				if (getColorScheme() !== 'prefer-dark') {
+				if (getColorScheme() !== PREFER_DARK) {
 					console.log('Setting accent from picture-uri change.')
 					setAccent()
 				}
@@ -228,7 +242,7 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri-dark',
 			() => {
-				if (getColorScheme() === 'prefer-dark') {
+				if (getColorScheme() === PREFER_DARK) {
 					console.log('Setting accent from picture-uri-dark change.')
 					setAccent()
 				}
