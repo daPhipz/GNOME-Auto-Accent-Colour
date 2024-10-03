@@ -178,8 +178,10 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri',
 			(settings, key) => {
-				console.log('Picture URI changed.')
-				setAccent()
+			    if (this._interfaceSettings.get_string('color-scheme') !== 'prefer-dark') {
+    				console.log('Setting accent from picture-uri change.')
+				    setAccent()
+			    }
 			}
 		)
 
@@ -190,8 +192,10 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri-dark',
 			(settings, key) => {
-				console.log('Dark picture URI changed.')
-				setAccent()
+				if (this._interfaceSettings.get_string('color-scheme') === 'prefer-dark') {
+				    console.log('Setting accent from picture-uri-dark change.')
+				    setAccent()
+				}
 			}
 		)
 
