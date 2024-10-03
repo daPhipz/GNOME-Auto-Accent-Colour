@@ -173,7 +173,6 @@ export default class AutoAccentColourExtension extends Extension {
 
         Main.panel.addToStatusArea(this.uuid, this._indicator)
 
-
 		// Watch for light background change
 		this._backgroundSettings.connect(
 			'changed::picture-uri',
@@ -184,9 +183,6 @@ export default class AutoAccentColourExtension extends Extension {
 			    }
 			}
 		)
-
-		// TODO: Add if statements to these so the second function doesn't
-		// override the other.
 
 		// Watch for dark background change
 		this._backgroundSettings.connect(
@@ -203,7 +199,10 @@ export default class AutoAccentColourExtension extends Extension {
 		this._interfaceSettings.connect(
 			'changed::color-scheme',
 			(settings, key) => {
-				console.log('Changed colour scheme')
+			    if (this._backgroundSettings.get_string('picture-uri') !== this._backgroundSettings.get_string('picture-uri-dark')) {
+			        console.log('Setting accent from color-scheme change.')
+			        setAccent()
+			    }
 			}
 		)
     }
