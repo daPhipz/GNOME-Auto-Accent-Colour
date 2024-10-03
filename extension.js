@@ -183,8 +183,8 @@ export default class AutoAccentColourExtension extends Extension {
 				extensionPath,
 				backgroundPath,
 				function(msg) {
-				    console.log('New accent: ' + msg)
-				    interfaceSettings.set_string('accent-color', msg)
+					console.log('New accent: ' + msg)
+					interfaceSettings.set_string('accent-color', msg)
 					indicator.remove_child(waitIcon)
 					indicator.add_child(normalIcon)
 				}
