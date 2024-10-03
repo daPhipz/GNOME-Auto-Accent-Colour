@@ -10,6 +10,7 @@ import St from 'gi://St'
 import Gio from 'gi://Gio'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
+import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
@@ -154,13 +155,22 @@ export default class AutoAccentColourExtension extends Extension {
 
 		const extensionPath = this.path
 
-		console.log('Background settings: ' + typeof(backgroundSettings))
-
 		function setAccent() {
 			applyClosestAccent(extensionPath, backgroundSettings, interfaceSettings)
 		}
 
         setAccent()
+
+        this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
+
+        const icon = new St.Icon({
+            icon_name: 'org.gnome.Settings-color-symbolic',
+            style_class: 'system-status-icon'
+        })
+        this._indicator.add_child(icon)
+
+        Main.panel.addToStatusArea(this.uuid, this._indicator)
+
 
 		// Watch for light background change
 		backgroundSettings.connect(
@@ -190,6 +200,7 @@ export default class AutoAccentColourExtension extends Extension {
     }
 
     disable() {
-
+        this._indicator?.destroy()
+        this._indicator = null
     }
 }
