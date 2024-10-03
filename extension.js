@@ -9,7 +9,8 @@
 import St from 'gi://St'
 import Gio from 'gi://Gio'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
-import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js'
+import {Extension, gettext as _} from
+	'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
@@ -70,8 +71,10 @@ function getClosestAccentColour(r, g, b) {
 	let closestAccent = ''
 
 	for (let accent of accentColours) {
-		let squaredEuclideanDistance = getSquaredEuclideanDistance(r, g, b,
-			accent.r, accent.g, accent.b)
+		let squaredEuclideanDistance = getSquaredEuclideanDistance(
+			r, g, b,
+			accent.r, accent.g, accent.b
+		)
 
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
@@ -150,15 +153,25 @@ export default class AutoAccentColourExtension extends Extension {
 		const extensionPath = this.path
 		const iconsPath = extensionPath + '/icons/'
 
-		this._backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+		this._backgroundSettings = new Gio.Settings({
+			schema: BACKGROUND_SCHEMA
+		})
 		const backgroundSettings = this._backgroundSettings
-		function getBackgroundUri() { return backgroundSettings.get_string('picture-uri') }
-		function getDarkBackgroundUri() { return backgroundSettings.get_string('picture-uri-dark') }
+		function getBackgroundUri() {
+			return backgroundSettings.get_string('picture-uri')
+		}
+		function getDarkBackgroundUri() {
+			return backgroundSettings.get_string('picture-uri-dark')
+		}
 
 		this._interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
 		const interfaceSettings = this._interfaceSettings
-		function getColorScheme() { return interfaceSettings.get_string('color-scheme') }
-		function setAccentColor(colorName) { interfaceSettings.set_string('accent-color', colorName) }
+		function getColorScheme() {
+			return interfaceSettings.get_string('color-scheme')
+		}
+		function setAccentColor(colorName) {
+			interfaceSettings.set_string('accent-color', colorName)
+		}
 
 		this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
 		const indicator = this._indicator
@@ -168,7 +181,9 @@ export default class AutoAccentColourExtension extends Extension {
 			style_class: 'system-status-icon'
 		})
 		const waitIcon = new St.Icon({
-			gicon: Gio.icon_new_for_string(iconsPath + 'color-wait-symbolic.svg'),
+			gicon: Gio.icon_new_for_string(
+				iconsPath + 'color-wait-symbolic.svg'
+			),
 			style_class: 'system-status-icon'
 		})
 		indicator.add_child(normalIcon)
@@ -180,7 +195,8 @@ export default class AutoAccentColourExtension extends Extension {
 			indicator.add_child(waitIcon)
 
 			const backgroundPath = (
-				getColorScheme() === 'prefer-dark' ? getDarkBackgroundUri() : getBackgroundUri()
+				getColorScheme() === 'prefer-dark' ?
+					getDarkBackgroundUri() : getBackgroundUri()
 			).replace('file://', '')
 
 			applyClosestAccent(
@@ -201,7 +217,7 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri',
 			() => {
-				if (this._interfaceSettings.get_string('color-scheme') !== 'prefer-dark') {
+				if (getColorScheme() !== 'prefer-dark') {
 					console.log('Setting accent from picture-uri change.')
 					setAccent()
 				}
@@ -212,7 +228,7 @@ export default class AutoAccentColourExtension extends Extension {
 		this._backgroundSettings.connect(
 			'changed::picture-uri-dark',
 			() => {
-				if (this._interfaceSettings.get_string('color-scheme') === 'prefer-dark') {
+				if (getColorScheme() === 'prefer-dark') {
 					console.log('Setting accent from picture-uri-dark change.')
 					setAccent()
 				}
@@ -223,7 +239,7 @@ export default class AutoAccentColourExtension extends Extension {
 		this._interfaceSettings.connect(
 			'changed::color-scheme',
 			() => {
-				if (this._backgroundSettings.get_string('picture-uri') !== this._backgroundSettings.get_string('picture-uri-dark')) {
+				if (getBackgroundUri() !== getDarkBackgroundUri()) {
 					console.log('Setting accent from color-scheme change.')
 					setAccent()
 				}
