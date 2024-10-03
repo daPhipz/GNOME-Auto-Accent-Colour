@@ -130,7 +130,6 @@ async function getDominantColour(extensionPath, backgroundPath) {
 async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
-	newAccent,
 	onFinish
 ) {
 	const [wall_r, wall_g, wall_b] = await getDominantColour(
@@ -139,8 +138,7 @@ async function applyClosestAccent(
 	)
 	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
-	newAccent(closestAccent)
-	onFinish()
+	onFinish(closestAccent)
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -181,15 +179,12 @@ export default class AutoAccentColourExtension extends Extension {
 				getColorScheme() === 'prefer-dark' ? getDarkBackgroundUri() : getBackgroundUri()
 			).replace('file://', '')
 
-			let newAccent = ''
-
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
-				function(msg) { newAccent = msg },
-				function() {
-				    console.log('New accent: ' + newAccent)
-				    interfaceSettings.set_string('accent-color', newAccent)
+				function(msg) {
+				    console.log('New accent: ' + msg)
+				    interfaceSettings.set_string('accent-color', msg)
 					indicator.remove_child(waitIcon)
 					indicator.add_child(normalIcon)
 				}
