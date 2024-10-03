@@ -136,7 +136,8 @@ async function getDominantColour(extensionPath, backgroundSettings, interfaceSet
 async function applyClosestAccent(
 	extensionPath,
 	backgroundSettings,
-	interfaceSettings
+	interfaceSettings,
+	onFinish
 ) {
     const [wall_r, wall_g, wall_b] = await getDominantColour(
         extensionPath,
@@ -146,6 +147,7 @@ async function applyClosestAccent(
     const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
     interfaceSettings.set_string('accent-color', closestAccent)
+    onFinish()
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -157,21 +159,40 @@ export default class AutoAccentColourExtension extends Extension {
 		const backgroundSettings = this._backgroundSettings
 		const interfaceSettings = this._interfaceSettings
 
+		const iconsPath = extensionPath + '/icons/'
+		//const normalIcon = Gio.icon_new_for_string(iconsPath + 'color-symbolic.svg')
+		//const waitIcon = Gio.icon_new_for_string(iconsPath + 'color-wait-symbolic.svg')
+
+        this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
+        const indicator = this._indicator
+
+        const normalIcon = new St.Icon({
+            gicon: Gio.icon_new_for_string(iconsPath + 'color-symbolic.svg'),
+            style_class: 'system-status-icon'
+        })
+        const waitIcon = new St.Icon({
+            gicon: Gio.icon_new_for_string(iconsPath + 'color-wait-symbolic.svg'),
+            style_class: 'system-status-icon'
+        })
+        indicator.add_child(normalIcon)
+
+        Main.panel.addToStatusArea(this.uuid, this._indicator)
+
 		function setAccent() {
-			applyClosestAccent(extensionPath, backgroundSettings, interfaceSettings)
+		    indicator.remove_child(normalIcon)
+		    indicator.add_child(waitIcon)
+			applyClosestAccent(
+			    extensionPath,
+			    backgroundSettings,
+			    interfaceSettings,
+			    function() {
+        			indicator.remove_child(waitIcon)
+			        indicator.add_child(normalIcon)
+			    }
+		    )
 		}
 
         setAccent()
-
-        this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
-
-        const icon = new St.Icon({
-            icon_name: 'org.gnome.Settings-color-symbolic',
-            style_class: 'system-status-icon'
-        })
-        this._indicator.add_child(icon)
-
-        Main.panel.addToStatusArea(this.uuid, this._indicator)
 
 		// Watch for light background change
 		this._backgroundSettings.connect(
