@@ -150,10 +150,12 @@ async function applyClosestAccent(
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
-        const backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
-		const interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
+        this._backgroundSettings = new Gio.Settings({ schema: BACKGROUND_SCHEMA })
+		this._interfaceSettings = new Gio.Settings({ schema: INTERFACE_SCHEMA })
 
 		const extensionPath = this.path
+		const backgroundSettings = this._backgroundSettings
+		const interfaceSettings = this._interfaceSettings
 
 		function setAccent() {
 			applyClosestAccent(extensionPath, backgroundSettings, interfaceSettings)
@@ -173,7 +175,7 @@ export default class AutoAccentColourExtension extends Extension {
 
 
 		// Watch for light background change
-		backgroundSettings.connect(
+		this._backgroundSettings.connect(
 			'changed::picture-uri',
 			(settings, key) => {
 				console.log('Picture URI changed.')
@@ -181,8 +183,11 @@ export default class AutoAccentColourExtension extends Extension {
 			}
 		)
 
+		// TODO: Add if statements to these so the second function doesn't
+		// override the other.
+
 		// Watch for dark background change
-		backgroundSettings.connect(
+		this._backgroundSettings.connect(
 			'changed::picture-uri-dark',
 			(settings, key) => {
 				console.log('Dark picture URI changed.')
@@ -191,7 +196,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
         // Watch for light/dark theme change
-		interfaceSettings.connect(
+		this._interfaceSettings.connect(
 			'changed::color-scheme',
 			(settings, key) => {
 				console.log('Changed colour scheme')
