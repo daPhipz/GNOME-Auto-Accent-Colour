@@ -1,6 +1,5 @@
 // TODO: Experiment with ColorThief palettes
 // TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
-// TODO: Reorganise functions
 // TODO: Add Extensions store page support
 // TODO: Add checker/installer for Python venv
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
@@ -30,6 +29,27 @@ const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 
+class AccentColour {
+	constructor(name, r, g, b) {
+		this.name = name,
+		this.r = r
+		this.g = g
+		this.b = b
+	}
+}
+
+const accentColours = [
+	new AccentColour(BLUE, 53, 131, 227),
+	new AccentColour(TEAL, 33, 144, 164),
+	new AccentColour(GREEN, 58, 148, 74),
+	new AccentColour(YELLOW, 200, 136, 0),
+	new AccentColour(ORANGE, 237, 91, 0),
+	new AccentColour(RED, 230, 45, 66),
+	new AccentColour(PINK, 213, 97, 153),
+	new AccentColour(PURPLE, 145, 65, 172),
+	new AccentColour(SLATE, 111, 131, 150)
+]
+
 // Thank you to andy.holmes on StackOverflow for this Promise wrapper
 // https://stackoverflow.com/a/61150669
 function execCommand(argv, input = null, cancellable = null) {
@@ -54,27 +74,6 @@ function execCommand(argv, input = null, cancellable = null) {
 		});
 	});
 }
-
-class AccentColour {
-	constructor(name, r, g, b) {
-		this.name = name,
-		this.r = r
-		this.g = g
-		this.b = b
-	}
-}
-
-const accentColours = [
-	new AccentColour(BLUE, 53, 131, 227),
-	new AccentColour(TEAL, 33, 144, 164),
-	new AccentColour(GREEN, 58, 148, 74),
-	new AccentColour(YELLOW, 200, 136, 0),
-	new AccentColour(ORANGE, 237, 91, 0),
-	new AccentColour(RED, 230, 45, 66),
-	new AccentColour(PINK, 213, 97, 153),
-	new AccentColour(PURPLE, 145, 65, 172),
-	new AccentColour(SLATE, 111, 131, 150)
-]
 
 function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
 	return (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
