@@ -167,6 +167,8 @@ export default class AutoAccentColourExtension extends Extension {
 		const extensionPath = this.path
 		const iconsPath = extensionPath + '/icons/'
 
+		this._settings = this.getSettings()
+
 		this._backgroundSettings = new Gio.Settings({
 			schema: BACKGROUND_SCHEMA
 		})
@@ -233,6 +235,13 @@ export default class AutoAccentColourExtension extends Extension {
 
 		setAccent()
 
+		this._settings.bind(
+			'hide-indicator',
+			this._indicator,
+			'visible',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+
 		// Watch for light background change
 		this._backgroundSettings.connect(
 			'changed::picture-uri',
@@ -263,6 +272,14 @@ export default class AutoAccentColourExtension extends Extension {
 					console.log('Setting accent from color-scheme change.')
 					setAccent()
 				}
+			}
+		)
+
+		// Watch for 'hide indicator' setting change
+		this._settings.connect(
+			'changed::hide-indicator',
+			(settings, key) => {
+				console.debug(`${key} = ${settings.get_value(key).print(true)}`)
 			}
 		)
 	}
