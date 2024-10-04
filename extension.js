@@ -200,6 +200,12 @@ export default class AutoAccentColourExtension extends Extension {
 			),
 			style_class: 'system-status-icon'
 		})
+		const alertIcon = new St.Icon({
+			gicon: Gio.icon_new_for_string(
+				iconsPath + 'color-alert-symbolic.svg'
+			),
+			style_class: 'system-status-icon'
+		})
 		indicator.add_child(normalIcon)
 
 		Main.panel.addToStatusArea(this.uuid, this._indicator)
