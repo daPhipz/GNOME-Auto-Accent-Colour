@@ -239,7 +239,7 @@ export default class AutoAccentColourExtension extends Extension {
 			'hide-indicator',
 			this._indicator,
 			'visible',
-			Gio.SettingsBindFlags.DEFAULT
+			Gio.SettingsBindFlags.INVERT_BOOLEAN
 		)
 
 		// Watch for light background change
