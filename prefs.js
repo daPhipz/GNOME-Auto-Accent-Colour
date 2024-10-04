@@ -27,6 +27,13 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		group.add(row)
 
+
+		const cachePage = new Adw.PreferencesPage({
+			title: _('Cache'),
+			icon_name: _('dialog-information-symbolic')
+		})
+		window.add(cachePage)
+
 		window._settings = this.getSettings()
 		window._settings.bind(
 			'hide-indicator',
