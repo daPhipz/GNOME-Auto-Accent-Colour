@@ -212,6 +212,11 @@ export default class AutoAccentColourExtension extends Extension {
 
 		Main.panel.addToStatusArea(this.uuid, this._indicator)
 
+		indicator.menu.addAction(
+			_('Preferences'),
+			() => this.openPreferences()
+		)
+
 		function setAccent() {
 			indicator.remove_child(normalIcon)
 			indicator.add_child(waitIcon)
