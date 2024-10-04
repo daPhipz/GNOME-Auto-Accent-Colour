@@ -287,5 +287,8 @@ export default class AutoAccentColourExtension extends Extension {
 	disable() {
 		this._indicator?.destroy()
 		this._indicator = null
+		this._settings = null
+		this._interfaceSettings = null
+		this._backgroundSettings = null
 	}
 }
