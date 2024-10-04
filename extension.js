@@ -4,6 +4,7 @@
 // TODO: Add checker/installer for Python venv
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Optimise ColorThief (shrink images before parsing them?)
+// TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
