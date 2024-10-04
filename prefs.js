@@ -4,16 +4,22 @@ import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Ex
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
-		const page = new Adw.PreferencesPage({
+		const dependenciesPage = new Adw.PreferencesPage({
+			title: _('Dependencies'),
+			icon_name: _('dialog-information-symbolic') // TODO: Change these icons
+		})
+		window.add(dependenciesPage)
+
+		const appearancePage = new Adw.PreferencesPage({
 			title: _('General'),
 			icon_name: _('dialog-information-symbolic')
 		})
-		window.add(page)
+		window.add(appearancePage)
 
 		const group = new Adw.PreferencesGroup({
 			title: _('Appearance')
 		})
-		page.add(group)
+		appearancePage.add(group)
 
 		const row = new Adw.SwitchRow({
 			title: _('Hide Indicator'),
@@ -30,3 +36,4 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		)
 	}
 }
+
