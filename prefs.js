@@ -12,6 +12,44 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		window.add(dependenciesPage)
 
+		const localDependenciesGroup = new Adw.PreferencesGroup({
+			title: _('Local Dependencies'),
+			description: _('Dependencies listed here can be installed to the extension\'s local directory')
+		})
+		dependenciesPage.add(localDependenciesGroup)
+
+		const installButton = new Gio.SimpleAction({
+			name: 'basicAction'
+		})
+
+		const colorThiefRow = new Adw.ActionRow({
+			title: _('ColorThief Module'),
+			subtitle: _('Python library for extracting colours from images'),
+
+		})
+		localDependenciesGroup.add(colorThiefRow)
+
+
+		const systemDependenciesGroup = new Adw.PreferencesGroup({
+			title: _('System Dependencies'),
+			description: _('Dependencies listed here must be installed via the system\'s package manager')
+		})
+		dependenciesPage.add(systemDependenciesGroup)
+
+		const pythonRow = new Adw.ActionRow({
+			title: _('Python'),
+			subtitle: _('To run ColorThief script on background image')
+		})
+		systemDependenciesGroup.add(pythonRow)
+
+		const imageMagickRow = new Adw.ActionRow({
+			title: _('ImageMagick'),
+			subtitle: _('To convert SVG and JXL backgrounds to a suitable format for parsing')
+		})
+		systemDependenciesGroup.add(imageMagickRow)
+
+
+
 		////////////////////////////////////////////////////////////////////////
 
 		// Settings page ///////////////////////////////////////////////////////
