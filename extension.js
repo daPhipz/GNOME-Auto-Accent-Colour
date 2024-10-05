@@ -5,6 +5,7 @@
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Optimise ColorThief (shrink images before parsing them?)
 // TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
+// TODO: Review console logging
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
