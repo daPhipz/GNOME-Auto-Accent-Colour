@@ -249,7 +249,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		// Watch for light background change
-		this._backgroundSettings.connect(
+		this._lightBackgroundHandler = this._backgroundSettings.connect(
 			'changed::picture-uri',
 			() => {
 				if (getColorScheme() !== PREFER_DARK) {
@@ -260,7 +260,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		// Watch for dark background change
-		this._backgroundSettings.connect(
+		this._darkBackgroundHandler = this._backgroundSettings.connect(
 			'changed::picture-uri-dark',
 			() => {
 				if (getColorScheme() === PREFER_DARK) {
@@ -271,7 +271,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		// Watch for light/dark theme change
-		this._interfaceSettings.connect(
+		this._colorSchemeHander = this._interfaceSettings.connect(
 			'changed::color-scheme',
 			() => {
 				if (getBackgroundUri() !== getDarkBackgroundUri()) {
@@ -282,7 +282,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		// Watch for 'hide indicator' setting change
-		this._settings.connect(
+		this._hideIndicatorHandler = this._settings.connect(
 			'changed::hide-indicator',
 			(settings, key) => {
 				console.debug(`${key} = ${settings.get_value(key).print(true)}`)
@@ -291,6 +291,23 @@ export default class AutoAccentColourExtension extends Extension {
 	}
 
 	disable() {
+		if (this._lightBackgroundHandler) {
+			this._backgroundSettings.disconnect(this._lightBackgroundHandler)
+			this._lightBackgroundHandler = null
+		}
+		if (this._darkBackgroundHandler) {
+			this._backgroundSettings.disconnect(this._darkBackgroundHandler)
+			this._darkBackgroundHandler = null
+		}
+		if (this._colorSchemeHander) {
+			this._interfaceSettings.disconnect(this._colorSchemeHander)
+			this._colorSchemeHander = null
+		}
+		if (this._hideIndicatorHandler) {
+			this._settings.disconnect(this._hideIndicatorHandler)
+			this._hideIndicatorHandler = null
+		}
+
 		this._indicator?.destroy()
 		this._indicator = null
 		this._settings = null
