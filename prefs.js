@@ -22,16 +22,16 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		window.add(settingsPage)
 
-		const group = new Adw.PreferencesGroup({
+		const appearanceGroup = new Adw.PreferencesGroup({
 			title: _('Appearance')
 		})
-		settingsPage.add(group)
+		settingsPage.add(appearanceGroup)
 
-		const row = new Adw.SwitchRow({
+		const indicatorRow = new Adw.SwitchRow({
 			title: _('Hide Indicator'),
 			subtitle: _('Dependency alerts will always be shown')
 		})
-		group.add(row)
+		appearanceGroup.add(indicatorRow)
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		window._settings = this.getSettings()
 		window._settings.bind(
 			'hide-indicator',
-			row,
+			indicatorRow,
 			'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
