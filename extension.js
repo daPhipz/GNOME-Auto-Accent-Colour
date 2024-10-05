@@ -237,7 +237,17 @@ export default class AutoAccentColourExtension extends Extension {
 
 		function setAccent() {
 			indicator.remove_child(normalIcon)
-			indicator.add_child(waitIcon)
+
+			if (!isColorThiefInstalled(extensionPath)) {
+				Main.notifyError(
+					_('Auto Accent Colour'),
+					_('Open the preferences for initial setup')
+				)
+
+				indicator.add_child(alertIcon)
+			} else {
+				indicator.add_child(waitIcon)
+			}
 
 			const backgroundPath = (
 				getColorScheme() === PREFER_DARK ?
