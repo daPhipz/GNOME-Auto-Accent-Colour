@@ -7,7 +7,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		// Dependencies page ///////////////////////////////////////////////////
 
 		const dependenciesPage = new Adw.PreferencesPage({
-			title: _('Dependencies'),
+			title: _('Setup'),
 			icon_name: _('package-x-generic-symbolic')
 		})
 		window.add(dependenciesPage)
