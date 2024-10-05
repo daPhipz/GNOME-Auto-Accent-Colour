@@ -4,11 +4,17 @@ import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Ex
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
+		// Dependencies page ///////////////////////////////////////////////////
+
 		const dependenciesPage = new Adw.PreferencesPage({
 			title: _('Dependencies'),
 			icon_name: _('package-x-generic-symbolic')
 		})
 		window.add(dependenciesPage)
+
+		////////////////////////////////////////////////////////////////////////
+
+		// Settings page ///////////////////////////////////////////////////////
 
 		const settingsPage = new Adw.PreferencesPage({
 			title: _('Settings'),
@@ -27,6 +33,9 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		group.add(row)
 
+		////////////////////////////////////////////////////////////////////////
+
+		// Cache page //////////////////////////////////////////////////////////
 
 		const cachePage = new Adw.PreferencesPage({
 			title: _('Cache'),
@@ -34,11 +43,17 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		window.add(cachePage)
 
+		////////////////////////////////////////////////////////////////////////
+
+		// About page //////////////////////////////////////////////////////////
+
 		const aboutPage = new Adw.PreferencesPage({
 			title: _('About'),
 			icon_name: _('user-info-symbolic')
 		})
 		window.add(aboutPage)
+
+		////////////////////////////////////////////////////////////////////////
 
 		window._settings = this.getSettings()
 		window._settings.bind(
