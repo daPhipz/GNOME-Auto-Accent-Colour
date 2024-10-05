@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-04 03:50+0100\n"
+"POT-Creation-Date: 2024-10-05 06:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,21 +22,45 @@ msgid "Preferences"
 msgstr ""
 
 #: prefs.js:8
-msgid "General"
+msgid "Dependencies"
 msgstr ""
 
 #: prefs.js:9
-msgid "dialog-information-symbolic"
+msgid "package-x-generic-symbolic"
 msgstr ""
 
 #: prefs.js:14
-msgid "Appearance"
+msgid "Settings"
 msgstr ""
 
-#: prefs.js:19
-msgid "Hide Indicator"
+#: prefs.js:15
+msgid "org.gnome.Settings-symbolic"
 msgstr ""
 
 #: prefs.js:20
+msgid "Appearance"
+msgstr ""
+
+#: prefs.js:25
+msgid "Hide Indicator"
+msgstr ""
+
+#: prefs.js:26
 msgid "Dependency alerts will always be shown"
+msgstr ""
+
+#: prefs.js:32
+msgid "Cache"
+msgstr ""
+
+#: prefs.js:33
+msgid "drive-harddisk-symbolic"
+msgstr ""
+
+#: prefs.js:38
+msgid "About"
+msgstr ""
+
+#: prefs.js:39
+msgid "user-info-symbolic"
 msgstr ""

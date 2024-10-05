@@ -6,20 +6,20 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		const dependenciesPage = new Adw.PreferencesPage({
 			title: _('Dependencies'),
-			icon_name: _('dialog-information-symbolic') // TODO: Change these icons
+			icon_name: _('package-x-generic-symbolic')
 		})
 		window.add(dependenciesPage)
 
-		const appearancePage = new Adw.PreferencesPage({
-			title: _('General'),
-			icon_name: _('dialog-information-symbolic')
+		const settingsPage = new Adw.PreferencesPage({
+			title: _('Settings'),
+			icon_name: _('org.gnome.Settings-symbolic')
 		})
-		window.add(appearancePage)
+		window.add(settingsPage)
 
 		const group = new Adw.PreferencesGroup({
 			title: _('Appearance')
 		})
-		appearancePage.add(group)
+		settingsPage.add(group)
 
 		const row = new Adw.SwitchRow({
 			title: _('Hide Indicator'),
@@ -30,13 +30,13 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const cachePage = new Adw.PreferencesPage({
 			title: _('Cache'),
-			icon_name: _('dialog-information-symbolic')
+			icon_name: _('drive-harddisk-symbolic')
 		})
 		window.add(cachePage)
 
 		const aboutPage = new Adw.PreferencesPage({
 			title: _('About'),
-			icon_name: _('dialog-information-symbolic')
+			icon_name: _('user-info-symbolic')
 		})
 		window.add(aboutPage)
 
