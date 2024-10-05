@@ -9,6 +9,7 @@
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
+import GLib from 'gi://GLib'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
@@ -161,6 +162,22 @@ async function applyClosestAccent(
 	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
 	onFinish(closestAccent)
+}
+
+function isColorThiefInstalled(extensionPath) {
+	const pythonExists = GLib.file_test(
+		extensionPath + '/venv/bin/python',
+		GLib.FileTest.EXISTS
+	)
+	const colorThiefExists = GLib.file_test(
+		extensionPath + '/venv/lib/python3.12/site-packages/colorthief.py',
+		GLib.FileTest.EXISTS
+	)
+
+	console.log('Python exists: ' + pythonExists)
+	console.log('ColorThief exists: ' + colorThiefExists)
+
+	return (pythonExists && colorThiefExists)
 }
 
 export default class AutoAccentColourExtension extends Extension {
