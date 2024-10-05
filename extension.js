@@ -241,7 +241,7 @@ export default class AutoAccentColourExtension extends Extension {
 			if (!isColorThiefInstalled(extensionPath)) {
 				Main.notifyError(
 					_('Auto Accent Colour'),
-					_('Open the preferences for initial setup')
+					_('Open preferences for initial setup')
 				)
 
 				indicator.add_child(alertIcon)
