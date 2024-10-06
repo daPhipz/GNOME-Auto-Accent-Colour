@@ -29,9 +29,9 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const colorThiefRow = new Adw.ActionRow({
 			title: _('ColorThief Module'),
-			subtitle: _('Python library for extracting colours from images'),
-
+			subtitle: _('Python library for extracting colours from images')
 		})
+		colorThiefRow.add_suffix(installButton)
 		localDependenciesGroup.add(colorThiefRow)
 
 
