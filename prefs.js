@@ -12,6 +12,11 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		window.add(dependenciesPage)
 
+		const dependenciesDescriptionGroup = new Adw.PreferencesGroup({
+			description: _('This extension requires some external depenecies to parse colours from the desktop background')
+		})
+		dependenciesPage.add(dependenciesDescriptionGroup)
+
 		const localDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('Local Dependencies'),
 			description: _('Dependencies listed here can be installed to the extension\'s local directory')
