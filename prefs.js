@@ -19,7 +19,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const localDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('Local Dependencies'),
-			description: _('Dependencies listed here can be installed to the extension\'s local directory')
+			description: _('Dependencies listed here are installed to the extension\'s local directory')
 		})
 		dependenciesPage.add(localDependenciesGroup)
 
