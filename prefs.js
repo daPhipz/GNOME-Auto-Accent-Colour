@@ -1,5 +1,6 @@
 import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
+import Gtk from 'gi://Gtk'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
@@ -23,16 +24,17 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		dependenciesPage.add(localDependenciesGroup)
 
-		const installButton = new Gio.SimpleAction({
-			name: 'basicAction'
-		})
-
 		const colorThiefRow = new Adw.ActionRow({
 			title: _('ColorThief Module'),
 			subtitle: _('Python library for extracting colours from images')
 		})
-		colorThiefRow.add_suffix(installButton)
 		localDependenciesGroup.add(colorThiefRow)
+
+		const installButton = new Gtk.Button({
+			label: _('Install'),
+			valign: Gtk.Align.CENTER
+		})
+		colorThiefRow.add_suffix(installButton)
 
 
 		const systemDependenciesGroup = new Adw.PreferencesGroup({
