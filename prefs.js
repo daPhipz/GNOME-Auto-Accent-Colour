@@ -29,10 +29,11 @@ function execCommand(argv, input = null, cancellable = null) {
 	});
 }
 
-async function downloadColorThief(extensionPath) {
+async function downloadColorThief(extensionPath, onFinish) {
 	console.log('Downloading ColorThief to ' + extensionPath + '...')
 	await execCommand(['python', '-m', 'venv', extensionPath + '/venv/'])
 	await execCommand([extensionPath + '/venv/bin/pip', 'install', 'colorthief'])
+	onFinish()
 }
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
@@ -140,8 +141,20 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		////////////////////////////////////////////////////////////////////////
 
+		const label = new Gtk.Label({ label: _('Installed') })
+
 		installButton.connect('clicked', () => {
-			downloadColorThief(this.path)
+			const spinner = new Adw.Spinner()
+			colorThiefRow.remove(installButton)
+			colorThiefRow.add_suffix(spinner)
+
+			downloadColorThief(
+				this.path,
+				function() {
+					colorThiefRow.remove(spinner)
+					colorThiefRow.add_suffix(label)
+				}
+			)
 		})
 
 		window._settings = this.getSettings()
