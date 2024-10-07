@@ -3,6 +3,38 @@ import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 
+// TODO: Remove duplicate code
+// Thank you to andy.holmes on StackOverflow for this Promise wrapper
+// https://stackoverflow.com/a/61150669
+function execCommand(argv, input = null, cancellable = null) {
+	let flags = Gio.SubprocessFlags.STDOUT_PIPE;
+
+	if (input !== null)
+		flags |= Gio.SubprocessFlags.STDIN_PIPE;
+
+	let proc = new Gio.Subprocess({
+		argv: argv,
+		flags: flags
+	});
+	proc.init(cancellable);
+
+	return new Promise((resolve, reject) => {
+		proc.communicate_utf8_async(input, cancellable, (proc, res) => {
+			try {
+				resolve(proc.communicate_utf8_finish(res)[1]);
+			} catch (e) {
+				reject(e);
+			}
+		});
+	});
+}
+
+async function downloadColorThief(extensionPath) {
+	console.log('Downloading ColorThief to ' + extensionPath + '...')
+	await execCommand(['python', '-m', 'venv', extensionPath + '/venv/'])
+	await execCommand([extensionPath + '/venv/bin/pip', 'install', 'colorthief'])
+}
+
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		// Dependencies page ///////////////////////////////////////////////////
@@ -108,7 +140,12 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		////////////////////////////////////////////////////////////////////////
 
+		installButton.connect('clicked', () => {
+			downloadColorThief(this.path)
+		})
+
 		window._settings = this.getSettings()
+
 		window._settings.bind(
 			'hide-indicator',
 			indicatorRow,
