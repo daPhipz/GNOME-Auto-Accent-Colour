@@ -154,6 +154,35 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		appearanceGroup.add(indicatorRow)
 
+		const paletteGroup = new Adw.PreferencesGroup({
+			title: _('Colour Palaette'),
+			description: _('Choose the type of background colour to base the shell accent colour from')
+		})
+		settingsPage.add(paletteGroup)
+
+		const dominantColourRadio = new Gtk.CheckButton({
+			valign: Gtk.Align.CENTER
+		})
+		const dominantColourRow = new Adw.ActionRow({
+			title: _('Dominant'),
+			subtitle: _('Use the most frequent colour from the background'),
+			activatable_widget: dominantColourRadio
+		})
+		dominantColourRow.add_prefix(dominantColourRadio)
+		paletteGroup.add(dominantColourRow)
+
+		const highlightColourRadio = new Gtk.CheckButton({
+			valign: Gtk.Align.CENTER,
+			group: dominantColourRadio
+		})
+		const highlightColourRow = new Adw.ActionRow({
+			title: _('Highlight'),
+			subtitle: _('Use a contrasting yet complimentary colour from the background'),
+			activatable_widget: highlightColourRadio
+		})
+		highlightColourRow.add_prefix(highlightColourRadio)
+		paletteGroup.add(highlightColourRow)
+
 		////////////////////////////////////////////////////////////////////////
 
 		// Cache page //////////////////////////////////////////////////////////
