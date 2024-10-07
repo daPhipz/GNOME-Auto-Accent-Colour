@@ -30,6 +30,13 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		localDependenciesGroup.add(colorThiefRow)
 
+		const pypiButton = new Gtk.LinkButton({
+			label: _('About'),
+			valign: Gtk.Align.CENTER,
+			uri: 'https://pypi.org/project/colorthief/'
+		})
+		colorThiefRow.add_suffix(pypiButton)
+
 		const installButton = new Gtk.Button({
 			label: _('Install'),
 			valign: Gtk.Align.CENTER,
