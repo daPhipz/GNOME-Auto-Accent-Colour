@@ -152,11 +152,37 @@ async function getDominantColour(extensionPath, backgroundPath) {
 	}
 }
 
+async function isColorThiefInstalled(extensionPath) {
+	try {
+		const pythonExists = GLib.file_test(
+			extensionPath + '/venv/bin/python',
+			GLib.FileTest.EXISTS
+		)
+		console.log('Python exists: ' + pythonExists)
+		if (!pythonExists) { return false }
+
+		const colorThiefExists = Boolean(
+			await execCommand([
+					extensionPath + '/venv/bin/python',
+					extensionPath + '/tools/is-colorthief-installed.py'
+			])
+		)
+		console.log('ColorThief exists: ' + colorThiefExists)
+		return colorThiefExists
+	} catch (e) {
+		logError(e)
+	}
+}
+
 async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
+	onDependencyCheck,
 	onFinish
 ) {
+	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
+	onDependencyCheck(colorThiefInstalled)
+
 	const [wall_r, wall_g, wall_b] = await getDominantColour(
 		extensionPath,
 		backgroundPath
@@ -164,22 +190,6 @@ async function applyClosestAccent(
 	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
 	onFinish(closestAccent)
-}
-
-function isColorThiefInstalled(extensionPath) {
-	const pythonExists = GLib.file_test(
-		extensionPath + '/venv/bin/python',
-		GLib.FileTest.EXISTS
-	)
-	const colorThiefExists = GLib.file_test(
-		extensionPath + '/venv/lib/python3.12/site-packages/colorthief.py',
-		GLib.FileTest.EXISTS
-	)
-
-	console.log('Python exists: ' + pythonExists)
-	console.log('ColorThief exists: ' + colorThiefExists)
-
-	return (pythonExists && colorThiefExists)
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -240,17 +250,6 @@ export default class AutoAccentColourExtension extends Extension {
 		function setAccent() {
 			indicator.remove_child(normalIcon)
 
-			if (!isColorThiefInstalled(extensionPath)) {
-				Main.notifyError(
-					_('Auto Accent Colour'),
-					_('Open preferences for initial setup')
-				)
-
-				indicator.add_child(alertIcon)
-			} else {
-				indicator.add_child(waitIcon)
-			}
-
 			const backgroundPath = (
 				getColorScheme() === PREFER_DARK ?
 					getDarkBackgroundUri() : getBackgroundUri()
@@ -259,6 +258,18 @@ export default class AutoAccentColourExtension extends Extension {
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
+				function(colorThiefInstalled) {
+					if (colorThiefInstalled) {
+						indicator.add_child(waitIcon)
+					} else {
+						Main.notifyError(
+							_('Auto Accent Colour'),
+							_('Open preferences for initial setup')
+						)
+
+						indicator.add_child(alertIcon)
+					}
+				},
 				function(newAccent) {
 					console.log('New accent: ' + newAccent)
 					setAccentColor(newAccent)
