@@ -32,7 +32,8 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const installButton = new Gtk.Button({
 			label: _('Install'),
-			valign: Gtk.Align.CENTER
+			valign: Gtk.Align.CENTER,
+			css_classes: ['suggested-action']
 		})
 		colorThiefRow.add_suffix(installButton)
 
