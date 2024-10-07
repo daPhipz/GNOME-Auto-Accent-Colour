@@ -1,6 +1,7 @@
 import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
+import GLib from 'gi://GLib' //TODO: Remove with duplicated code
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 
 // TODO: Remove duplicate code
@@ -29,11 +30,51 @@ function execCommand(argv, input = null, cancellable = null) {
 	});
 }
 
+// TODO: Remove duplicate code
+async function isColorThiefInstalled(extensionPath) {
+	try {
+		const pythonExists = GLib.file_test(
+			extensionPath + '/venv/bin/python',
+			GLib.FileTest.EXISTS
+		)
+		console.log('Python exists: ' + pythonExists)
+		if (!pythonExists) { return false }
+
+		const colorThiefExists = Boolean(
+			await execCommand([
+					extensionPath + '/venv/bin/python',
+					extensionPath + '/tools/is-colorthief-installed.py'
+			])
+		)
+		console.log('ColorThief exists: ' + colorThiefExists)
+		return colorThiefExists
+	} catch (e) {
+		logError(e)
+	}
+}
+
 async function downloadColorThief(extensionPath, onFinish) {
 	console.log('Downloading ColorThief to ' + extensionPath + '...')
 	await execCommand(['python', '-m', 'venv', extensionPath + '/venv/'])
 	await execCommand([extensionPath + '/venv/bin/pip', 'install', 'colorthief'])
 	onFinish()
+}
+
+async function refreshLocalDependencies(
+	extensionPath,
+	colorThiefRow,
+	spinner,
+	installButton,
+	installedLabel
+) {
+	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
+	colorThiefRow.remove(spinner)
+
+	if (colorThiefInstalled) {
+		colorThiefRow.add_suffix(installedLabel)
+	} else {
+		colorThiefRow.add_suffix(installButton)
+	}
 }
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
@@ -75,8 +116,9 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			valign: Gtk.Align.CENTER,
 			css_classes: ['suggested-action']
 		})
-		colorThiefRow.add_suffix(installButton)
 
+		const colorThiefSpinner = new Adw.Spinner()
+		colorThiefRow.add_suffix(colorThiefSpinner)
 
 		const systemDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('System Dependencies'),
@@ -90,13 +132,17 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		systemDependenciesGroup.add(pythonRow)
 
+		const pythonSpinner = new Adw.Spinner()
+		pythonRow.add_suffix(pythonSpinner)
+
 		const imageMagickRow = new Adw.ActionRow({
 			title: _('ImageMagick'),
 			subtitle: _('To convert SVG and JXL backgrounds to a suitable format for parsing')
 		})
 		systemDependenciesGroup.add(imageMagickRow)
 
-
+		const imageMagickSpinner = new Adw.Spinner()
+		imageMagickRow.add_suffix(imageMagickSpinner)
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -141,18 +187,29 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		////////////////////////////////////////////////////////////////////////
 
-		const label = new Gtk.Label({ label: _('Installed') })
+		const extensionPath = this.path
+		const installedLabel = new Gtk.Label({ label: _('Installed') })
+
+		function refreshLocal() {
+			refreshLocalDependencies(
+				extensionPath,
+				colorThiefRow,
+				colorThiefSpinner,
+				installButton,
+				installedLabel
+			)
+		}
+
+		refreshLocal()
 
 		installButton.connect('clicked', () => {
-			const spinner = new Adw.Spinner()
 			colorThiefRow.remove(installButton)
 			colorThiefRow.add_suffix(spinner)
 
 			downloadColorThief(
 				this.path,
 				function() {
-					colorThiefRow.remove(spinner)
-					colorThiefRow.add_suffix(label)
+					refreshLocal()
 				}
 			)
 		})
@@ -167,4 +224,5 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		)
 	}
 }
+
 
