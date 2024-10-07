@@ -299,6 +299,7 @@ export default class AutoAccentColourExtension extends Extension {
 				console.log('Colorthief has been installed')
 				if (settings.get_value(key)) {
 					setAccent()
+					indicator.remove_child(alertIcon)
 				}
 			}
 		)
