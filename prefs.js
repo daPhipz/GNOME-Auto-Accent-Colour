@@ -128,7 +128,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const pythonRow = new Adw.ActionRow({
 			title: _('Python'),
-			subtitle: _('To run ColorThief script on background image')
+			subtitle: _('To install ColorThief in a virtual environment using pip')
 		})
 		systemDependenciesGroup.add(pythonRow)
 
