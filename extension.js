@@ -182,6 +182,7 @@ async function applyClosestAccent(
 ) {
 	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
 	onDependencyCheck(colorThiefInstalled)
+	if (!colorThiefInstalled) { return }
 
 	const [wall_r, wall_g, wall_b] = await getDominantColour(
 		extensionPath,
@@ -198,6 +199,7 @@ export default class AutoAccentColourExtension extends Extension {
 		const iconsPath = extensionPath + '/icons/'
 
 		this._settings = this.getSettings()
+		const settings = this._settings
 
 		this._backgroundSettings = new Gio.Settings({
 			schema: BACKGROUND_SCHEMA
@@ -262,6 +264,8 @@ export default class AutoAccentColourExtension extends Extension {
 					if (colorThiefInstalled) {
 						indicator.add_child(waitIcon)
 					} else {
+						settings.set_boolean('colorthief-installed', false)
+
 						Main.notifyError(
 							_('Auto Accent Colour'),
 							_('Open preferences for initial setup')
@@ -286,6 +290,16 @@ export default class AutoAccentColourExtension extends Extension {
 			this._indicator,
 			'visible',
 			Gio.SettingsBindFlags.INVERT_BOOLEAN
+		)
+
+		this._colorthiefInstalledHandler = this._settings.connect(
+			'changed::colorthief-installed',
+			(settings, key) => {
+				console.log('Colorthief has been installed')
+				if (settings.get_value(key)) {
+					setAccent()
+				}
+			}
 		)
 
 		// Watch for light background change
@@ -346,6 +360,10 @@ export default class AutoAccentColourExtension extends Extension {
 		if (this._hideIndicatorHandler) {
 			this._settings.disconnect(this._hideIndicatorHandler)
 			this._hideIndicatorHandler = null
+		}
+		if (this._colorthiefInstalledHandler) {
+			this._settings.disconnect(this._colorthiefInstalledHandler)
+			this._colorthiefInstalledHandler = null
 		}
 
 		this._indicator?.destroy()

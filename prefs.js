@@ -202,19 +202,21 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		refreshLocal()
 
+		window._settings = this.getSettings()
+		const settings = window._settings
+
 		installButton.connect('clicked', () => {
 			colorThiefRow.remove(installButton)
-			colorThiefRow.add_suffix(spinner)
+			colorThiefRow.add_suffix(colorThiefSpinner)
 
 			downloadColorThief(
 				this.path,
 				function() {
 					refreshLocal()
+					settings.set_boolean('colorthief-installed', true)
 				}
 			)
 		})
-
-		window._settings = this.getSettings()
 
 		window._settings.bind(
 			'hide-indicator',
@@ -224,5 +226,6 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		)
 	}
 }
+
 
 

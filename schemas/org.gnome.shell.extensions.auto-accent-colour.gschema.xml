@@ -4,5 +4,8 @@
     <key name="hide-indicator" type="b">
       <default>false</default>
     </key>
+    <key name="colorthief-installed" type="b">
+      <default>false</default>
+    </key>
   </schema>
 </schemalist>
