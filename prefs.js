@@ -60,15 +60,13 @@ async function downloadColorThief(extensionPath, onFinish) {
 	onFinish()
 }
 
-async function refreshLocalDependencies(
+async function getLocalDependencies(
 	extensionPath,
 	colorThiefRow,
-	spinner,
 	installButton,
 	installedLabel
 ) {
 	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
-	colorThiefRow.remove(spinner)
 
 	if (colorThiefInstalled) {
 		colorThiefRow.add_suffix(installedLabel)
@@ -117,9 +115,6 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			css_classes: ['suggested-action']
 		})
 
-		const colorThiefSpinner = new Adw.Spinner()
-		colorThiefRow.add_suffix(colorThiefSpinner)
-
 		const systemDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('System Dependencies'),
 			description: _('Dependencies listed here must be installed via the system\'s package manager')
@@ -132,17 +127,11 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		systemDependenciesGroup.add(pythonRow)
 
-		const pythonSpinner = new Adw.Spinner()
-		pythonRow.add_suffix(pythonSpinner)
-
 		const imageMagickRow = new Adw.ActionRow({
 			title: _('ImageMagick'),
 			subtitle: _('To convert SVG and JXL backgrounds to a suitable format for parsing')
 		})
 		systemDependenciesGroup.add(imageMagickRow)
-
-		const imageMagickSpinner = new Adw.Spinner()
-		imageMagickRow.add_suffix(imageMagickSpinner)
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -190,17 +179,18 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		const extensionPath = this.path
 		const installedLabel = new Gtk.Label({ label: _('Installed') })
 
-		function refreshLocal() {
-			refreshLocalDependencies(
+		const colorThiefSpinner = new Adw.Spinner()
+
+		function refreshLocalDependencies() {
+			getLocalDependencies(
 				extensionPath,
 				colorThiefRow,
-				colorThiefSpinner,
 				installButton,
 				installedLabel
 			)
 		}
 
-		refreshLocal()
+		refreshLocalDependencies()
 
 		window._settings = this.getSettings()
 		const settings = window._settings
@@ -212,7 +202,8 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			downloadColorThief(
 				this.path,
 				function() {
-					refreshLocal()
+					refreshLocalDependencies()
+					colorThiefRow.remove(colorThiefSpinner)
 					settings.set_boolean('colorthief-installed', true)
 				}
 			)
