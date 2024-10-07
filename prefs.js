@@ -14,7 +14,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		window.add(dependenciesPage)
 
 		const dependenciesDescriptionGroup = new Adw.PreferencesGroup({
-			description: _('This extension requires some external depenecies to parse colours from the desktop background')
+			description: _('This extension requires some external dependencies to parse colours from the desktop background')
 		})
 		dependenciesPage.add(dependenciesDescriptionGroup)
 
