@@ -117,7 +117,7 @@ async function convert(imagePath, extensionPath) {
 	}
 }
 
-async function getDominantColour(extensionPath, backgroundPath) {
+async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
 		const backgroundFileExtension = backgroundPath.split('.').pop()
 		let rasterPath = ''
@@ -157,7 +157,7 @@ async function getDominantColour(extensionPath, backgroundPath) {
 		console.log('Parsed G: ' + dominantColourTuple[1])
 		console.log('Parsed B: ' + dominantColourTuple[2])
 
-		return dominantColourTuple
+		return [dominantColourTuple, highlightColourTuple]
 	} catch (e) {
 		logError(e)
 	}
@@ -195,10 +195,12 @@ async function applyClosestAccent(
 	onDependencyCheck(colorThiefInstalled)
 	if (!colorThiefInstalled) { return }
 
-	const [wall_r, wall_g, wall_b] = await getDominantColour(
+	const backgroundPalette = await getBackgroundPalette(
 		extensionPath,
 		backgroundPath
 	)
+
+	const [wall_r, wall_g, wall_b] = backgroundPalette[0]
 	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
 	onFinish(closestAccent)
