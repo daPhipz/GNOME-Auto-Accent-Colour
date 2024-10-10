@@ -129,25 +129,35 @@ async function getDominantColour(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const wallpaperColourStr = await execCommand([
+		// Run Python script to get colours from background
+		const backgroundPaletteStr = await execCommand([
 			extensionPath + '/venv/bin/python',
-			extensionPath + '/tools/get-colour.py',
+			extensionPath + '/tools/get-bg-colours.py',
 			rasterPath
 		])
-		console.log('Wallpaper colour: ' + wallpaperColourStr)
+		console.log('Wallpaper colour palette: ' + backgroundPaletteStr)
 
+		// Split script output into 2D array of colour-value entries
+		const backgroundPalette = backgroundPaletteStr
+			.split(' ')
+			.map(colour => colour.split(','))
 
-		const wallpaperColourTuple = wallpaperColourStr
-			.replace(/\(|\)|\n/g, '')
-			.split(',')
-		for (let i in wallpaperColourTuple) {
-			wallpaperColourTuple[i] = Number(wallpaperColourTuple[i])
+		// Convert each value in 2D array to integer
+		for (let colourIndex in backgroundPalette) {
+			for (let valueIndex in backgroundPalette[colourIndex]) {
+				const intValue = Number(backgroundPalette[colourIndex][valueIndex])
+				backgroundPalette[colourIndex][valueIndex] = intValue
+			}
 		}
-		console.log('Parsed R: ' + wallpaperColourTuple[0])
-		console.log('Parsed G: ' + wallpaperColourTuple[1])
-		console.log('Parsed B: ' + wallpaperColourTuple[2])
 
-		return wallpaperColourTuple
+		const dominantColourTuple = backgroundPalette[0]
+		const highlightColourTuple = backgroundPalette[1]
+
+		console.log('Parsed R: ' + dominantColourTuple[0])
+		console.log('Parsed G: ' + dominantColourTuple[1])
+		console.log('Parsed B: ' + dominantColourTuple[2])
+
+		return dominantColourTuple
 	} catch (e) {
 		logError(e)
 	}
