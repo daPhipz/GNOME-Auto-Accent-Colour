@@ -224,6 +224,16 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		window._settings = this.getSettings()
 		const settings = window._settings
 
+		console.log("Highlight mode: " + settings.get_value('highlight-mode'))
+
+		if (settings.get_value('highlight-mode')) {
+			console.log("Highlight mode detected")
+			highlightColourRadio.set_active(true)
+		} else {
+			console.log("Dominant mode detected")
+			dominantColourRadio.set_active(true)
+		}
+
 		installButton.connect('clicked', () => {
 			colorThiefRow.remove(installButton)
 			colorThiefRow.add_suffix(colorThiefSpinner)
@@ -243,6 +253,20 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			indicatorRow,
 			'active',
 			Gio.SettingsBindFlags.DEFAULT
+		)
+
+		window._settings.bind(
+			'highlight-mode',
+			highlightColourRadio,
+			'active',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+
+		window._settings.bind(
+			'highlight-mode',
+			dominantColourRadio,
+			'active',
+			Gio.SettingsBindFlags.INVERT_BOOLEAN
 		)
 	}
 }
