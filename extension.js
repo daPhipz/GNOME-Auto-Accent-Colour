@@ -8,7 +8,6 @@
 // TODO: Review console logging
 // TODO: Add random accent colour mode?
 // TODO: Do not use hardcoded accent colour values -- https://gjs-docs.gnome.org/adw1~1/adw.accentcolor
-// TODO: Fix indicator icons
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
@@ -255,7 +254,15 @@ export default class AutoAccentColourExtension extends Extension {
 			),
 			style_class: 'system-status-icon'
 		})
-		indicator.add_child(normalIcon)
+
+		let currentIcon = normalIcon
+		indicator.add_child(currentIcon)
+
+		function changeIndicatorIcon(newIcon) {
+			indicator.remove_child(currentIcon)
+			currentIcon = newIcon
+			indicator.add_child(currentIcon)
+		}
 
 		Main.panel.addToStatusArea(this.uuid, this._indicator)
 
@@ -265,8 +272,6 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		function setAccent() {
-			indicator.remove_child(normalIcon)
-
 			const backgroundPath = (
 				getColorScheme() === PREFER_DARK ?
 					getDarkBackgroundUri() : getBackgroundUri()
@@ -277,7 +282,7 @@ export default class AutoAccentColourExtension extends Extension {
 				backgroundPath,
 				function(colorThiefInstalled) {
 					if (colorThiefInstalled) {
-						indicator.add_child(waitIcon)
+						changeIndicatorIcon(waitIcon)
 					} else {
 						settings.set_boolean('colorthief-installed', false)
 
@@ -286,14 +291,13 @@ export default class AutoAccentColourExtension extends Extension {
 							_('Open preferences for initial setup')
 						)
 
-						indicator.add_child(alertIcon)
+						changeIndicatorIcon(alertIcon)
 					}
 				},
 				function(newAccent) {
 					console.log('New accent: ' + newAccent)
 					setAccentColor(newAccent)
-					indicator.remove_child(waitIcon)
-					indicator.add_child(normalIcon)
+					changeIndicatorIcon(normalIcon)
 				}
 			)
 		}
