@@ -95,6 +95,8 @@ function getClosestAccentColour(r, g, b) {
 			accent.r, accent.g, accent.b
 		)
 
+		console.log("Distance from " + accent.name + ": " + squaredEuclideanDistance)
+
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
 			closestAccent = accent.name
