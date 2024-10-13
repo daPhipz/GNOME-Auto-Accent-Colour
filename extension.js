@@ -12,6 +12,7 @@
 // TODO: Look at using Git submodules for ColorThief dependencies
 // TODO: Perhaps use ImageMagick for colour extraction
 // TODO: Look at using HSL and other formats over RGB
+// TODO: Add descriptions to schema keys
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
