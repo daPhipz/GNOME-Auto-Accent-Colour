@@ -10,6 +10,8 @@
 // TODO: Do not use hardcoded accent colour values -- https://gjs-docs.gnome.org/adw1~1/adw.accentcolor
 // TODO: Avoid using pip module for ColorThief
 // TODO: Look at using Git submodules for ColorThief dependencies
+// TODO: Perhaps use ImageMagick for colour extraction
+// TODO: Look at using HSL and other formats over RGB
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
