@@ -136,29 +136,9 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const backgroundPaletteStr = getPalette(rasterPath)
-		console.log('Type: ' + typeof(backgroundPaletteStr))
-
-		// Run Python script to get colours from background
-		// const backgroundPaletteStr = await execCommand([
-		// 	extensionPath + '/venv/bin/python',
-		// 	extensionPath + '/tools/get-bg-colours.py',
-		// 	rasterPath
-		// ])
-		console.log('Wallpaper colour palette: ' + backgroundPaletteStr)
-
-		// Split script output into 2D array of colour-value entries
-		const backgroundPalette = backgroundPaletteStr
-			.split(' ')
-			.map(colour => colour.split(','))
-
-		// Convert each value in 2D array to integer
-		for (let colourIndex in backgroundPalette) {
-			for (let valueIndex in backgroundPalette[colourIndex]) {
-				const intValue = Number(backgroundPalette[colourIndex][valueIndex])
-				backgroundPalette[colourIndex][valueIndex] = intValue
-			}
-		}
+		const backgroundPalette = getPalette(rasterPath)
+		console.log('Type: ' + typeof(backgroundPalette))
+		console.log('Wallpaper colour palette: ' + backgroundPalette)
 
 		const dominantColourTuple = backgroundPalette[0]
 		const highlightColourTuple = backgroundPalette[1]
