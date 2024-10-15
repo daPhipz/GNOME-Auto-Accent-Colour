@@ -125,15 +125,6 @@ async function convert(imagePath, extensionPath) {
 	}
 }
 
-
-// const CanvasImage = function (image) {
-//     this.canvas  = document.createElement('canvas');
-//     this.context = this.canvas.getContext('2d');
-//     this.width  = this.canvas.width  = image.naturalWidth;
-//     this.height = this.canvas.height = image.naturalHeight;
-//     this.context.drawImage(image, 0, 0, this.width, this.height);
-// };
-
 function createPixelArray(imgData, pixelCount, quality) {
     const pixels = imgData;
     const pixelArray = [];
@@ -153,9 +144,7 @@ function createPixelArray(imgData, pixelCount, quality) {
 }
 
 function getPalette(sourceImage, colorCount = 5, quality = 1) {
-    // Create custom CanvasImage object
     const image = GdkPixbuf.Pixbuf.new_from_file(sourceImage)
-    //image.new_from_file(sourceImage)
     const imageData = image.get_pixels()
     console.log('Image data [0]: ' + imageData[0])
     console.log('Image data [1]: ' + imageData[1])
