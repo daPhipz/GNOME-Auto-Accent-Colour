@@ -30,51 +30,6 @@ function execCommand(argv, input = null, cancellable = null) {
 	});
 }
 
-// TODO: Remove duplicate code
-async function isColorThiefInstalled(extensionPath) {
-	try {
-		const pythonExists = GLib.file_test(
-			extensionPath + '/venv/bin/python',
-			GLib.FileTest.EXISTS
-		)
-		console.log('Python exists: ' + pythonExists)
-		if (!pythonExists) { return false }
-
-		const colorThiefExists = Boolean(
-			await execCommand([
-					extensionPath + '/venv/bin/python',
-					extensionPath + '/tools/is-colorthief-installed.py'
-			])
-		)
-		console.log('ColorThief exists: ' + colorThiefExists)
-		return colorThiefExists
-	} catch (e) {
-		logError(e)
-	}
-}
-
-async function downloadColorThief(extensionPath, onFinish) {
-	console.log('Downloading ColorThief to ' + extensionPath + '...')
-	await execCommand(['python', '-m', 'venv', extensionPath + '/venv/'])
-	await execCommand([extensionPath + '/venv/bin/pip', 'install', 'colorthief'])
-	onFinish()
-}
-
-async function getLocalDependencies(
-	extensionPath,
-	colorThiefRow,
-	installButton,
-	installedLabel
-) {
-	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
-
-	if (colorThiefInstalled) {
-		colorThiefRow.add_suffix(installedLabel)
-	} else {
-		colorThiefRow.add_suffix(installButton)
-	}
-}
-
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		window._settings = this.getSettings()
@@ -92,42 +47,11 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		dependenciesPage.add(dependenciesDescriptionGroup)
 
-		const localDependenciesGroup = new Adw.PreferencesGroup({
-			title: _('Local Dependencies'),
-			description: _('Dependencies listed here are installed to the extension\'s local directory')
-		})
-		dependenciesPage.add(localDependenciesGroup)
-
-		const colorThiefRow = new Adw.ActionRow({
-			title: _('ColorThief Module'),
-			subtitle: _('Python library for extracting colours from images')
-		})
-		localDependenciesGroup.add(colorThiefRow)
-
-		const pypiButton = new Gtk.LinkButton({
-			label: _('About'),
-			valign: Gtk.Align.CENTER,
-			uri: 'https://pypi.org/project/colorthief/'
-		})
-		colorThiefRow.add_suffix(pypiButton)
-
-		const installButton = new Gtk.Button({
-			label: _('Install'),
-			valign: Gtk.Align.CENTER,
-			css_classes: ['suggested-action']
-		})
-
 		const systemDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('System Dependencies'),
 			description: _('Dependencies listed here must be installed via the system\'s package manager')
 		})
 		dependenciesPage.add(systemDependenciesGroup)
-
-		const pythonRow = new Adw.ActionRow({
-			title: _('Python'),
-			subtitle: _('To install ColorThief in a virtual environment using pip')
-		})
-		systemDependenciesGroup.add(pythonRow)
 
 		const imageMagickRow = new Adw.ActionRow({
 			title: _('ImageMagick'),
@@ -211,33 +135,6 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const extensionPath = this.path
 		const installedLabel = new Gtk.Label({ label: _('Installed') })
-
-		const colorThiefSpinner = new Adw.Spinner()
-
-		function refreshLocalDependencies() {
-			getLocalDependencies(
-				extensionPath,
-				colorThiefRow,
-				installButton,
-				installedLabel
-			)
-		}
-
-		refreshLocalDependencies()
-
-		installButton.connect('clicked', () => {
-			colorThiefRow.remove(installButton)
-			colorThiefRow.add_suffix(colorThiefSpinner)
-
-			downloadColorThief(
-				this.path,
-				function() {
-					refreshLocalDependencies()
-					colorThiefRow.remove(colorThiefSpinner)
-					settings.set_boolean('colorthief-installed', true)
-				}
-			)
-		})
 
 		window._settings.bind(
 			'hide-indicator',
