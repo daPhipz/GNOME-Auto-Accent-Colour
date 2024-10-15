@@ -16,7 +16,6 @@
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
-import GLib from 'gi://GLib'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
@@ -153,38 +152,11 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 	}
 }
 
-async function isColorThiefInstalled(extensionPath) {
-	try {
-		const pythonExists = GLib.file_test(
-			extensionPath + '/venv/bin/python',
-			GLib.FileTest.EXISTS
-		)
-		console.log('Python exists: ' + pythonExists)
-		if (!pythonExists) { return false }
-
-		const colorThiefExists = Boolean(
-			await execCommand([
-					extensionPath + '/venv/bin/python',
-					extensionPath + '/tools/is-colorthief-installed.py'
-			])
-		)
-		console.log('ColorThief exists: ' + colorThiefExists)
-		return colorThiefExists
-	} catch (e) {
-		logError(e)
-	}
-}
-
 async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
-	onDependencyCheck,
 	onFinish
 ) {
-	const colorThiefInstalled = await isColorThiefInstalled(extensionPath)
-	onDependencyCheck(colorThiefInstalled)
-	if (!colorThiefInstalled) { return }
-
 	const backgroundPalette = await getBackgroundPalette(
 		extensionPath,
 		backgroundPath
@@ -261,6 +233,8 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		function setAccent() {
+			changeIndicatorIcon(waitIcon)
+
 			const backgroundPath = (
 				getColorScheme() === PREFER_DARK ?
 					getDarkBackgroundUri() : getBackgroundUri()
@@ -269,20 +243,6 @@ export default class AutoAccentColourExtension extends Extension {
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
-				function(colorThiefInstalled) {
-					if (colorThiefInstalled) {
-						changeIndicatorIcon(waitIcon)
-					} else {
-						settings.set_boolean('colorthief-installed', false)
-
-						Main.notifyError(
-							_('Auto Accent Colour'),
-							_('Open preferences for initial setup')
-						)
-
-						changeIndicatorIcon(alertIcon)
-					}
-				},
 				function(newAccent) {
 					console.log('New accent: ' + newAccent)
 					setAccentColor(newAccent)
@@ -298,17 +258,6 @@ export default class AutoAccentColourExtension extends Extension {
 			this._indicator,
 			'visible',
 			Gio.SettingsBindFlags.INVERT_BOOLEAN
-		)
-
-		this._colorthiefInstalledHandler = this._settings.connect(
-			'changed::colorthief-installed',
-			(settings, key) => {
-				console.log('Colorthief has been installed')
-				if (settings.get_value(key)) {
-					setAccent()
-					indicator.remove_child(alertIcon)
-				}
-			}
 		)
 
 		// Watch for light background change
@@ -369,10 +318,6 @@ export default class AutoAccentColourExtension extends Extension {
 		if (this._hideIndicatorHandler) {
 			this._settings.disconnect(this._hideIndicatorHandler)
 			this._hideIndicatorHandler = null
-		}
-		if (this._colorthiefInstalledHandler) {
-			this._settings.disconnect(this._colorthiefInstalledHandler)
-			this._colorthiefInstalledHandler = null
 		}
 
 		this._indicator?.destroy()

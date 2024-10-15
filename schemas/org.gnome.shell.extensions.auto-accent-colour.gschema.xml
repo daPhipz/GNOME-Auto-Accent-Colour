@@ -4,9 +4,6 @@
     <key name="hide-indicator" type="b">
       <default>false</default>
     </key>
-    <key name="colorthief-installed" type="b">
-      <default>false</default>
-    </key>
     <key name="highlight-mode" type="b">
       <default>false</default>
     </key>
