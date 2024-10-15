@@ -156,68 +156,36 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		appearanceGroup.add(indicatorRow)
 
-		// this._actionGroup = new Gio.SimpleActionGroup()
-		// this.insert_action_group('palette-selection', this._actionGroup)
-
-		// this._actionGroup.add_action(this._settings.create_action('dominant'))
-		// this._actionGroup.add_action(this._settings.create_action('highlight'))
-
 		const paletteGroup = new Adw.PreferencesGroup({
 			title: _('Colour Palaette'),
 			description: _('Choose the type of background colour to base the shell accent colour from')
 		})
 		settingsPage.add(paletteGroup)
 
-		const modes = [
-			{
-				mode: 'dominant',
-				title: _('Dominant'),
-				subtitle: _('Use the most frequent colour from the background')
-			}, {
-				mode: 'highlight',
-				title: _('Highlight'),
-				subtitle: _('Use a contrasting yet complimentary colour from the background')
-			}
-		]
+		const dominantColourRadio = new Gtk.CheckButton({
+			valign: Gtk.Align.CENTER,
+			action_target: new GLib.Variant('s', 'dominant')
+		})
+		const dominantColourRow = new Adw.ActionRow({
+			title: _('Dominant'),
+			subtitle: _('Use the most frequent colour from the background'),
+			activatable_widget: dominantColourRadio
+		})
+		dominantColourRow.add_prefix(dominantColourRadio)
+		paletteGroup.add(dominantColourRow)
 
-		for (const {mode, title, subtitle} of modes) {
-			const check = new Gtk.CheckButton({
-				action_name: 'palette',
-				action_target: new GLib.Variant('s', mode)
-			})
-			const row = new Adw.ActionRow({
-				activatable_widget: check,
-				title: title,
-				subtitle, subtitle
-			})
-			row.add_prefix(check)
-			paletteGroup.add(row)
-		}
-
-		// settingsPage.add(paletteGroup)
-
-		// const dominantColourRadio = new Gtk.CheckButton({
-		// 	valign: Gtk.Align.CENTER
-		// })
-		// const dominantColourRow = new Adw.ActionRow({
-		// 	title: _('Dominant'),
-		// 	subtitle: _('Use the most frequent colour from the background'),
-		// 	activatable_widget: dominantColourRadio
-		// })
-		// dominantColourRow.add_prefix(dominantColourRadio)
-		// paletteGroup.add(dominantColourRow)
-
-		// const highlightColourRadio = new Gtk.CheckButton({
-		// 	valign: Gtk.Align.CENTER,
-		// 	group: dominantColourRadio
-		// })
-		// const highlightColourRow = new Adw.ActionRow({
-		// 	title: _('Highlight'),
-		// 	subtitle: _('Use a contrasting yet complimentary colour from the background'),
-		// 	activatable_widget: highlightColourRadio
-		// })
-		// highlightColourRow.add_prefix(highlightColourRadio)
-		// paletteGroup.add(highlightColourRow)
+		const highlightColourRadio = new Gtk.CheckButton({
+			valign: Gtk.Align.CENTER,
+			group: dominantColourRadio,
+			action_target: new GLib.Variant('s', 'highlight')
+		})
+		const highlightColourRow = new Adw.ActionRow({
+			title: _('Highlight'),
+			subtitle: _('Use a contrasting yet complimentary colour from the background'),
+			activatable_widget: highlightColourRadio
+		})
+		highlightColourRow.add_prefix(highlightColourRadio)
+		paletteGroup.add(highlightColourRow)
 
 		////////////////////////////////////////////////////////////////////////
 
@@ -257,16 +225,6 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		refreshLocalDependencies()
 
-		console.log("Highlight mode: " + settings.get_boolean('highlight-mode'))
-
-		// if (settings.get_value('highlight-mode')) {
-		// 	console.log("Highlight mode detected")
-		// 	highlightColourRadio.set_active(true)
-		// } else {
-		// 	console.log("Dominant mode detected")
-		// 	dominantColourRadio.set_active(true)
-		// }
-
 		installButton.connect('clicked', () => {
 			colorThiefRow.remove(installButton)
 			colorThiefRow.add_suffix(colorThiefSpinner)
@@ -287,6 +245,28 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
+
+		window._settings.bind(
+			'highlight-mode',
+			dominantColourRadio,
+			'active',
+			Gio.SettingsBindFlags.INVERT_BOOLEAN
+		)
+
+		window._settings.bind(
+			'highlight-mode',
+			highlightColourRadio,
+			'active',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+
+		dominantColourRadio.connect('activate', () => {
+			settings.set_boolean('highlight-mode', false)
+		})
+
+		highlightColourRadio.connect('activate', () => {
+			settings.set_boolean('highlight-mode', true)
+		})
 	}
 }
 
