@@ -1,18 +1,14 @@
-// TODO: Experiment with ColorThief palettes
 // TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
 // TODO: Add Extensions store page support
-// TODO: Add checker/installer for Python venv
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
-// TODO: Optimise ColorThief (shrink images before parsing them?)
 // TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
 // TODO: Review console logging
 // TODO: Add random accent colour mode?
 // TODO: Do not use hardcoded accent colour values -- https://gjs-docs.gnome.org/adw1~1/adw.accentcolor
-// TODO: Avoid using pip module for ColorThief
-// TODO: Look at using Git submodules for ColorThief dependencies
-// TODO: Perhaps use ImageMagick for colour extraction
-// TODO: Look at using HSL and other formats over RGB
 // TODO: Add descriptions to schema keys
+// TODO: Make color-thief work fully asynchronously
+// TODO: Investigate imagemagick SVG conversion causing artefacts
+// TODO: Add checker to find if imagemagick is installed
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
@@ -112,7 +108,6 @@ function getClosestAccentColour(r, g, b) {
 	return closestAccent
 }
 
-// TODO: check for existance of imagemagick
 async function convert(imagePath, extensionPath) {
 	try {
 		const cacheDir = extensionPath + '/cached/'
