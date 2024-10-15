@@ -138,18 +138,15 @@ function createPixelArray(imgData, pixelCount, quality) {
     const pixels = imgData;
     const pixelArray = [];
 
-    for (let i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
-        offset = i * 4;
+    for (let i = 0, offset, r, g, b; i < pixelCount; i = i + quality) {
+        offset = i * 3;
         r = pixels[offset + 0];
         g = pixels[offset + 1];
         b = pixels[offset + 2];
-        a = pixels[offset + 3];
 
-        // If pixel is mostly opaque and not white
-        if (typeof a === 'undefined' || a >= 125) {
-            if (!(r > 250 && g > 250 && b > 250)) {
-                pixelArray.push([r, g, b]);
-            }
+        // If pixel is not white
+        if (!(r > 250 && g > 250 && b > 250)) {
+            pixelArray.push([r, g, b]);
         }
     }
     return pixelArray;
@@ -160,7 +157,14 @@ function getPalette(sourceImage, colorCount = 5, quality = 1) {
     const image = GdkPixbuf.Pixbuf.new_from_file(sourceImage)
     //image.new_from_file(sourceImage)
     const imageData = image.get_pixels()
+    console.log('Image data [0]: ' + imageData[0])
+    console.log('Image data [1]: ' + imageData[1])
+    console.log('Image data [2]: ' + imageData[2])
+    console.log('Image data [3]: ' + imageData[3])
+    console.log('Image data [4]: ' + imageData[4])
+    console.log('Image data [5]: ' + imageData[5])
     const pixelCount = image.get_width() * image.get_height()
+    console.log('Pixel count: ' + pixelCount)
     const pixels = createPixelArray(imageData, pixelCount, quality)
 
     // Send array to quantize function which clusters values
