@@ -1,3 +1,6 @@
+// Olivier Lesnicki's quantize module slightly modfied to work with GJS.
+// Original project: https://github.com/olivierlesnicki/quantize
+
 /*
  * quantize.js Copyright 2008 Nick Rabinowitz
  * Ported to node.js by Olivier Lesnicki

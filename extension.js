@@ -17,12 +17,11 @@
 import St from 'gi://St'
 import Gio from 'gi://Gio'
 import GLib from 'gi://GLib'
-import GdkPixbuf from 'gi://GdkPixbuf'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import quantize from './tools/quantize.js'
+import getPalette from './tools/color-thief.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const COLOR_SCHEME = 'color-scheme'
@@ -124,42 +123,6 @@ async function convert(imagePath, extensionPath) {
 		logError(e)
 	}
 }
-
-function createPixelArray(imgData, pixelCount, quality) {
-    const pixels = imgData;
-    const pixelArray = [];
-
-    for (let i = 0, offset, r, g, b; i < pixelCount; i = i + quality) {
-        offset = i * 3;
-        r = pixels[offset + 0];
-        g = pixels[offset + 1];
-        b = pixels[offset + 2];
-
-        // If pixel is not white
-        if (!(r > 250 && g > 250 && b > 250)) {
-            pixelArray.push([r, g, b]);
-        }
-    }
-    return pixelArray;
-}
-
-function getPalette(sourceImage, colorCount = 5, quality = 1) {
-    const image = GdkPixbuf.Pixbuf.new_from_file(sourceImage)
-    const imageData = image.get_pixels()
-    for (let i = 0; i < 6; i++) {
-    	console.log('Image data [' + i + ']: ' + imageData[i])
-    }
-    const pixelCount = image.get_width() * image.get_height()
-    console.log('Pixel count: ' + pixelCount)
-    const pixels = createPixelArray(imageData, pixelCount, quality)
-
-    // Send array to quantize function which clusters values
-    // using median cut algorithm
-    const cmap    = quantize(pixels, colorCount);
-    const palette = cmap? cmap.palette() : null;
-
-    return palette;
-};
 
 async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
