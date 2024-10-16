@@ -296,7 +296,7 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		// Watch for light/dark theme change
-		this._colorSchemeHander = this._interfaceSettings.connect(
+		this._colorSchemeHandler = this._interfaceSettings.connect(
 			'changed::color-scheme',
 			() => {
 				if (getBackgroundUri() !== getDarkBackgroundUri()) {
@@ -324,9 +324,9 @@ export default class AutoAccentColourExtension extends Extension {
 			this._backgroundSettings.disconnect(this._darkBackgroundHandler)
 			this._darkBackgroundHandler = null
 		}
-		if (this._colorSchemeHander) {
-			this._interfaceSettings.disconnect(this._colorSchemeHander)
-			this._colorSchemeHander = null
+		if (this._colorSchemeHandler) {
+			this._interfaceSettings.disconnect(this._colorSchemeHandler)
+			this._colorSchemeHandler = null
 		}
 		if (this._hideIndicatorHandler) {
 			this._settings.disconnect(this._hideIndicatorHandler)
