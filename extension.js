@@ -279,14 +279,13 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		const backgroundFilePath = GLib.get_home_dir() + '/.config/background'
-		console.log("Background file path: " + backgroundFilePath)
-		this._backgroundFile = Gio.File.new_for_path(backgroundFilePath)
-		this._fileMonitor = this._backgroundFile.monitor(
+		const backgroundFile = Gio.File.new_for_path(backgroundFilePath)
+		this._backgroundFileMonitor = backgroundFile.monitor(
 			Gio.FileMonitorFlags.NONE,
 			null
 		)
 
-		this._backgroundFileHandler = this._fileMonitor.connect(
+		this._backgroundFileHandler = this._backgroundFileMonitor.connect(
 			'changed',
 			(_fileMonitor, file, otherFile, eventType) => {
 				if (eventType == Gio.FileMonitorEvent.CREATED) {
@@ -333,11 +332,16 @@ export default class AutoAccentColourExtension extends Extension {
 			this._settings.disconnect(this._hideIndicatorHandler)
 			this._hideIndicatorHandler = null
 		}
+		if (this._backgroundFileHandler) {
+			this._backgroundFileMonitor.disconnect(this._backgroundFileHandler)
+			this._backgroundFileHandler = null
+		}
 
 		this._indicator?.destroy()
 		this._indicator = null
 		this._settings = null
 		this._interfaceSettings = null
 		this._backgroundSettings = null
+		this._backgroundFileMonitor = null
 	}
 }
