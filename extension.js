@@ -37,12 +37,74 @@ const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 
+function calculateHueFromRGB(r, g, b) {
+	const highestComponent = Math.max(r, g, b)
+	const lowestComponent = Math.min(r, g, b)
+
+	let hue = 0
+
+	switch (highestComponent) {
+		case r:
+			hue = (g - b) / (highestComponent - lowestComponent)
+			break
+		case g:
+			hue = 2 + (b - r) / (highestComponent - lowestComponent)
+			break
+		case b:
+			hue = 4 + (r - g) / (highestComponent - lowestComponent)
+			break
+	}
+
+	hue *= 60
+	if (hue < 0) { hue += 360 }
+
+	return hue
+}
+
+/* Hue values are:
+0 = Blue
+60 = Yellow
+120 = Green
+180 = Cyan
+240 = Blue
+300 = Magenta
+*/
+class HueRange {
+	constructor(hue) {
+		const increment = 60
+		const circleDegrees = 360
+
+		const adjustedHue = hue - 20
+		/* Prevents lower bound being IN the range of colour the hue is in.
+		E.g., the 'green' accent colour's lower bound is 120 (green) without
+		adjustment, when it should be 60 (yellow) to allow 120 (green) to be in
+		the MIDDLE of the two bounds. */
+
+		let lowerBound = Math.floor(adjustedHue / increment) * increment
+		if (lowerBound >= circleDegrees) { lowerBound -= circleDegrees }
+
+		let upperBound = lowerBound + 2 * increment
+		if (upperBound >= circleDegrees) { upperBound -= circleDegrees }
+
+		this.lowerBound = lowerBound
+		this.upperBound = upperBound
+	}
+}
+
 class AccentColour {
 	constructor(name, r, g, b) {
 		this.name = name,
 		this.r = r
 		this.g = g
 		this.b = b
+
+		const hue = calculateHueFromRGB(r, g, b)
+		const hueRange = new HueRange(hue)
+
+		console.log(name + ' hue: ' + hue)
+		console.log(name + ' hue range: ' + hueRange.lowerBound + ', ' + hueRange.upperBound)
+
+		this.hueRange = hueRange
 	}
 }
 
@@ -132,7 +194,8 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const backgroundPalette = getPalette(rasterPath)
+		//const backgroundPalette = getPalette(rasterPath)
+		const backgroundPalette = [[119, 103, 87], []]
 		console.log('Type: ' + typeof(backgroundPalette))
 		console.log('Wallpaper colour palette: ' + backgroundPalette)
 
