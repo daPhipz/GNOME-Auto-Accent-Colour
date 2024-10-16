@@ -12,6 +12,7 @@
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
+import GLib from 'gi://GLib'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
@@ -272,6 +273,24 @@ export default class AutoAccentColourExtension extends Extension {
 			() => {
 				if (getColorScheme() === PREFER_DARK) {
 					console.log('Setting accent from picture-uri-dark change.')
+					setAccent()
+				}
+			}
+		)
+
+		const backgroundFilePath = GLib.get_home_dir() + '/.config/background'
+		console.log("Background file path: " + backgroundFilePath)
+		this._backgroundFile = Gio.File.new_for_path(backgroundFilePath)
+		this._fileMonitor = this._backgroundFile.monitor(
+			Gio.FileMonitorFlags.NONE,
+			null
+		)
+
+		this._backgroundFileHandler = this._fileMonitor.connect(
+			'changed',
+			(_fileMonitor, file, otherFile, eventType) => {
+				if (eventType == Gio.FileMonitorEvent.CREATED) {
+					console.log('Background file changed.')
 					setAccent()
 				}
 			}
