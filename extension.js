@@ -225,6 +225,11 @@ export default class AutoAccentColourExtension extends Extension {
 		Main.panel.addToStatusArea(this.uuid, this._indicator)
 
 		indicator.menu.addAction(
+			_('Refresh'),
+			() => setAccent()
+		)
+
+		indicator.menu.addAction(
 			_('Preferences'),
 			() => this.openPreferences()
 		)
