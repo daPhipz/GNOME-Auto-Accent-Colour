@@ -1,4 +1,3 @@
-// TODO: Preferences window to allow user to pick which palette entry to use (e.g overall or highlight)
 // TODO: Add Extensions store page support
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
@@ -226,10 +225,6 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 		const dominantColourTuple = backgroundPalette[0]
 		const highlightColourTuple = backgroundPalette[1]
 
-		console.log('Parsed R: ' + dominantColourTuple[0])
-		console.log('Parsed G: ' + dominantColourTuple[1])
-		console.log('Parsed B: ' + dominantColourTuple[2])
-
 		return [dominantColourTuple, highlightColourTuple]
 	} catch (e) {
 		logError(e)
@@ -239,6 +234,7 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
+	highlightMode,
 	onFinish
 ) {
 	const backgroundPalette = await getBackgroundPalette(
@@ -246,7 +242,13 @@ async function applyClosestAccent(
 		backgroundPath
 	)
 
-	const [wall_r, wall_g, wall_b] = backgroundPalette[0]
+	const paletteIndex = highlightMode ? 1 : 0
+
+	console.log('Parsed R: ' + backgroundPalette[paletteIndex][0])
+	console.log('Parsed G: ' + backgroundPalette[paletteIndex][1])
+	console.log('Parsed B: ' + backgroundPalette[paletteIndex][2])
+
+	const [wall_r, wall_g, wall_b] = backgroundPalette[paletteIndex]
 	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
 
 	onFinish(closestAccent)
@@ -329,9 +331,12 @@ export default class AutoAccentColourExtension extends Extension {
 					getDarkBackgroundUri() : getBackgroundUri()
 			).replace('file://', '')
 
+			const highlightMode = settings.get_boolean('highlight-mode')
+
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
+				highlightMode,
 				function(newAccent) {
 					console.log('New accent: ' + newAccent)
 					setAccentColor(newAccent)
@@ -404,6 +409,14 @@ export default class AutoAccentColourExtension extends Extension {
 			'changed::hide-indicator',
 			(settings, key) => {
 				console.debug(`${key} = ${settings.get_value(key).print(true)}`)
+			}
+		)
+
+		this._highlightModeHandler = this._settings.connect(
+			'changed::highlight-mode',
+			(settings, key) => {
+				console.log(`${key} = ${settings.get_value(key).print(true)}`)
+				setAccent()
 			}
 		)
 	}
