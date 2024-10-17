@@ -150,11 +150,28 @@ function getSquaredEuclideanDistance(r1, g1, b1, r2, g2, b2) {
 	return (r1 - r2) ** 2 + (g1 - g2) ** 2 + (b1 - b2) ** 2
 }
 
+function isHueInRange(hue, hueRange) {
+	if (hue >= hueRange.lowerBound && hue <= hueRange.upperBound) {
+		return true
+	} else if (hueRange.lowerBound > hueRange.upperBound) {
+		// Check for wrapping
+
+		return hue >= hueRange.lowerBound || hue <= hueRange.upperBound
+	}
+
+	return false
+}
+
 function getClosestAccentColour(r, g, b) {
 	let shortestDistance = Number.MAX_VALUE
 	let closestAccent = ''
 
-	for (let accent of accentColours) {
+	const hue = calculateHueFromRGB(r, g, b)
+	const eligibleAccents = accentColours.filter((accent) => {
+		return isHueInRange(hue, accent.hueRange)
+	})
+
+	for (let accent of eligibleAccents) {
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
 			r, g, b,
 			accent.r, accent.g, accent.b
