@@ -82,7 +82,7 @@ class HueRange {
 		the MIDDLE of the two bounds. */
 
 		let lowerBound = Math.floor(adjustedHue / increment) * increment
-		if (lowerBound >= circleDegrees) { lowerBound -= circleDegrees }
+		if (lowerBound < 0) { lowerBound += circleDegrees }
 
 		let upperBound = lowerBound + 2 * increment
 		if (upperBound >= circleDegrees) { upperBound -= circleDegrees }
