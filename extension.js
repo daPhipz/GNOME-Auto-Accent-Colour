@@ -74,7 +74,8 @@ class HueRange {
 		const increment = 60
 		const circleDegrees = 360
 
-		const adjustedHue = hue - 20
+		const hueOffset = 20
+		const adjustedHue = hue - hueOffset
 		/* Prevents lower bound being IN the range of colour the hue is in.
 		E.g., the 'green' accent colour's lower bound is 120 (green) without
 		adjustment, when it should be 60 (yellow) to allow 120 (green) to be in
