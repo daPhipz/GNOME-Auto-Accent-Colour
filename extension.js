@@ -62,7 +62,7 @@ function calculateHueFromRGB(r, g, b) {
 }
 
 /* Hue values are:
-0 = Blue
+0 = Red
 60 = Yellow
 120 = Green
 180 = Cyan
