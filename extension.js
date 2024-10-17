@@ -37,20 +37,20 @@ const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 
 function getHueFromRGB(r, g, b) {
-	const highestComponent = Math.max(r, g, b)
-	const lowestComponent = Math.min(r, g, b)
+	const maxColour = Math.max(r, g, b)
+	const minColour = Math.min(r, g, b)
 
 	let hue = 0
 
-	switch (highestComponent) {
+	switch (maxColour) {
 		case r:
-			hue = (g - b) / (highestComponent - lowestComponent)
+			hue = (g - b) / (maxColour - minColour)
 			break
 		case g:
-			hue = 2 + (b - r) / (highestComponent - lowestComponent)
+			hue = 2 + (b - r) / (maxColour - minColour)
 			break
 		case b:
-			hue = 4 + (r - g) / (highestComponent - lowestComponent)
+			hue = 4 + (r - g) / (maxColour - minColour)
 			break
 	}
 
@@ -161,6 +161,7 @@ function getClosestAccentColour(r, g, b) {
 		return isHueInRange(hue, accent.hueRange)
 	})
 	// TODO: Add saturation checker here. If saturation < 5, return slate.
+
 
 	for (let accent of eligibleAccents) {
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
