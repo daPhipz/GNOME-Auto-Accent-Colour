@@ -167,6 +167,7 @@ function getClosestAccentColour(r, g, b) {
 	let closestAccent = ''
 
 	const hue = calculateHueFromRGB(r, g, b)
+	console.log('Parsed hue: ' + hue)
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
 	})
