@@ -77,14 +77,6 @@ function getSaturationFromRGB(r, g, b) {
 	return saturation * 100
 }
 
-/* Hue values are:
-0 = Red
-60 = Yellow
-120 = Green
-180 = Cyan
-240 = Blue
-300 = Magenta
-*/
 class HueRange {
 	constructor(lowerBound, upperBound) {
 		this.lowerBound = lowerBound
