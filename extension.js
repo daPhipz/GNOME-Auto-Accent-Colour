@@ -39,18 +39,19 @@ const PICTURE_URI_DARK = 'picture-uri-dark'
 function getHueFromRGB(r, g, b) {
 	const maxColour = Math.max(r, g, b)
 	const minColour = Math.min(r, g, b)
+	const delta = maxColour - minColour
 
 	let hue = 0
 
 	switch (maxColour) {
 		case r:
-			hue = (g - b) / (maxColour - minColour)
+			hue = (g - b) / delta
 			break
 		case g:
-			hue = 2 + (b - r) / (maxColour - minColour)
+			hue = 2 + (b - r) / delta
 			break
 		case b:
-			hue = 4 + (r - g) / (maxColour - minColour)
+			hue = 4 + (r - g) / delta
 			break
 	}
 
