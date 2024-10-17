@@ -61,6 +61,22 @@ function getHueFromRGB(r, g, b) {
 	return hue
 }
 
+function getSaturationFromRGB(r, g, b) {
+	const maxColourPercentage = Math.max(r, g, b) / 255
+	const minColourPercentage = Math.min(r, g, b) / 255
+	console.log('cMax: ' + maxColourPercentage)
+	const delta = maxColourPercentage - minColourPercentage
+	console.log('Delta: ' + delta)
+
+	let saturation = 0.0
+
+	if (maxColourPercentage != 0.0) {
+		saturation = delta / maxColourPercentage
+	}
+
+	return saturation * 100
+}
+
 /* Hue values are:
 0 = Red
 60 = Yellow
@@ -161,8 +177,12 @@ function getClosestAccentColour(r, g, b) {
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
 	})
-	// TODO: Add saturation checker here. If saturation < 5, return slate.
 
+	const saturation = getSaturationFromRGB(r, g, b)
+	console.log('Parsed saturation: ' + saturation)
+	if (saturation < 5) {
+		return SLATE
+	}
 
 	for (let accent of eligibleAccents) {
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
