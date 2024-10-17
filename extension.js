@@ -37,7 +37,7 @@ const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 
-function calculateHueFromRGB(r, g, b) {
+function getHueFromRGB(r, g, b) {
 	const highestComponent = Math.max(r, g, b)
 	const lowestComponent = Math.min(r, g, b)
 
@@ -99,7 +99,7 @@ class AccentColour {
 		this.g = g
 		this.b = b
 
-		const hue = calculateHueFromRGB(r, g, b)
+		const hue = getHueFromRGB(r, g, b)
 		const hueRange = new HueRange(hue)
 
 		console.log(name + ' hue: ' + hue)
@@ -166,7 +166,7 @@ function getClosestAccentColour(r, g, b) {
 	let shortestDistance = Number.MAX_VALUE
 	let closestAccent = ''
 
-	const hue = calculateHueFromRGB(r, g, b)
+	const hue = getHueFromRGB(r, g, b)
 	console.log('Parsed hue: ' + hue)
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
