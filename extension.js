@@ -4,7 +4,6 @@
 // TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
 // TODO: Review console logging
 // TODO: Add random accent colour mode?
-// TODO: Do not use hardcoded accent colour values -- https://gjs-docs.gnome.org/adw1~1/adw.accentcolor
 // TODO: Add descriptions to schema keys
 // TODO: Make color-thief work fully asynchronously
 // TODO: Investigate imagemagick SVG conversion causing artefacts
@@ -70,55 +69,45 @@ function getHueFromRGB(r, g, b) {
 300 = Magenta
 */
 class HueRange {
-	constructor(hue) {
-		const increment = 60
-		const circleDegrees = 360
-
-		const hueOffset = 32
-		const adjustedHue = hue - hueOffset
-		/* Prevents lower bound being IN the range of colour the hue is in.
-		E.g., the 'green' accent colour's lower bound is 120 (green) without
-		adjustment, when it should be 60 (yellow) to allow 120 (green) to be in
-		the MIDDLE of the two bounds. */
-
-		let lowerBound = Math.floor(adjustedHue / increment) * increment
-		if (lowerBound < 0) { lowerBound += circleDegrees }
-
-		let upperBound = lowerBound + 2 * increment
-		if (upperBound >= circleDegrees) { upperBound -= circleDegrees }
-
+	constructor(lowerBound, upperBound) {
 		this.lowerBound = lowerBound
 		this.upperBound = upperBound
 	}
 }
 
 class AccentColour {
-	constructor(name, r, g, b) {
+	constructor(name, r, g, b, hueRange) {
 		this.name = name,
 		this.r = r
 		this.g = g
 		this.b = b
-
-		const hue = getHueFromRGB(r, g, b)
-		const hueRange = new HueRange(hue)
-
-		console.log(name + ' hue: ' + hue)
-		console.log(name + ' hue range: ' + hueRange.lowerBound + ', ' + hueRange.upperBound)
-
 		this.hueRange = hueRange
 	}
 }
 
+/* Hue values are:
+0 = Red
+60 = Yellow
+120 = Green
+180 = Cyan
+240 = Blue
+300 = Magenta
+*/
 const accentColours = [
-	new AccentColour(BLUE, 53, 131, 227),
-	new AccentColour(TEAL, 33, 144, 164),
-	new AccentColour(GREEN, 58, 148, 74),
-	new AccentColour(YELLOW, 200, 136, 0),
-	new AccentColour(ORANGE, 237, 91, 0),
-	new AccentColour(RED, 230, 45, 66),
-	new AccentColour(PINK, 213, 97, 153),
-	new AccentColour(PURPLE, 145, 65, 172),
-	new AccentColour(SLATE, 111, 131, 150)
+	/* The RGB values set in these accent colour entries are *not* the RGB
+	values of the same accent colours you would find in the GNOME appearance
+	settings. They are exaggerated to add further distinction between them, so
+	that a greater variety of accents can be returned from different backgrounds
+	and their derived colours. */
+	new AccentColour(BLUE, 0, 0, 255, new HueRange(180, 300)),
+	new AccentColour(TEAL, 0, 255, 255, new HueRange(120, 240)),
+	new AccentColour(GREEN, 0, 191, 0, new HueRange(50, 180)),
+	new AccentColour(YELLOW, 200, 150, 0, new HueRange(29, 70)),
+	new AccentColour(ORANGE, 237, 91, 0, new HueRange(0, 70)),
+	new AccentColour(RED, 230, 0, 26, new HueRange(300, 22)),
+	new AccentColour(PINK, 213, 0, 103, new HueRange(240, 0)),
+	new AccentColour(PURPLE, 145, 65, 172, new HueRange(240, 330)),
+	new AccentColour(SLATE, 166, 166, 166, new HueRange(180, 300))
 ]
 
 // Thank you to andy.holmes on StackOverflow for this Promise wrapper
@@ -171,6 +160,7 @@ function getClosestAccentColour(r, g, b) {
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
 	})
+	// TODO: Add saturation checker here. If saturation < 5, return slate.
 
 	for (let accent of eligibleAccents) {
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
