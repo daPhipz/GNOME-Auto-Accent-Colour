@@ -217,8 +217,6 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 		}
 
 		const backgroundPalette = getPalette(rasterPath)
-		//const backgroundPalette = [[119, 103, 87], []]
-		//TODO: Remove this line when done with it
 		console.log('Type: ' + typeof(backgroundPalette))
 		console.log('Wallpaper colour palette: ' + backgroundPalette)
 
