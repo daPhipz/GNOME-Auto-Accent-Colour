@@ -12,6 +12,7 @@
 import St from 'gi://St'
 import Gio from 'gi://Gio'
 import GLib from 'gi://GLib'
+import GObject from 'gi://GObject'
 import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
@@ -204,6 +205,61 @@ async function convert(imagePath, extensionPath) {
 	}
 }
 
+// NEW COLORTHIEF FUNCTIONS ///////////////////////////////////////////////////
+
+function onColorThiefFinished(source_object, result, user_data) {
+	const colorThief = source_object
+
+	const outcome = colorThief.getPaletteFinish(result)
+
+	console.log('Colorthief outcome: ' + outcome)
+}
+
+class ColorThief {
+	constructor() {
+		this.imagePath = ''
+	}
+
+	getPalleteSync(imagePath) {
+		return getPalette(imagePath) //External method in tools/color-thief.js
+	}
+
+	getPaletteAsync(callback, imagePath) {
+		console.log('Started async script')
+		const task = Gio.Task.new(this, callback, null)
+		task.set_return_on_cancel(false)
+
+		this.imagePath = imagePath
+		task.run_in_thread(this._getPaletteThreadCallback)
+	}
+
+	_getPaletteThreadCallback(task, source_object, task_data, cancellable) {
+		console.log('Starting callback')
+
+		if (task.return_error_if_cancelled()) {
+			return
+		}
+
+		const imagePath = this.imagePath
+
+		const outcome = this.getPaletteSync(imagePath)
+
+		console.log('Callback outcome: ' + outcome)
+
+		task.return_value(outcome)
+	}
+
+	getPaletteFinish(result) {
+		if (!Gio.Task.is_valid(result, this)) {
+			return -1
+		}
+
+		return result.propagate_value().value
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
 		const backgroundFileExtension = backgroundPath.split('.').pop()
@@ -216,7 +272,10 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const backgroundPalette = getPalette(rasterPath)
+		const colorThief = new ColorThief()
+		colorThief.getPaletteAsync(onColorThiefFinished, rasterPath)
+
+		const backgroundPalette = [[255, 0, 0], [0, 255, 0]]
 		console.log('Type: ' + typeof(backgroundPalette))
 		console.log('Wallpaper colour palette: ' + backgroundPalette)
 
