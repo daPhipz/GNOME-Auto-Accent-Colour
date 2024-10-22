@@ -251,8 +251,8 @@ var ColorThief = GObject.registerClass(
 			this.notify('image-path')
 		}
 
-		getPalleteSync() {
-			return getPalette() //External method in tools/color-thief.js
+		getPaletteSync() {
+			return getPalette(this.image_path.toString()) //External method in tools/color-thief.js
 		}
 
 		getPaletteAsync(callback) {
@@ -260,8 +260,11 @@ var ColorThief = GObject.registerClass(
 			console.log('Image path: ' + this.image_path)
 			console.log(typeof(this))
 			const task = Gio.Task.new(this, null, callback)
+			console.log('Created task')
 			task.set_return_on_cancel(false)
+			task.set_task_data(0, function() {})
 
+			//this.getPaletteSync()
 			task.run_in_thread(this._getPaletteThreadCallback)
 		}
 
@@ -272,11 +275,10 @@ var ColorThief = GObject.registerClass(
 				return
 			}
 
-			const imagePath = this.image_path
+			const outcome = this.getPaletteSync()
 
-			const outcome = this.getPaletteSync(imagePath)
-
-			console.log('Callback outcome: ' + outcome)
+			//console.log('Callback outcome: ' + outcome)
+			console.log(outcome)
 
 			task.return_value(outcome)
 		}
