@@ -215,48 +215,81 @@ function onColorThiefFinished(source_object, result, user_data) {
 	console.log('Colorthief outcome: ' + outcome)
 }
 
-class ColorThief {
-	constructor() {
-		this.imagePath = ''
-	}
-
-	getPalleteSync(imagePath) {
-		return getPalette(imagePath) //External method in tools/color-thief.js
-	}
-
-	getPaletteAsync(callback, imagePath) {
-		console.log('Started async script')
-		const task = Gio.Task.new(this, callback, null)
-		task.set_return_on_cancel(false)
-
-		this.imagePath = imagePath
-		task.run_in_thread(this._getPaletteThreadCallback)
-	}
-
-	_getPaletteThreadCallback(task, source_object, task_data, cancellable) {
-		console.log('Starting callback')
-
-		if (task.return_error_if_cancelled()) {
-			return
+var ColorThief = GObject.registerClass(
+	{
+		GTypeName: 'ColorThief',
+		Properties: {
+			'image-path': GObject.ParamSpec.string(
+				'image-path',
+				'Image Path',
+				'Path of image to extract colours from',
+				GObject.ParamFlags.READWRITE,
+				null
+			)
+		}
+	},
+	class ColorThief extends GObject.Object {
+		constructor(params = {}) {
+			super(params)
+			//this.imagePath = ''
 		}
 
-		const imagePath = this.imagePath
+		get image_path() {
+			if (this._image_path === undefined) {
+				this._image_path = null
+			}
 
-		const outcome = this.getPaletteSync(imagePath)
-
-		console.log('Callback outcome: ' + outcome)
-
-		task.return_value(outcome)
-	}
-
-	getPaletteFinish(result) {
-		if (!Gio.Task.is_valid(result, this)) {
-			return -1
+			return this._image_path
 		}
 
-		return result.propagate_value().value
+		set image_path(value) {
+			if (this.image_path === value) {
+				return
+			}
+
+			this._image_path = value
+			this.notify('image-path')
+		}
+
+		getPalleteSync() {
+			return getPalette() //External method in tools/color-thief.js
+		}
+
+		getPaletteAsync(callback) {
+			console.log('Started async script')
+			console.log('Image path: ' + this.image_path)
+			console.log(typeof(this))
+			const task = Gio.Task.new(this, null, callback)
+			task.set_return_on_cancel(false)
+
+			task.run_in_thread(this._getPaletteThreadCallback)
+		}
+
+		_getPaletteThreadCallback(task, source_object, task_data, cancellable) {
+			console.log('Starting callback')
+
+			if (task.return_error_if_cancelled()) {
+				return
+			}
+
+			const imagePath = this.image_path
+
+			const outcome = this.getPaletteSync(imagePath)
+
+			console.log('Callback outcome: ' + outcome)
+
+			task.return_value(outcome)
+		}
+
+		getPaletteFinish(result) {
+			if (!Gio.Task.is_valid(result, this)) {
+				return -1
+			}
+
+			return result.propagate_value().value
+		}
 	}
-}
+)
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -272,8 +305,8 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const colorThief = new ColorThief()
-		colorThief.getPaletteAsync(onColorThiefFinished, rasterPath)
+		const colorThief = new ColorThief({ image_path: rasterPath })
+		colorThief.getPaletteAsync(onColorThiefFinished)
 
 		const backgroundPalette = [[255, 0, 0], [0, 255, 0]]
 		console.log('Type: ' + typeof(backgroundPalette))
