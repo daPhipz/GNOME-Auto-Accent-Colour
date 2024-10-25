@@ -7,6 +7,7 @@
 // TODO: Investigate imagemagick SVG conversion causing artefacts
 // TODO: Add checker to find if imagemagick is installed
 // TODO: Review duplicate script-runs from background file change and uri change
+// TODO: Check out using shell fade transitions for changing accent colours (like light/dark theme change)
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
