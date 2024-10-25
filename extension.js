@@ -4,7 +4,6 @@
 // TODO: Review console logging
 // TODO: Add random accent colour mode?
 // TODO: Add descriptions to schema keys
-// TODO: Make color-thief work fully asynchronously
 // TODO: Investigate imagemagick SVG conversion causing artefacts
 // TODO: Add checker to find if imagemagick is installed
 // TODO: Review duplicate script-runs from background file change and uri change
