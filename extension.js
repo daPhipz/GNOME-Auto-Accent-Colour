@@ -205,95 +205,30 @@ async function convert(imagePath, extensionPath) {
 	}
 }
 
-// NEW COLORTHIEF FUNCTIONS ///////////////////////////////////////////////////
+/*
+Crusty way of getting colorthief to run without blocking the main thread.
+I have no idea how to use multithreading in GJS, so I just spawn a new
+GJS subprocess to run the colorthief script asynchronously, and convert its
+stdout from a string back into an array of numbers. If you have a more elegant
+solution, please feel free to submit a pull request.
+*/
+async function runColorThief(imagePath, extensionPath) {
+	try {
+		const resultStr = await execCommand(
+			['gjs', '-m', extensionPath + '/tools/run-color-thief.js', imagePath]
+		)
 
-function onColorThiefFinished(source_object, result, user_data) {
-	const colorThief = source_object
-
-	const outcome = colorThief.getPaletteFinish(result)
-
-	console.log('Colorthief outcome: ' + outcome)
-}
-
-var ColorThief = GObject.registerClass(
-	{
-		GTypeName: 'ColorThief',
-		Properties: {
-			'image-path': GObject.ParamSpec.string(
-				'image-path',
-				'Image Path',
-				'Path of image to extract colours from',
-				GObject.ParamFlags.READWRITE,
-				null
-			)
+		const palette = resultStr.split(';')
+		console.log('palette after splitting semicolons: ' + palette[0])
+		for (let i = 0; i < palette.length; i++) {
+			palette[i] = palette[i].split(',').map(Number)
 		}
-	},
-	class ColorThief extends GObject.Object {
-		constructor(params = {}) {
-			super(params)
-			//this.imagePath = ''
-		}
-
-		get image_path() {
-			if (this._image_path === undefined) {
-				this._image_path = null
-			}
-
-			return this._image_path
-		}
-
-		set image_path(value) {
-			if (this.image_path === value) {
-				return
-			}
-
-			this._image_path = value
-			this.notify('image-path')
-		}
-
-		getPaletteSync() {
-			return getPalette(this.image_path.toString()) //External method in tools/color-thief.js
-		}
-
-		getPaletteAsync(callback) {
-			console.log('Started async script')
-			console.log('Image path: ' + this.image_path)
-			console.log(typeof(this))
-			const task = Gio.Task.new(this, null, callback)
-			console.log('Created task')
-			task.set_return_on_cancel(false)
-			task.set_task_data(0, function() {})
-
-			//this.getPaletteSync()
-			task.run_in_thread(this._getPaletteThreadCallback)
-		}
-
-		_getPaletteThreadCallback(task, source_object, task_data, cancellable) {
-			console.log('Starting callback')
-
-			if (task.return_error_if_cancelled()) {
-				return
-			}
-
-			const outcome = this.getPaletteSync()
-
-			//console.log('Callback outcome: ' + outcome)
-			console.log(outcome)
-
-			task.return_value(outcome)
-		}
-
-		getPaletteFinish(result) {
-			if (!Gio.Task.is_valid(result, this)) {
-				return -1
-			}
-
-			return result.propagate_value().value
-		}
+		console.log(palette[0])
+		return palette
+	} catch (e) {
+		logError(e)
 	}
-)
-
-///////////////////////////////////////////////////////////////////////////////
+}
 
 async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
@@ -307,10 +242,9 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			rasterPath = backgroundPath
 		}
 
-		const colorThief = new ColorThief({ image_path: rasterPath })
-		colorThief.getPaletteAsync(onColorThiefFinished)
+		const backgroundPalette = await runColorThief(rasterPath, extensionPath)
+		console.log('Colorthief result: ' + backgroundPalette)
 
-		const backgroundPalette = [[255, 0, 0], [0, 255, 0]]
 		console.log('Type: ' + typeof(backgroundPalette))
 		console.log('Wallpaper colour palette: ' + backgroundPalette)
 
