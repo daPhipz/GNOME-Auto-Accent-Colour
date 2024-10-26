@@ -231,10 +231,19 @@ async function runColorThief(imagePath, extensionPath) {
 
 async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
-		const backgroundFileExtension = backgroundPath.split('.').pop()
+		const backgroundFile = Gio.File.new_for_path(backgroundPath)
+		const backgroundFileInfo = await backgroundFile.query_info_async(
+			'standard::*',
+			Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+			GLib.PRIORITY_DEFAULT,
+			null
+		)
+		const backgroundContentType = backgroundFileInfo.get_content_type()
+		console.log('Background content type: ' + backgroundContentType)
+
 		let rasterPath = ''
 
-		if (['svg', 'jxl'].includes(backgroundFileExtension)) {
+		if (['image/svg+xml', 'image/jxl'].includes(backgroundContentType)) {
 			await convert(backgroundPath, extensionPath)
 			rasterPath = extensionPath + '/cached/converted_bg.jpg'
 		} else {
