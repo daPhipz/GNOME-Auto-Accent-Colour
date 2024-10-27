@@ -199,9 +199,10 @@ function getClosestAccentColour(r, g, b) {
 
 async function convert(imagePath, extensionPath) {
 	try {
-		const cacheDir = extensionPath + '/cached/'
-		await execCommand(['mkdir', cacheDir])
-		await execCommand(['magick', imagePath, cacheDir + '/converted_bg.jpg'])
+		const cacheDirPath = extensionPath + '/cached/'
+		const cacheDir = Gio.File.new_for_path(cacheDirPath)
+		await cacheDir.make_directory_async(GLib.PRIORITY_DEFAULT, null, null)
+		await execCommand(['magick', imagePath, cacheDirPath + '/converted_bg.jpg'])
 	} catch (e) {
 		logError(e)
 	}
