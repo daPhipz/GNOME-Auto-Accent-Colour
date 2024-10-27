@@ -181,9 +181,7 @@ function getClosestAccentColour(r, g, b) {
 		return SLATE
 	}
 
-	for (let i = 0; i < accentColours.length; i++) {
-		const accent = accentColours[i]
-
+	for (let accent of eligibleAccents) {
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
 			r, g, b,
 			accent.r, accent.g, accent.b
@@ -193,7 +191,7 @@ function getClosestAccentColour(r, g, b) {
 
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
-			closestAccentIndex = i
+			closestAccentIndex = accentColours.indexOf(accent)
 		}
 	}
 
