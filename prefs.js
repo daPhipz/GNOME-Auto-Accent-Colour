@@ -124,6 +124,100 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		})
 		window.add(cachePage)
 
+		const cacheDescriptionGroup = new Adw.PreferencesGroup({
+			description: _(
+				'Backgrounds and their derived colours are cached to increase performance and compatibility with the extension'
+			)
+		})
+		cachePage.add(cacheDescriptionGroup)
+
+		function createDeleteButton() {
+			const buttonContent = new Adw.ButtonContent({
+				label: _('Clear'),
+				icon_name: 'user-trash-symbolic'
+			})
+			return new Gtk.Button({
+				valign: Gtk.Align.CENTER,
+				child: buttonContent,
+				css_classes: ['destructive-action', 'flat']
+			})
+		}
+
+		const hashTitle = _('Hash')
+		const dominantAccentTitle = _('Dominant Accent')
+		const highlightAccentTitle = _('Highlight Accent')
+
+		// Light background
+
+		const lightBackgroundDeleteBtn = createDeleteButton()
+
+		const lightBackgroundGroup = new Adw.PreferencesGroup({
+			title: _('Light Background'),
+			header_suffix: lightBackgroundDeleteBtn
+		})
+		cachePage.add(lightBackgroundGroup)
+
+		const lightHashRow = new Adw.ActionRow({
+			title: hashTitle,
+			subtitle_selectable: true,
+			css_classes: ['property']
+		})
+		lightBackgroundGroup.add(lightHashRow)
+
+		const lightDominantAccent = new Adw.ActionRow({
+			title: dominantAccentTitle,
+			css_classes: ['property']
+		})
+		lightBackgroundGroup.add(lightDominantAccent)
+
+		const lightHighlightAccent = new Adw.ActionRow({
+			title: highlightAccentTitle,
+			css_classes: ['property']
+		})
+		lightBackgroundGroup.add(lightHighlightAccent)
+
+		// Dark background
+
+		const darkBackgroundDeleteBtn = createDeleteButton()
+
+		const darkBackgroundGroup = new Adw.PreferencesGroup({
+			title: _('Dark Background'),
+			header_suffix: darkBackgroundDeleteBtn
+		})
+		cachePage.add(darkBackgroundGroup)
+
+		const darkHashRow = new Adw.ActionRow({
+			title: hashTitle,
+			subtitle_selectable: true,
+			css_classes: ['property']
+		})
+		darkBackgroundGroup.add(darkHashRow)
+
+		const darkDominantAccent = new Adw.ActionRow({
+			title: dominantAccentTitle,
+			css_classes: ['property']
+		})
+		darkBackgroundGroup.add(darkDominantAccent)
+
+		const darkHighlightAccent = new Adw.ActionRow({
+			title: highlightAccentTitle,
+			css_classes: ['property']
+		})
+		darkBackgroundGroup.add(darkHighlightAccent)
+
+		// Converted background
+
+		const convertedBackgroundDeleteBtn = createDeleteButton()
+
+		const convertedBackgroundGroup = new Adw.PreferencesGroup({
+			title: _('Converted Background'),
+			description: _(
+				'Cached conversion of SVG and JXL background into JPG format'
+			),
+			header_suffix: convertedBackgroundDeleteBtn
+		})
+		cachePage.add(convertedBackgroundGroup)
+
 		////////////////////////////////////////////////////////////////////////
 
 		// About page //////////////////////////////////////////////////////////
