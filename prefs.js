@@ -38,7 +38,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const dependenciesPage = new Adw.PreferencesPage({
 			title: _('Setup'),
-			icon_name: _('package-x-generic-symbolic')
+			icon_name: 'package-x-generic-symbolic'
 		})
 		window.add(dependenciesPage)
 
@@ -65,7 +65,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const settingsPage = new Adw.PreferencesPage({
 			title: _('Settings'),
-			icon_name: _('org.gnome.Settings-symbolic')
+			icon_name: 'org.gnome.Settings-symbolic'
 		})
 		window.add(settingsPage)
 
@@ -117,7 +117,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const cachePage = new Adw.PreferencesPage({
 			title: _('Cache'),
-			icon_name: _('drive-harddisk-symbolic')
+			icon_name: 'drive-harddisk-symbolic'
 		})
 		window.add(cachePage)
 
@@ -127,7 +127,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const aboutPage = new Adw.PreferencesPage({
 			title: _('About'),
-			icon_name: _('user-info-symbolic')
+			icon_name: 'user-info-symbolic'
 		})
 		window.add(aboutPage)
 
