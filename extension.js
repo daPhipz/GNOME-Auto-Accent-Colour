@@ -8,6 +8,9 @@
 // TODO: Add checker to find if imagemagick is installed
 // TODO: Review duplicate script-runs from background file change and uri change
 // TODO: Check out using shell fade transitions for changing accent colours (like light/dark theme change)
+// TODO: Review string concatenation, and switch to template literals
+// TODO: Use backticks and newlines for very long strings
+// TODO: Research converting UI text into multiple languages
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
