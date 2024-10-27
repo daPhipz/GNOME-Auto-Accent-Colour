@@ -212,7 +212,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		const convertedBackgroundGroup = new Adw.PreferencesGroup({
 			title: _('Converted Background'),
 			description: _(
-				'Cached conversion of SVG and JXL background into JPG format'
+				'Cached conversion of SVG or JXL background into JPG format'
 			),
 			header_suffix: convertedBackgroundDeleteBtn
 		})
