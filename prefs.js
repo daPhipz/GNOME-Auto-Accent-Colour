@@ -82,7 +82,10 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 
 		const paletteGroup = new Adw.PreferencesGroup({
 			title: _('Colour Palette'),
-			description: _('Choose the type of background colour to base the shell accent colour from')
+			description: _(
+				'Choose the type of background colour to base the shell accent \
+colour from. The dominant colour may sometimes be the same as the highlight colour.'
+			)
 		})
 		settingsPage.add(paletteGroup)
 
