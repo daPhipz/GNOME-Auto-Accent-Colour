@@ -241,12 +241,17 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 			GLib.PRIORITY_DEFAULT,
 			null
 		)
-		const backgroundContentType = backgroundFileInfo.get_content_type()
-		console.log('Background content type: ' + backgroundContentType)
+		const backgroundImgFormat = backgroundFileInfo.get_content_type()
+		console.log('Background image format: ' + backgroundImgFormat)
 
+		/* List of image formats that don't work well with colorthief, and often
+		cause crashes or return incorrect colours as a result. If you know of
+		any other formats that don't work well with this extension, please
+		submit an issue or pull request on the repo. */
+		const incompatibleFormats = ['image/svg+xml', 'image/jxl']
 		let rasterPath = ''
 
-		if (['image/svg+xml', 'image/jxl'].includes(backgroundContentType)) {
+		if (incompatibleFormats.includes(backgroundImgFormat)) {
 			await convert(backgroundPath, extensionPath)
 			rasterPath = extensionPath + '/cached/converted_bg.jpg'
 		} else {
