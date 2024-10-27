@@ -167,7 +167,7 @@ function isHueInRange(hue, hueRange) {
 
 function getClosestAccentColour(r, g, b) {
 	let shortestDistance = Number.MAX_VALUE
-	let closestAccent = ''
+	let closestAccentIndex = -1
 
 	const hue = getHueFromRGB(r, g, b)
 	console.log('Parsed hue: ' + hue)
@@ -181,7 +181,9 @@ function getClosestAccentColour(r, g, b) {
 		return SLATE
 	}
 
-	for (let accent of eligibleAccents) {
+	for (let i = 0; i < accentColours.length; i++) {
+		const accent = accentColours[i]
+
 		let squaredEuclideanDistance = getSquaredEuclideanDistance(
 			r, g, b,
 			accent.r, accent.g, accent.b
@@ -191,13 +193,11 @@ function getClosestAccentColour(r, g, b) {
 
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
-			closestAccent = accent.name
+			closestAccentIndex = i
 		}
 	}
 
-	console.log("Closest accent: " + closestAccent)
-
-	return closestAccent
+	return closestAccentIndex
 }
 
 async function convert(imagePath, extensionPath) {
@@ -236,33 +236,9 @@ async function runColorThief(imagePath, extensionPath) {
 	}
 }
 
-async function getBackgroundPalette(extensionPath, backgroundPath) {
+async function getBackgroundPalette(extensionPath, backgroundPath, cachedHash) {
 	try {
-		const backgroundFile = Gio.File.new_for_path(backgroundPath)
-		const backgroundFileInfo = await backgroundFile.query_info_async(
-			'standard::*',
-			Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-			GLib.PRIORITY_DEFAULT,
-			null
-		)
-		const backgroundImgFormat = backgroundFileInfo.get_content_type()
-		console.log('Background image format: ' + backgroundImgFormat)
-
-		/* List of image formats that don't work well with colorthief, and often
-		cause crashes or return incorrect colours as a result. If you know of
-		any other formats that don't work well with this extension, please
-		submit an issue or pull request on the repo. */
-		const incompatibleFormats = ['image/svg+xml', 'image/jxl']
-		let rasterPath = ''
-
-		if (incompatibleFormats.includes(backgroundImgFormat)) {
-			await convert(backgroundPath, extensionPath)
-			rasterPath = extensionPath + '/cached/converted_bg.jpg'
-		} else {
-			rasterPath = backgroundPath
-		}
-
-		const backgroundPalette = await runColorThief(rasterPath, extensionPath)
+		const backgroundPalette = await runColorThief(backgroundPath, extensionPath)
 		console.log('Colorthief result: ' + backgroundPalette)
 
 		console.log('Type: ' + typeof(backgroundPalette))
@@ -280,24 +256,66 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
+	cachedHash,
+	cachedAccentIndex,
+	addToCache,
 	highlightMode,
 	onFinish
 ) {
-	const backgroundPalette = await getBackgroundPalette(
-		extensionPath,
-		backgroundPath
+	const backgroundFile = Gio.File.new_for_path(backgroundPath)
+	const backgroundFileInfo = await backgroundFile.query_info_async(
+		'standard::*',
+		Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+		GLib.PRIORITY_DEFAULT,
+		null
 	)
+	const backgroundImgFormat = backgroundFileInfo.get_content_type()
+	console.log('Background image format: ' + backgroundImgFormat)
 
-	const paletteIndex = highlightMode ? 1 : 0
+	/* List of image formats that don't work well with colorthief, and often
+	cause crashes or return incorrect colours as a result, requiring conversion.
+	If you know of any other formats that don't work well with this extension,
+	please submit an issue or pull request. */
+	const incompatibleFormats = ['image/svg+xml', 'image/jxl']
+	const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
 
-	console.log('Parsed R: ' + backgroundPalette[paletteIndex][0])
-	console.log('Parsed G: ' + backgroundPalette[paletteIndex][1])
-	console.log('Parsed B: ' + backgroundPalette[paletteIndex][2])
+	const rasterPath = conversionRequired ? extensionPath + '/cached/converted_bg.jpg' : backgroundPath
+	const rasterFile = Gio.File.new_for_path(rasterPath)
+	console.log('Cached hash: ' + cachedHash)
 
-	const [wall_r, wall_g, wall_b] = backgroundPalette[paletteIndex]
-	const closestAccent = getClosestAccentColour(wall_r, wall_g, wall_b)
+	if (await rasterFile.query_exists(null) && rasterFile.hash() == cachedHash) {
+		console.log('Background hash: ' + rasterFile.hash())
+		const cachedAccent = accentColours[cachedAccentIndex]
+		console.log('Returning cached accent (' + cachedAccent.name + ')')
+		onFinish(cachedAccent)
+	} else {
+		console.log('Background hash: ' + rasterFile.hash())
 
-	onFinish(closestAccent)
+		const backgroundPalette = await getBackgroundPalette(
+			extensionPath,
+			backgroundPath
+		)
+
+		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
+		const dom_accent = getClosestAccentColour(dom_r, dom_g, dom_b) // Dominant accent
+
+		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
+		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
+
+		addToCache(rasterFile.hash(), dom_accent, hi_accent)
+
+		const paletteIndex = highlightMode ? 1 : 0
+
+		console.log('Parsed R: ' + backgroundPalette[paletteIndex][0])
+		console.log('Parsed G: ' + backgroundPalette[paletteIndex][1])
+		console.log('Parsed B: ' + backgroundPalette[paletteIndex][2])
+
+		const closestAccent = accentColours[highlightMode ? hi_accent : dom_accent]
+
+		console.log("Closest accent: " + closestAccent.name)
+
+		onFinish(closestAccent)
+	}
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -326,6 +344,28 @@ export default class AutoAccentColourExtension extends Extension {
 		}
 		function setAccentColor(colorName) {
 			interfaceSettings.set_string(ACCENT_COLOR, colorName)
+		}
+
+		function getCachedHash() {
+			return settings.get_int64(getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash')
+		}
+		function getCachedAccent() {
+			const theme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
+			const colourMode = settings.get_boolean('highlight-mode') ? 'highlight' : 'dominant'
+
+			return settings.get_enum(`${theme}-${colourMode}-accent`)
+		}
+		function cache(backgroundHash, dominantAccent, highlightAccent) {
+			const currentTheme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
+			const backgroundsAreSame = getBackgroundUri() == getDarkBackgroundUri()
+
+			for (const theme of ['dark', 'light']) {
+				if (currentTheme == theme || backgroundsAreSame) {
+					settings.set_int64(`${theme}-hash`, backgroundHash)
+					settings.set_enum(`${theme}-dominant-accent`, dominantAccent)
+					settings.set_enum(`${theme}-highlight-accent`, highlightAccent)
+				}
+			}
 		}
 
 		this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
@@ -382,10 +422,13 @@ export default class AutoAccentColourExtension extends Extension {
 			applyClosestAccent(
 				extensionPath,
 				backgroundPath,
+				getCachedHash(),
+				getCachedAccent(),
+				cache,
 				highlightMode,
 				function(newAccent) {
-					console.log('New accent: ' + newAccent)
-					setAccentColor(newAccent)
+					console.log('New accent: ' + newAccent.name)
+					setAccentColor(newAccent.name)
 					changeIndicatorIcon(normalIcon)
 				}
 			)
