@@ -157,9 +157,12 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		})
 		cachePage.add(lightBackgroundGroup)
 
+		let testStr = ''
+
 		const lightHashRow = new Adw.ActionRow({
 			title: hashTitle,
 			subtitle_selectable: true,
+			subtitle: testStr,
 			css_classes: ['property']
 		})
 		lightBackgroundGroup.add(lightHashRow)
@@ -261,6 +264,15 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		highlightColourRadio.connect('activate', () => {
 			settings.set_boolean('highlight-mode', true)
 		})
+
+		function setLightHashRow() {
+			lightHashRow.subtitle = settings.get_int64('light-hash').toString()
+		}
+		function setLightHashDominantAccent() {
+
+		}
+
+
 	}
 }
 
