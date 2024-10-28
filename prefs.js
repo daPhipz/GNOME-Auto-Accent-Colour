@@ -126,7 +126,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 
 		const cacheDescriptionGroup = new Adw.PreferencesGroup({
 			description: _(
-				'Backgrounds and their derived colours are cached to increase performance and compatibility with the extension'
+				'Information about backgrounds and their derived colours are cached to increase performance and compatibility with the extension'
 			)
 		})
 		cachePage.add(cacheDescriptionGroup)
