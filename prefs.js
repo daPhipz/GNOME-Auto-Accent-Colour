@@ -140,13 +140,10 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		cachePage.add(cacheDescriptionGroup)
 
 		function createDeleteButton() {
-			const buttonContent = new Adw.ButtonContent({
-				label: _('Clear'),
-				icon_name: 'user-trash-symbolic'
-			})
 			return new Gtk.Button({
 				valign: Gtk.Align.CENTER,
-				child: buttonContent,
+				tooltip_text: _('Clear'),
+				icon_name: 'user-trash-symbolic',
 				css_classes: ['destructive-action', 'flat']
 			})
 		}
