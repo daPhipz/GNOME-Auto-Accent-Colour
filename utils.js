@@ -6,4 +6,4 @@ function isImageMagickInstalled() {
 	return lookup != null
 }
 
-export default isImageMagickInstalled()
+export default isImageMagickInstalled

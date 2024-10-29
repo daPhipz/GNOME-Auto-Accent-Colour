@@ -213,7 +213,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		const installedLabel = new Gtk.Label({ label: _('Installed') })
 
 		function setImageMagickRow() {
-			const magickInstalled = isImageMagickInstalled
+			const magickInstalled = isImageMagickInstalled()
 
 			const icon = magickInstalled ? 'emblem-ok-symbolic' : 'dialog-warning-symbolic'
 			const label = magickInstalled ? _('Installed') : _('Not Installed')
