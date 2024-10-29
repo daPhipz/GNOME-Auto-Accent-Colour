@@ -471,7 +471,7 @@ export default class AutoAccentColourExtension extends Extension {
 						_('ImageMagick not installed'), _('ImageMagick is required to set an accent colour from this background')
 					)
 					changeIndicatorIcon(alertIcon)
-				}
+				},
 				function(newAccent) {
 					setAccentColor(newAccent.name)
 					console.log(`New accent: ${getAccentColor()}`)
