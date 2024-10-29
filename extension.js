@@ -11,6 +11,7 @@
 // TODO: Review string concatenation, and switch to template literals
 // TODO: Use backticks and newlines for very long strings
 // TODO: Research converting UI text into multiple languages
+// TODO: Investigate script sometimes not running when it should.
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
