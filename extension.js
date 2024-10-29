@@ -1,17 +1,18 @@
 // TODO: Add Extensions store page support
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
-// TODO: Cache wallpaper hashes and associated colours to reduce need to run ColorThief
+// TODO: Add accent colour preview in cache preferences
 // TODO: Review console logging
 // TODO: Add random accent colour mode?
 // TODO: Add descriptions to schema keys
 // TODO: Investigate imagemagick SVG conversion causing artefacts
 // TODO: Add checker to find if imagemagick is installed
 // TODO: Review duplicate script-runs from background file change and uri change
-// TODO: Check out using shell fade transitions for changing accent colours (like light/dark theme change)
 // TODO: Review string concatenation, and switch to template literals
 // TODO: Use backticks and newlines for very long strings
 // TODO: Research converting UI text into multiple languages
 // TODO: Investigate script sometimes not running when it should.
+// TODO: Consider moving some data structures to enable() local methods
+// TODO: Maybe remove some of the static string constants?
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
