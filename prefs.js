@@ -30,6 +30,14 @@ function execCommand(argv, input = null, cancellable = null) {
 	});
 }
 
+// TODO: Merge into one with extension.js
+class AccentColour {
+	constructor(label, adwEnumEntry) {
+		this.label = label
+		this.rgba = Adw.AccentColor.to_rgba(adwEnumEntry)
+	}
+}
+
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		window._settings = this.getSettings()
@@ -265,13 +273,66 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			settings.set_boolean('highlight-mode', true)
 		})
 
+		const accents = [
+			new AccentColour(_('Blue'), Adw.AccentColor.BLUE),
+			new AccentColour(_('Teal'), Adw.AccentColor.TEAL),
+			new AccentColour(_('Green'), Adw.AccentColor.GREEN),
+			new AccentColour(_('Yellow'), Adw.AccentColor.YELLOW),
+			new AccentColour(_('Orange'), Adw.AccentColor.ORANGE),
+			new AccentColour(_('Red'), Adw.AccentColor.RED),
+			new AccentColour(_('Pink'), Adw.AccentColor.PINK),
+			new AccentColour(_('Purple'), Adw.AccentColor.PURPLE),
+			new AccentColour(_('Slate'), Adw.AccentColor.SLATE),
+		]
+
+		/* I would use Gio.Settings.bind_with_mapping to show the values in the
+		cache tab, except I have no clue how its 'get_mapping' parameter is
+		supposed to work. Instead, this longer, less sophisticated code will
+		work in the	meantime:
+		(TODO for the future -- change to bind_with_mapping calls once
+		documentation either elaborates further or I see something that actually
+		explains how this thing works) */
+
+		function getCachedAccent(theme, colourType) {
+			const index = settings.get_enum(`${theme}-${colourType}-accent`)
+			const accentName = accents[index].label
+
+			console.log('accent name: ' + accentName)
+			return accentName.toString()
+		}
+
 		function setLightHashRow() {
 			lightHashRow.subtitle = settings.get_int64('light-hash').toString()
 		}
-		function setLightHashDominantAccent() {
-
+		function setLightDominantAccent() {
+			lightDominantAccent.subtitle = getCachedAccent('light', 'dominant')
+		}
+		function setLightHighlightAccent() {
+			lightHighlightAccent.subtitle = getCachedAccent('light', 'highlight')
+		}
+		function setDarkHashRow() {
+			darkHashRow.subtitle = settings.get_int64('dark-hash').toString()
+		}
+		function setDarkDominantAccent() {
+			darkDominantAccent.subtitle = getCachedAccent('dark', 'dominant')
+		}
+		function setDarkHighlightAccent() {
+			darkHighlightAccent.subtitle = getCachedAccent('dark', 'highlight')
 		}
 
+		setLightHashRow()
+		setLightDominantAccent()
+		setLightHighlightAccent()
+		setDarkHashRow()
+		setDarkDominantAccent()
+		setDarkHighlightAccent()
+
+		window._settings.connect('changed::light-hash', () => { setLightHashRow() })
+		window._settings.connect('changed::light-dominant-accent', () => { setLightDominantAccent() })
+		window._settings.connect('changed::light-highlight-accent', () => { setLightHighlightAccent() })
+		window._settings.connect('changed::dark-hash', () => { setDarkHashRow() })
+		window._settings.connect('changed::dark-dominant-accent', () => { setDarkDominantAccent() })
+		window._settings.connect('changed::dark-highlight-accent', () => { setDarkHighlightAccent() })
 
 	}
 }
