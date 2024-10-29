@@ -199,12 +199,15 @@ function getClosestAccentColour(r, g, b) {
 	return closestAccentIndex
 }
 
-async function convert(imagePath, extensionPath) {
+async function convert(imagePath) {
 	try {
-		const cacheDirPath = extensionPath + '/cached/'
-		const cacheDir = Gio.File.new_for_path(cacheDirPath)
-		await cacheDir.make_directory_async(GLib.PRIORITY_DEFAULT, null, null)
-		await execCommand(['magick', imagePath, cacheDirPath + '/converted_bg.jpg'])
+		const cacheDirPath = `${GLib.get_home_dir()}/.cache/auto-accent-colour`
+		GLib.mkdir_with_parents(cacheDirPath, 755)
+
+		const convertedPath = `${cacheDirPath}/converted_bg.jpg`
+		await execCommand(['magick', imagePath, convertedPath])
+
+		return convertedPath.toString()
 	} catch (e) {
 		logError(e)
 	}
@@ -290,12 +293,10 @@ async function applyClosestAccent(
 
 		console.log(`Conversion to JPG required: ${conversionRequired}`)
 
-		if (conversionRequired) {
-			await convert(backgroundPath, extensionPath)
-		}
 		const rasterPath = conversionRequired
-			? `${extensionPath}/cached/converted_bg.jpg`
+			? await convert(backgroundPath)
 			: backgroundPath
+		console.log(`Raster path: ${rasterPath}`)
 
 		const backgroundPalette = await getBackgroundPalette(
 			extensionPath,
