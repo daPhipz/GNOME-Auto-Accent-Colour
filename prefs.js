@@ -42,7 +42,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 			header_suffix: refreshButton,
 			description: _(
 				'ImageMagick is required to parse colour data from SVG and JXL \
-backgrounds. It must be installed via the system\'s package manager.'
+backgrounds. It must be installed via the system package manager.'
 			)
 		})
 		dependenciesPage.add(systemDependenciesGroup)
