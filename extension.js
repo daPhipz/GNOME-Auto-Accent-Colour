@@ -468,7 +468,7 @@ export default class AutoAccentColourExtension extends Extension {
 				highlightMode,
 				function() {
 					Main.notifyError(
-						_('ImageMagick not installed'), _('ImageMagick is required to set an accent colour from this background'))
+						_('ImageMagick not installed'), _('ImageMagick is required to set an accent colour from this background')
 					)
 					changeIndicatorIcon(alertIcon)
 				}
