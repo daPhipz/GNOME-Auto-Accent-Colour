@@ -219,7 +219,7 @@ async function convert(imagePath) {
 		const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
 		await execCommand(['magick', imagePath, convertedPath])
 
-		return convertedPath.toString()
+		return convertedPath
 	} catch (e) {
 		logError(e)
 	}
@@ -366,6 +366,9 @@ export default class AutoAccentColourExtension extends Extension {
 		function setAccentColor(colorName) {
 			interfaceSettings.set_string(ACCENT_COLOR, colorName)
 		}
+		function getAccentColor(colorName) {
+			interfaceSettings.get_string(ACCENT_COLOR)
+		}
 
 		function getCachedHash() {
 			return settings.get_int64(getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash')
@@ -448,8 +451,8 @@ export default class AutoAccentColourExtension extends Extension {
 				cache,
 				highlightMode,
 				function(newAccent) {
-					console.log('New accent: ' + newAccent.name)
 					setAccentColor(newAccent.name)
+					console.log(`New accent: ${getAccentColor()}`)
 					changeIndicatorIcon(normalIcon)
 				}
 			)
