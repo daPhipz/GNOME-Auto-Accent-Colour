@@ -88,8 +88,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		settingsPage.add(appearanceGroup)
 
 		const indicatorRow = new Adw.SwitchRow({
-			title: _('Hide Indicator'),
-			subtitle: _('Dependency alerts will always be shown')
+			title: _('Hide Indicator')
 		})
 		appearanceGroup.add(indicatorRow)
 
