@@ -3,6 +3,7 @@ import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import isImageMagickInstalled from './utils.js'
 
 // TODO: Merge into one with extension.js
 class AccentColour {
@@ -29,20 +30,25 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 		})
 		window.add(dependenciesPage)
 
-		const dependenciesDescriptionGroup = new Adw.PreferencesGroup({
-			description: _('This extension requires some external dependencies to parse colours from the desktop background')
+		const refreshButton = new Gtk.Button({
+			icon_name: 'view-refresh-symbolic',
+			tooltip_text: _('Refresh'),
+			valign: Gtk.Align.CENTER,
+			css_classes: ['flat']
 		})
-		dependenciesPage.add(dependenciesDescriptionGroup)
 
 		const systemDependenciesGroup = new Adw.PreferencesGroup({
 			title: _('System Dependencies'),
-			description: _('Dependencies listed here must be installed via the system\'s package manager')
+			header_suffix: refreshButton,
+			description: _(
+				'ImageMagick is required to parse colour data from SVG and JXL \
+backgrounds. It must be installed via the system\'s package manager.'
+			)
 		})
 		dependenciesPage.add(systemDependenciesGroup)
 
 		const imageMagickRow = new Adw.ActionRow({
-			title: _('ImageMagick'),
-			subtitle: _('To convert SVG and JXL backgrounds to a suitable format for parsing')
+			title: _('ImageMagick')
 		})
 		systemDependenciesGroup.add(imageMagickRow)
 
@@ -205,6 +211,26 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 
 		const extensionPath = this.path
 		const installedLabel = new Gtk.Label({ label: _('Installed') })
+
+		function setImageMagickRow() {
+			const magickInstalled = isImageMagickInstalled
+
+			const icon = magickInstalled ? 'emblem-ok-symbolic' : 'dialog-warning-symbolic'
+			const label = magickInstalled ? _('Installed') : _('Not Installed')
+			const css_classes = ['property']
+
+			if (!magickInstalled) {
+				css_classes.push('warning')
+			}
+
+			imageMagickRow.subtitle = label
+			imageMagickRow.icon_name = icon
+			imageMagickRow.css_classes = css_classes
+		}
+
+		setImageMagickRow()
+
+		refreshButton.connect('clicked', () => { setImageMagickRow() })
 
 		window._settings.bind(
 			'hide-indicator',
