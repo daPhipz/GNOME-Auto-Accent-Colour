@@ -261,28 +261,10 @@ async function applyClosestAccent(
 	highlightMode,
 	onFinish
 ) {
-	const backgroundFile = Gio.File.new_for_path(backgroundPath)
-	const backgroundFileInfo = await backgroundFile.query_info_async(
-		'standard::*',
-		Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-		GLib.PRIORITY_DEFAULT,
-		null
-	)
-	const backgroundImgFormat = backgroundFileInfo.get_content_type()
-	console.log('Background image format: ' + backgroundImgFormat)
-
-	/* List of image formats that don't work well with colorthief, and often
-	cause crashes or return incorrect colours as a result, requiring conversion.
-	If you know of any other formats that don't work well with this extension,
-	please submit an issue or pull request. */
-	const incompatibleFormats = ['image/svg+xml', 'image/jxl']
-	const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
-
-	const rasterPath = conversionRequired ? extensionPath + '/cached/converted_bg.jpg' : backgroundPath
-	const rasterFile = Gio.File.new_for_path(rasterPath)
 	console.log('Cached hash: ' + cachedHash)
 
-	const backgroundHash = await rasterFile.query_exists(null) ? rasterFile.hash() : 0
+	const backgroundFile = Gio.File.new_for_path(backgroundPath)
+	const backgroundHash = backgroundFile.hash()
 	console.log(`Background hash: ${backgroundHash}`)
 
 	if (backgroundHash == cachedHash) {
@@ -290,9 +272,34 @@ async function applyClosestAccent(
 		console.log('Returning cached accent (' + cachedAccent.name + ')')
 		onFinish(cachedAccent)
 	} else {
+		const backgroundFileInfo = await backgroundFile.query_info_async(
+			'standard::*',
+			Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+			GLib.PRIORITY_DEFAULT,
+			null
+		)
+		const backgroundImgFormat = backgroundFileInfo.get_content_type()
+		console.log('Background image format: ' + backgroundImgFormat)
+
+		/* List of image formats that don't work well with colorthief, and often
+		cause crashes or return incorrect colours as a result, requiring conversion.
+		If you know of any other formats that don't work well with this extension,
+		please submit an issue or pull request. */
+		const incompatibleFormats = ['image/svg+xml', 'image/jxl']
+		const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
+
+		console.log(`Conversion to JPG required: ${conversionRequired}`)
+
+		if (conversionRequired) {
+			await convert(backgroundPath, extensionPath)
+		}
+		const rasterPath = conversionRequired
+			? `${extensionPath}/cached/converted_bg.jpg`
+			: backgroundPath
+
 		const backgroundPalette = await getBackgroundPalette(
 			extensionPath,
-			backgroundPath
+			rasterPath
 		)
 
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
