@@ -280,6 +280,7 @@ async function applyClosestAccent(
 	cachedAccentIndex,
 	addToCache,
 	highlightMode,
+	onDependencyFail,
 	onFinish
 ) {
 	console.log('Cached hash: ' + cachedHash)
@@ -315,6 +316,7 @@ async function applyClosestAccent(
 			const magickInstalled = isImageMagickInstalled()
 			if (!magickInstalled) {
 				console.log("Imagemagick not installed !!")
+				onDependencyFail()
 				return
 			}
 		}
@@ -464,6 +466,12 @@ export default class AutoAccentColourExtension extends Extension {
 				getCachedAccent(),
 				cache,
 				highlightMode,
+				function() {
+					Main.notifyError(
+						_('ImageMagick not installed'), _('ImageMagick is required to set an accent colour from this background'))
+					)
+					changeIndicatorIcon(alertIcon)
+				}
 				function(newAccent) {
 					setAccentColor(newAccent.name)
 					console.log(`New accent: ${getAccentColor()}`)
