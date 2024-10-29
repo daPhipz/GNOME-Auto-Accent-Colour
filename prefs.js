@@ -38,6 +38,11 @@ class AccentColour {
 	}
 }
 
+const LIGHT = 'light'
+const DARK = 'dark'
+const DOMINANT = 'dominant'
+const HIGHLIGHT = 'highlight'
+
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		window._settings = this.getSettings()
@@ -298,39 +303,35 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			return accentName.toString()
 		}
 
-		function setLightHashRow() {
-			lightHashRow.subtitle = settings.get_int64('light-hash').toString()
+		function setHashRow(theme) {
+			const row = theme == LIGHT ? lightHashRow : darkHashRow
+			row.subtitle = settings.get_int64(`${theme}-hash`).toString()
 		}
-		function setLightDominantAccent() {
-			lightDominantAccent.subtitle = getCachedAccent('light', 'dominant')
-		}
-		function setLightHighlightAccent() {
-			lightHighlightAccent.subtitle = getCachedAccent('light', 'highlight')
-		}
-		function setDarkHashRow() {
-			darkHashRow.subtitle = settings.get_int64('dark-hash').toString()
-		}
-		function setDarkDominantAccent() {
-			darkDominantAccent.subtitle = getCachedAccent('dark', 'dominant')
-		}
-		function setDarkHighlightAccent() {
-			darkHighlightAccent.subtitle = getCachedAccent('dark', 'highlight')
+		function setAccentRow(theme, colourType) {
+			const [dominantAccent, highlightAccent] = theme == LIGHT
+				? [lightDominantAccent, lightHighlightAccent]
+				: [darkDominantAccent, darkHighlightAccent]
+			const row = colourType == DOMINANT ? dominantAccent : highlightAccent
+			row.subtitle = getCachedAccent(theme, colourType)
 		}
 
-		setLightHashRow()
-		setLightDominantAccent()
-		setLightHighlightAccent()
-		setDarkHashRow()
-		setDarkDominantAccent()
-		setDarkHighlightAccent()
+		for (let theme of [LIGHT, DARK]) {
+			setHashRow(theme)
 
-		window._settings.connect('changed::light-hash', () => { setLightHashRow() })
-		window._settings.connect('changed::light-dominant-accent', () => { setLightDominantAccent() })
-		window._settings.connect('changed::light-highlight-accent', () => { setLightHighlightAccent() })
-		window._settings.connect('changed::dark-hash', () => { setDarkHashRow() })
-		window._settings.connect('changed::dark-dominant-accent', () => { setDarkDominantAccent() })
-		window._settings.connect('changed::dark-highlight-accent', () => { setDarkHighlightAccent() })
+			window._settings.connect(
+				`changed::${theme}-hash`,
+				() => { setHashRow(theme) }
+			)
 
+			for (let colourType of [DOMINANT, HIGHLIGHT]) {
+				setAccentRow(theme, colourType)
+
+				window._settings.connect(
+					`changed::${theme}-${colourType}-accent`,
+					() => { setAccentRow(theme, colourType) }
+				)
+			}
+		}
 	}
 }
 
