@@ -133,6 +133,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		}
 
 		const hashTitle = _('Hash')
+		const noCacheMsg = _('Nothing cached')
 		const dominantAccentTitle = _('Dominant Accent')
 		const highlightAccentTitle = _('Highlight Accent')
 
@@ -147,6 +148,11 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		cachePage.add(lightBackgroundGroup)
 
 		let testStr = ''
+
+		const lightNoCacheRow = new Adw.ActionRow({
+			title: noCacheMsg
+		})
+		lightBackgroundGroup.add(lightNoCacheRow)
 
 		const lightHashRow = new Adw.ActionRow({
 			title: hashTitle,
@@ -177,6 +183,11 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			header_suffix: darkBackgroundDeleteBtn
 		})
 		cachePage.add(darkBackgroundGroup)
+
+		const darkNoCacheRow = new Adw.ActionRow({
+			title: noCacheMsg
+		})
+		darkBackgroundGroup.add(darkNoCacheRow)
 
 		const darkHashRow = new Adw.ActionRow({
 			title: hashTitle,
@@ -290,8 +301,19 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		}
 
 		function setHashRow(theme) {
-			const row = theme == LIGHT ? lightHashRow : darkHashRow
-			row.subtitle = settings.get_int64(`${theme}-hash`).toString()
+			const noCacheRow = theme == LIGHT ? lightNoCacheRow : darkNoCacheRow
+			const hashRow = theme == LIGHT ? lightHashRow : darkHashRow
+			const dominantRow = theme == LIGHT ? lightDominantAccent : darkDominantAccent
+			const highlightRow = theme == LIGHT ? lightHighlightAccent : darkHighlightAccent
+			const hash = settings.get_int64(`${theme}-hash`)
+			const isHashDefault = hash == -1
+
+			noCacheRow.visible = isHashDefault
+			hashRow.visible = !isHashDefault
+			dominantRow.visible = !isHashDefault
+			highlightRow.visible = !isHashDefault
+
+			hashRow.subtitle = hash.toString()
 		}
 		function setAccentRow(theme, colourType) {
 			const [dominantAccent, highlightAccent] = theme == LIGHT
