@@ -282,14 +282,14 @@ async function applyClosestAccent(
 	const rasterFile = Gio.File.new_for_path(rasterPath)
 	console.log('Cached hash: ' + cachedHash)
 
-	if (await rasterFile.query_exists(null) && rasterFile.hash() == cachedHash) {
-		console.log('Background hash: ' + rasterFile.hash())
+	const backgroundHash = await rasterFile.query_exists(null) ? rasterFile.hash() : 0
+	console.log(`Background hash: ${backgroundHash}`)
+
+	if (backgroundHash == cachedHash) {
 		const cachedAccent = accentColours[cachedAccentIndex]
 		console.log('Returning cached accent (' + cachedAccent.name + ')')
 		onFinish(cachedAccent)
 	} else {
-		console.log('Background hash: ' + rasterFile.hash())
-
 		const backgroundPalette = await getBackgroundPalette(
 			extensionPath,
 			backgroundPath
@@ -301,7 +301,7 @@ async function applyClosestAccent(
 		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
 		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
 
-		addToCache(rasterFile.hash(), dom_accent, hi_accent)
+		addToCache(backgroundHash, dom_accent, hi_accent)
 
 		const paletteIndex = highlightMode ? 1 : 0
 
