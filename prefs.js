@@ -1,34 +1,8 @@
 import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
-import GLib from 'gi://GLib' //TODO: Remove with duplicated code
+import GLib from 'gi://GLib'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
-
-// TODO: Remove duplicate code
-// Thank you to andy.holmes on StackOverflow for this Promise wrapper
-// https://stackoverflow.com/a/61150669
-function execCommand(argv, input = null, cancellable = null) {
-	let flags = Gio.SubprocessFlags.STDOUT_PIPE;
-
-	if (input !== null)
-		flags |= Gio.SubprocessFlags.STDIN_PIPE;
-
-	let proc = new Gio.Subprocess({
-		argv: argv,
-		flags: flags
-	});
-	proc.init(cancellable);
-
-	return new Promise((resolve, reject) => {
-		proc.communicate_utf8_async(input, cancellable, (proc, res) => {
-			try {
-				resolve(proc.communicate_utf8_finish(res)[1]);
-			} catch (e) {
-				reject(e);
-			}
-		});
-	});
-}
 
 // TODO: Merge into one with extension.js
 class AccentColour {
