@@ -284,6 +284,15 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			new AccentColour(_('Slate'), Adw.AccentColor.SLATE),
 		]
 
+		function clearCache(theme) {
+			settings.reset(`${theme}-hash`)
+			settings.reset(`${theme}-dominant-accent`)
+			settings.reset(`${theme}-highlight-accent`)
+		}
+
+		lightBackgroundDeleteBtn.connect('clicked', () => { clearCache('light') })
+		darkBackgroundDeleteBtn.connect('clicked', () => { clearCache('dark') })
+
 		/* I would use Gio.Settings.bind_with_mapping to show the values in the
 		cache tab, except I have no clue how its 'get_mapping' parameter is
 		supposed to work. Instead, this longer, less sophisticated code will
@@ -302,6 +311,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 
 		function setHashRow(theme) {
 			const noCacheRow = theme == LIGHT ? lightNoCacheRow : darkNoCacheRow
+			const deleteBtn = theme == LIGHT ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
 			const hashRow = theme == LIGHT ? lightHashRow : darkHashRow
 			const dominantRow = theme == LIGHT ? lightDominantAccent : darkDominantAccent
 			const highlightRow = theme == LIGHT ? lightHighlightAccent : darkHighlightAccent
@@ -309,12 +319,14 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			const isHashDefault = hash == -1
 
 			noCacheRow.visible = isHashDefault
+			deleteBtn.sensitive = !isHashDefault
 			hashRow.visible = !isHashDefault
 			dominantRow.visible = !isHashDefault
 			highlightRow.visible = !isHashDefault
 
 			hashRow.subtitle = hash.toString()
 		}
+
 		function setAccentRow(theme, colourType) {
 			const [dominantAccent, highlightAccent] = theme == LIGHT
 				? [lightDominantAccent, lightHighlightAccent]
