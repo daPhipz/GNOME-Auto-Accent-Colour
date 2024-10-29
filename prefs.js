@@ -139,7 +139,7 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 
 		const cacheDescriptionGroup = new Adw.PreferencesGroup({
 			description: _(
-				'Information about backgrounds and their derived colours are cached to increase performance and compatibility with the extension'
+				'Information about backgrounds and their derived colours is cached to increase performance'
 			)
 		})
 		cachePage.add(cacheDescriptionGroup)
@@ -217,19 +217,6 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			css_classes: ['property']
 		})
 		darkBackgroundGroup.add(darkHighlightAccent)
-
-		// Converted background
-
-		const convertedBackgroundDeleteBtn = createDeleteButton()
-
-		const convertedBackgroundGroup = new Adw.PreferencesGroup({
-			title: _('Converted Background'),
-			description: _(
-				'Cached conversion of SVG or JXL background into JPG format'
-			),
-			header_suffix: convertedBackgroundDeleteBtn
-		})
-		cachePage.add(convertedBackgroundGroup)
 
 		////////////////////////////////////////////////////////////////////////
 

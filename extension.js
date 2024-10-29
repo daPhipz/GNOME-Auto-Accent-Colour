@@ -39,6 +39,8 @@ const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 
+const CONVERTED_BACKGROUND_FILENAME = 'converted_bg.jpg'
+
 function getHueFromRGB(r, g, b) {
 	const maxColour = Math.max(r, g, b)
 	const minColour = Math.min(r, g, b)
@@ -200,12 +202,21 @@ function getClosestAccentColour(r, g, b) {
 	return closestAccentIndex
 }
 
+function getExtensionCacheDir() {
+	return `${GLib.get_home_dir()}/.cache/auto-accent-colour`
+}
+
+async function clearConvertedBackground() {
+	const cacheDirPath = getExtensionCacheDir()
+	GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
+}
+
 async function convert(imagePath) {
 	try {
-		const cacheDirPath = `${GLib.get_home_dir()}/.cache/auto-accent-colour`
+		const cacheDirPath = getExtensionCacheDir()
 		GLib.mkdir_with_parents(cacheDirPath, 755)
 
-		const convertedPath = `${cacheDirPath}/converted_bg.jpg`
+		const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
 		await execCommand(['magick', imagePath, convertedPath])
 
 		return convertedPath.toString()
@@ -303,6 +314,8 @@ async function applyClosestAccent(
 			extensionPath,
 			rasterPath
 		)
+
+		if (conversionRequired) { clearConvertedBackground() }
 
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
 		const dom_accent = getClosestAccentColour(dom_r, dom_g, dom_b) // Dominant accent
