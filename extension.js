@@ -211,6 +211,12 @@ async function clearConvertedBackground() {
 	GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
 }
 
+function isImageMagickInstalled() {
+	const lookup = GLib.find_program_in_path('magick')
+	console.log(`Magick lookup: ${lookup}`)
+	return lookup != null
+}
+
 async function convert(imagePath) {
 	try {
 		const cacheDirPath = getExtensionCacheDir()
@@ -304,6 +310,14 @@ async function applyClosestAccent(
 		const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
 
 		console.log(`Conversion to JPG required: ${conversionRequired}`)
+
+		if (conversionRequired) {
+			const magickInstalled = isImageMagickInstalled()
+			if (!magickInstalled) {
+				console.log("Imagemagick not installed !!")
+				return
+			}
+		}
 
 		const rasterPath = conversionRequired
 			? await convert(backgroundPath)
