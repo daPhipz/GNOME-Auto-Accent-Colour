@@ -21,6 +21,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
+import isImageMagickInstalled from './utils.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const COLOR_SCHEME = 'color-scheme'
@@ -211,12 +212,6 @@ async function clearConvertedBackground() {
 	GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
 }
 
-function isImageMagickInstalled() {
-	const lookup = GLib.find_program_in_path('magick')
-	console.log(`Magick lookup: ${lookup}`)
-	return lookup != null
-}
-
 async function convert(imagePath) {
 	try {
 		const cacheDirPath = getExtensionCacheDir()
@@ -313,6 +308,7 @@ async function applyClosestAccent(
 		console.log(`Conversion to JPG required: ${conversionRequired}`)
 
 		if (conversionRequired) {
+			console.log('About to run magick installed checker')
 			const magickInstalled = isImageMagickInstalled()
 			if (!magickInstalled) {
 				console.log("Imagemagick not installed !!")
