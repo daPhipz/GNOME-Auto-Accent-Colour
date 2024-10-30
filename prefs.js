@@ -305,16 +305,17 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 			const index = settings.get_enum(`${theme}-${colourType}-accent`)
 			const accentName = accents[index].label
 
-			console.log('accent name: ' + accentName)
 			return accentName.toString()
 		}
 
 		function setHashRow(theme) {
-			const noCacheRow = theme == LIGHT ? lightNoCacheRow : darkNoCacheRow
-			const deleteBtn = theme == LIGHT ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
-			const hashRow = theme == LIGHT ? lightHashRow : darkHashRow
-			const dominantRow = theme == LIGHT ? lightDominantAccent : darkDominantAccent
-			const highlightRow = theme == LIGHT ? lightHighlightAccent : darkHighlightAccent
+			const lightTheme = theme == LIGHT
+
+			const noCacheRow = lightTheme ? lightNoCacheRow : darkNoCacheRow
+			const deleteBtn = lightTheme ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
+			const hashRow = lightTheme ? lightHashRow : darkHashRow
+			const dominantRow = lightTheme ? lightDominantAccent : darkDominantAccent
+			const highlightRow = lightTheme ? lightHighlightAccent : darkHighlightAccent
 			const hash = settings.get_int64(`${theme}-hash`)
 			const isHashDefault = hash == -1
 

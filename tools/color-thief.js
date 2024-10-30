@@ -49,11 +49,7 @@ function createPixelArray(imgData, pixelCount, quality) {
 function getPalette(sourceImage, colorCount = 5, quality = 1) {
     const image = GdkPixbuf.Pixbuf.new_from_file(sourceImage)
     const imageData = image.get_pixels()
-    for (let i = 0; i < 6; i++) {
-    	console.log('Image data [' + i + ']: ' + imageData[i])
-    }
     const pixelCount = image.get_width() * image.get_height()
-    console.log('Pixel count: ' + pixelCount)
     const pixels = createPixelArray(imageData, pixelCount, quality)
 
     // Send array to quantize function which clusters values

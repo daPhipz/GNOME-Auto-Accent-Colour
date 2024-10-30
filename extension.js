@@ -65,9 +65,7 @@ function getHueFromRGB(r, g, b) {
 function getSaturationFromRGB(r, g, b) {
 	const maxColourPercentage = Math.max(r, g, b) / 255
 	const minColourPercentage = Math.min(r, g, b) / 255
-	console.log('cMax: ' + maxColourPercentage)
 	const delta = maxColourPercentage - minColourPercentage
-	console.log('Delta: ' + delta)
 
 	let saturation = 0.0
 
@@ -166,14 +164,15 @@ function getClosestAccentColour(r, g, b) {
 	let closestAccentIndex = -1
 
 	const hue = getHueFromRGB(r, g, b)
-	console.log('Parsed hue: ' + hue)
+	console.log(`Parsed hue: ${hue}`)
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
 	})
 
 	const saturation = getSaturationFromRGB(r, g, b)
-	console.log('Parsed saturation: ' + saturation)
+	console.log(`Parsed saturation: ${saturation}`)
 	if (saturation < 5) {
+		console.log('Returning slate due to low saturation')
 		return SLATE_INDEX
 	}
 
@@ -183,7 +182,7 @@ function getClosestAccentColour(r, g, b) {
 			accent.r, accent.g, accent.b
 		)
 
-		console.log("Distance from " + accent.name + ": " + squaredEuclideanDistance)
+		console.log(`Distance from ${accent.name}: ${squaredEuclideanDistance}`)
 
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
@@ -191,6 +190,7 @@ function getClosestAccentColour(r, g, b) {
 		}
 	}
 
+	console.log(`Closest accent: ${accentColours[closestAccentIndex].name}`)
 	return closestAccentIndex
 }
 
@@ -227,15 +227,13 @@ solution, please feel free to submit a pull request.
 async function runColorThief(imagePath, extensionPath) {
 	try {
 		const resultStr = await execCommand(
-			['gjs', '-m', extensionPath + '/tools/run-color-thief.js', imagePath]
+			['gjs', '-m', `${extensionPath}/tools/run-color-thief.js`, imagePath]
 		)
 
 		const palette = resultStr.split(';')
-		console.log('palette after splitting semicolons: ' + palette[0])
 		for (let i = 0; i < palette.length; i++) {
 			palette[i] = palette[i].split(',').map(Number)
 		}
-		console.log(palette[0])
 		return palette
 	} catch (e) {
 		logError(e)
@@ -245,10 +243,7 @@ async function runColorThief(imagePath, extensionPath) {
 async function getBackgroundPalette(extensionPath, backgroundPath, cachedHash) {
 	try {
 		const backgroundPalette = await runColorThief(backgroundPath, extensionPath)
-		console.log('Colorthief result: ' + backgroundPalette)
-
-		console.log('Type: ' + typeof(backgroundPalette))
-		console.log('Wallpaper colour palette: ' + backgroundPalette)
+		console.log(`Wallpaper colour palette: ${backgroundPalette}`)
 
 		const dominantColourTuple = backgroundPalette[0]
 		const highlightColourTuple = backgroundPalette[1]
@@ -269,7 +264,7 @@ async function applyClosestAccent(
 	onDependencyFail,
 	onFinish
 ) {
-	console.log('Cached hash: ' + cachedHash)
+	console.log(`Cached hash: ${cachedHash}`)
 
 	const backgroundFile = Gio.File.new_for_path(backgroundPath)
 	const backgroundHash = backgroundFile.hash()
@@ -277,7 +272,7 @@ async function applyClosestAccent(
 
 	if (backgroundHash == cachedHash) {
 		const cachedAccent = accentColours[cachedAccentIndex]
-		console.log('Returning cached accent (' + cachedAccent.name + ')')
+		console.log(`Returning cached accent (${cachedAccent.name})`)
 		onFinish(cachedAccent)
 	} else {
 		const backgroundFileInfo = await backgroundFile.query_info_async(
@@ -287,7 +282,7 @@ async function applyClosestAccent(
 			null
 		)
 		const backgroundImgFormat = backgroundFileInfo.get_content_type()
-		console.log('Background image format: ' + backgroundImgFormat)
+		console.log(`Background image format: ${backgroundImgFormat}`)
 
 		/* List of image formats that don't work well with colorthief, and often
 		cause crashes or return incorrect colours as a result, requiring conversion.
@@ -299,10 +294,9 @@ async function applyClosestAccent(
 		console.log(`Conversion to JPG required: ${conversionRequired}`)
 
 		if (conversionRequired) {
-			console.log('About to run magick installed checker')
 			const magickInstalled = isImageMagickInstalled()
 			if (!magickInstalled) {
-				console.log("Imagemagick not installed !!")
+				console.log('Imagemagick not installed !!')
 				onDependencyFail()
 				return
 			}
@@ -320,24 +314,20 @@ async function applyClosestAccent(
 
 		if (conversionRequired) { clearConvertedBackground() }
 
+		console.log('Getting dominant accent...')
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
 		const dom_accent = getClosestAccentColour(dom_r, dom_g, dom_b) // Dominant accent
 
+		console.log('Getting highlight accent...')
 		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
 		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
 
 		addToCache(backgroundHash, dom_accent, hi_accent)
 
-		const paletteIndex = highlightMode ? 1 : 0
-
-		console.log('Parsed R: ' + backgroundPalette[paletteIndex][0])
-		console.log('Parsed G: ' + backgroundPalette[paletteIndex][1])
-		console.log('Parsed B: ' + backgroundPalette[paletteIndex][2])
-
 		const closestAccentIndex = highlightMode ? hi_accent : dom_accent
 		const closestAccent = accentColours[closestAccentIndex]
 
-		console.log("Closest accent: " + closestAccent.name)
+		console.log(`Accent to apply: ${closestAccent.name}`)
 
 		onFinish(closestAccent)
 	}
@@ -346,7 +336,7 @@ async function applyClosestAccent(
 export default class AutoAccentColourExtension extends Extension {
 	enable() {
 		const extensionPath = this.path
-		const iconsPath = extensionPath + '/icons/'
+		const iconsPath = `${extensionPath}/icons/`
 
 		this._settings = this.getSettings()
 		const settings = this._settings
@@ -375,11 +365,15 @@ export default class AutoAccentColourExtension extends Extension {
 		}
 
 		function getCachedHash() {
-			return settings.get_int64(getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash')
+			return settings.get_int64(
+				getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash'
+			)
 		}
 		function getCachedAccent() {
 			const theme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
-			const colourMode = settings.get_boolean('highlight-mode') ? 'highlight' : 'dominant'
+			const colourMode = settings.get_boolean('highlight-mode')
+				? 'highlight'
+				: 'dominant'
 
 			return settings.get_enum(`${theme}-${colourMode}-accent`)
 		}
@@ -400,7 +394,7 @@ export default class AutoAccentColourExtension extends Extension {
 		const indicator = this._indicator
 
 		const normalIcon = new St.Icon({
-			gicon: Gio.icon_new_for_string(iconsPath + 'color-symbolic.svg'),
+			gicon: Gio.icon_new_for_string(`${iconsPath}/color-symbolic.svg`),
 			style_class: 'system-status-icon'
 		})
 		const waitIcon = new St.Icon({
@@ -456,7 +450,8 @@ export default class AutoAccentColourExtension extends Extension {
 				highlightMode,
 				function() {
 					Main.notifyError(
-						_('ImageMagick not installed'), _('ImageMagick is required to set an accent colour from this background')
+						_('ImageMagick not installed'),
+						_('ImageMagick is required to set an accent colour from this background')
 					)
 					changeIndicatorIcon(alertIcon)
 				},
