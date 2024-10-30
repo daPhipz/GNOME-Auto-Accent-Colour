@@ -38,6 +38,7 @@ const SLATE = 'slate'
 const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
+const SLATE_INDEX = 8
 
 const CONVERTED_BACKGROUND_FILENAME = 'converted_bg.jpg'
 
@@ -182,7 +183,7 @@ function getClosestAccentColour(r, g, b) {
 	const saturation = getSaturationFromRGB(r, g, b)
 	console.log('Parsed saturation: ' + saturation)
 	if (saturation < 5) {
-		return SLATE
+		return SLATE_INDEX
 	}
 
 	for (let accent of eligibleAccents) {
@@ -342,7 +343,8 @@ async function applyClosestAccent(
 		console.log('Parsed G: ' + backgroundPalette[paletteIndex][1])
 		console.log('Parsed B: ' + backgroundPalette[paletteIndex][2])
 
-		const closestAccent = accentColours[highlightMode ? hi_accent : dom_accent]
+		const closestAccentIndex = highlightMode ? hi_accent : dom_accent
+		const closestAccent = accentColours[closestAccentIndex]
 
 		console.log("Closest accent: " + closestAccent.name)
 
