@@ -19,6 +19,9 @@
     <key name="highlight-mode" type="b">
       <default>false</default>
     </key>
+    <key name="debug-logging" type="b">
+      <default>false</default>
+    </key>
     <key name="light-hash" type="x">
       <default>-1</default>
     </key>

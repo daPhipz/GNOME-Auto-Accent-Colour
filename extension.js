@@ -21,7 +21,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import {Extension, gettext as _} from
 	'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import isImageMagickInstalled from './utils.js'
+import { isImageMagickInstalled, setLogging, journal } from './utils.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const COLOR_SCHEME = 'color-scheme'
@@ -165,15 +165,15 @@ function getClosestAccentColour(r, g, b) {
 	let closestAccentIndex = -1
 
 	const hue = getHueFromRGB(r, g, b)
-	console.log(`Parsed hue: ${hue}`)
+	journal(`Parsed hue: ${hue}`)
 	const eligibleAccents = accentColours.filter((accent) => {
 		return isHueInRange(hue, accent.hueRange)
 	})
 
 	const saturation = getSaturationFromRGB(r, g, b)
-	console.log(`Parsed saturation: ${saturation}`)
+	journal(`Parsed saturation: ${saturation}`)
 	if (saturation < 5) {
-		console.log('Returning slate due to low saturation')
+		journal('Returning slate due to low saturation')
 		return SLATE_INDEX
 	}
 
@@ -183,7 +183,7 @@ function getClosestAccentColour(r, g, b) {
 			accent.r, accent.g, accent.b
 		)
 
-		console.log(`Distance from ${accent.name}: ${squaredEuclideanDistance}`)
+		journal(`Distance from ${accent.name}: ${squaredEuclideanDistance}`)
 
 		if (squaredEuclideanDistance < shortestDistance) {
 			shortestDistance = squaredEuclideanDistance
@@ -191,7 +191,7 @@ function getClosestAccentColour(r, g, b) {
 		}
 	}
 
-	console.log(`Closest accent: ${accentColours[closestAccentIndex].name}`)
+	journal(`Closest accent: ${accentColours[closestAccentIndex].name}`)
 	return closestAccentIndex
 }
 
@@ -244,7 +244,7 @@ async function runColorThief(imagePath, extensionPath) {
 async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
 		const backgroundPalette = await runColorThief(backgroundPath, extensionPath)
-		console.log(`Wallpaper colour palette: ${backgroundPalette}`)
+		journal(`Wallpaper colour palette: ${backgroundPalette}`)
 
 		const dominantColourTuple = backgroundPalette[0]
 		const highlightColourTuple = backgroundPalette[1]
@@ -265,15 +265,15 @@ async function applyClosestAccent(
 	onDependencyFail,
 	onFinish
 ) {
-	console.log(`Cached hash: ${cachedHash}`)
+	journal(`Cached hash: ${cachedHash}`)
 
 	const backgroundFile = Gio.File.new_for_path(backgroundPath)
 	const backgroundHash = backgroundFile.hash()
-	console.log(`Background hash: ${backgroundHash}`)
+	journal(`Background hash: ${backgroundHash}`)
 
 	if (backgroundHash == cachedHash) {
 		const cachedAccent = accentColours[cachedAccentIndex]
-		console.log(`Returning cached accent (${cachedAccent.name})`)
+		journal(`Returning cached accent (${cachedAccent.name})`)
 		onFinish(cachedAccent)
 	} else {
 		const backgroundFileInfo = await backgroundFile.query_info_async(
@@ -283,7 +283,7 @@ async function applyClosestAccent(
 			null
 		)
 		const backgroundImgFormat = backgroundFileInfo.get_content_type()
-		console.log(`Background image format: ${backgroundImgFormat}`)
+		journal(`Background image format: ${backgroundImgFormat}`)
 
 		/* List of image formats that don't work well with colorthief, and often
 		cause crashes or return incorrect colours as a result, requiring conversion.
@@ -292,12 +292,12 @@ async function applyClosestAccent(
 		const incompatibleFormats = ['image/svg+xml', 'image/jxl']
 		const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
 
-		console.log(`Conversion to JPG required: ${conversionRequired}`)
+		journal(`Conversion to JPG required: ${conversionRequired}`)
 
 		if (conversionRequired) {
 			const magickInstalled = isImageMagickInstalled()
 			if (!magickInstalled) {
-				console.log('Imagemagick not installed !!')
+				journal('Imagemagick not installed !!')
 				onDependencyFail()
 				return
 			}
@@ -306,7 +306,7 @@ async function applyClosestAccent(
 		const rasterPath = conversionRequired
 			? await convert(backgroundPath)
 			: backgroundPath
-		console.log(`Raster path: ${rasterPath}`)
+		journal(`Raster path: ${rasterPath}`)
 
 		const backgroundPalette = await getBackgroundPalette(
 			extensionPath,
@@ -315,11 +315,11 @@ async function applyClosestAccent(
 
 		if (conversionRequired) { clearConvertedBackground() }
 
-		console.log('Getting dominant accent...')
+		journal('Getting dominant accent...')
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
 		const dom_accent = getClosestAccentColour(dom_r, dom_g, dom_b) // Dominant accent
 
-		console.log('Getting highlight accent...')
+		journal('Getting highlight accent...')
 		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
 		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
 
@@ -328,7 +328,7 @@ async function applyClosestAccent(
 		const closestAccentIndex = highlightMode ? hi_accent : dom_accent
 		const closestAccent = accentColours[closestAccentIndex]
 
-		console.log(`Accent to apply: ${closestAccent.name}`)
+		journal(`Accent to apply: ${closestAccent.name}`)
 
 		onFinish(closestAccent)
 	}
@@ -390,6 +390,8 @@ export default class AutoAccentColourExtension extends Extension {
 				}
 			}
 		}
+
+		setLogging(this._settings.get_boolean('debug-logging'))
 
 		this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
 		const indicator = this._indicator
@@ -458,7 +460,7 @@ export default class AutoAccentColourExtension extends Extension {
 				},
 				function(newAccent) {
 					setAccentColor(newAccent.name)
-					console.log(`New accent: ${getAccentColor()}`)
+					journal(`New accent: ${getAccentColor()}`)
 					changeIndicatorIcon(normalIcon)
 				}
 			)
@@ -478,7 +480,7 @@ export default class AutoAccentColourExtension extends Extension {
 			'changed::picture-uri',
 			() => {
 				if (getColorScheme() !== PREFER_DARK) {
-					console.log('Setting accent from picture-uri change.')
+					journal('Setting accent from picture-uri change.')
 					setAccent()
 				}
 			}
@@ -489,7 +491,7 @@ export default class AutoAccentColourExtension extends Extension {
 			'changed::picture-uri-dark',
 			() => {
 				if (getColorScheme() === PREFER_DARK) {
-					console.log('Setting accent from picture-uri-dark change.')
+					journal('Setting accent from picture-uri-dark change.')
 					setAccent()
 				}
 			}
@@ -506,7 +508,7 @@ export default class AutoAccentColourExtension extends Extension {
 			'changed',
 			(_fileMonitor, file, otherFile, eventType) => {
 				if (eventType == Gio.FileMonitorEvent.CREATED) {
-					console.log('Background file changed.')
+					journal('Background file changed.')
 					setAccent()
 				}
 			}
@@ -517,7 +519,7 @@ export default class AutoAccentColourExtension extends Extension {
 			'changed::color-scheme',
 			() => {
 				if (getBackgroundUri() !== getDarkBackgroundUri()) {
-					console.log('Setting accent from color-scheme change.')
+					journal('Setting accent from color-scheme change.')
 					setAccent()
 				}
 			}
@@ -527,15 +529,23 @@ export default class AutoAccentColourExtension extends Extension {
 		this._hideIndicatorHandler = this._settings.connect(
 			'changed::hide-indicator',
 			(settings, key) => {
-				console.debug(`${key} = ${settings.get_value(key).print(true)}`)
+				journal(`${key} = ${settings.get_value(key).print(true)}`)
 			}
 		)
 
 		this._highlightModeHandler = this._settings.connect(
 			'changed::highlight-mode',
 			(settings, key) => {
-				console.log(`${key} = ${settings.get_value(key).print(true)}`)
+				journal(`${key} = ${settings.get_value(key).print(true)}`)
 				setAccent()
+			}
+		)
+
+		this._debugModeHandler = this._settings.connect(
+			'changed::debug-logging',
+			(settings, key) => {
+				setLogging(settings.get_boolean(key))
+				journal(`${key} = ${settings.get_value(key).print(true)}`)
 			}
 		)
 	}

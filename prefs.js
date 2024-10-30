@@ -3,7 +3,7 @@ import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
-import isImageMagickInstalled from './utils.js'
+import { isImageMagickInstalled } from './utils.js'
 
 // TODO: Merge into one with extension.js
 class AccentColour {
@@ -273,6 +273,13 @@ This may sometimes be the same as the dominant colour.'
 		window._settings.bind(
 			'highlight-mode',
 			highlightColourRadio,
+			'active',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+
+		window._settings.bind(
+			'debug-logging',
+			debugLoggingRow,
 			'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
