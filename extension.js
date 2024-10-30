@@ -7,7 +7,6 @@
 // TODO: Investigate imagemagick SVG conversion causing artefacts
 // TODO: Review duplicate script-runs from background file change and uri change
 // TODO: Review string concatenation, and switch to template literals
-// TODO: Use backticks and newlines for very long strings
 // TODO: Research converting UI text into multiple languages
 // TODO: Investigate script sometimes not running when it should.
 // TODO: Consider moving some data structures to enable() local methods
