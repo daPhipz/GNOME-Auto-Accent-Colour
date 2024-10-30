@@ -240,7 +240,7 @@ async function runColorThief(imagePath, extensionPath) {
 	}
 }
 
-async function getBackgroundPalette(extensionPath, backgroundPath, cachedHash) {
+async function getBackgroundPalette(extensionPath, backgroundPath) {
 	try {
 		const backgroundPalette = await runColorThief(backgroundPath, extensionPath)
 		console.log(`Wallpaper colour palette: ${backgroundPalette}`)
