@@ -26,15 +26,6 @@ const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const COLOR_SCHEME = 'color-scheme'
 const PREFER_DARK = 'prefer-dark'
 const ACCENT_COLOR = 'accent-color'
-const BLUE = 'blue'
-const TEAL = 'teal'
-const GREEN = 'green'
-const YELLOW = 'yellow'
-const ORANGE = 'orange'
-const RED = 'red'
-const PINK = 'pink'
-const PURPLE = 'purple'
-const SLATE = 'slate'
 const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
@@ -118,15 +109,15 @@ const accentColours = [
 	settings. They are exaggerated to add further distinction between them, so
 	that a greater variety of accents can be returned from different backgrounds
 	and their derived colours. */
-	new AccentColour(BLUE, 0, 0, 255, new HueRange(180, 300)),
-	new AccentColour(TEAL, 0, 255, 255, new HueRange(120, 240)),
-	new AccentColour(GREEN, 0, 191, 0, new HueRange(50, 180)),
-	new AccentColour(YELLOW, 200, 150, 0, new HueRange(29, 70)),
-	new AccentColour(ORANGE, 237, 91, 0, new HueRange(0, 70)),
-	new AccentColour(RED, 230, 0, 26, new HueRange(300, 22)),
-	new AccentColour(PINK, 213, 0, 103, new HueRange(240, 0)),
-	new AccentColour(PURPLE, 145, 65, 172, new HueRange(240, 330)),
-	new AccentColour(SLATE, 166, 166, 166, new HueRange(180, 300))
+	new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+	new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
+	new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
+	new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
+	new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
+	new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
+	new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
+	new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
+	new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
 ]
 
 // Thank you to andy.holmes on StackOverflow for this Promise wrapper
