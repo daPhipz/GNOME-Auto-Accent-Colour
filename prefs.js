@@ -108,6 +108,17 @@ This may sometimes be the same as the dominant colour.'
 		highlightColourRow.add_prefix(highlightColourRadio)
 		paletteGroup.add(highlightColourRow)
 
+		const devToolsGroup = new Adw.PreferencesGroup({
+			title: _('Developer Tools')
+		})
+		settingsPage.add(devToolsGroup)
+
+		const debugLoggingRow = new Adw.SwitchRow({
+			title: _('Debug Logging'),
+			subtitle: _('Print debug messages to the system journal')
+		})
+		devToolsGroup.add(debugLoggingRow)
+
 		////////////////////////////////////////////////////////////////////////
 
 		// Cache page //////////////////////////////////////////////////////////
