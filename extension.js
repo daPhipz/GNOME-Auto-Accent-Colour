@@ -12,6 +12,7 @@
 // TODO: Investigate script sometimes not running when it should.
 // TODO: Consider moving some data structures to enable() local methods
 // TODO: Maybe remove some of the static string constants?
+// TODO: THE BACKGROUND FILE ALWAYS RETURNS THE SAME HASH!!!
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
