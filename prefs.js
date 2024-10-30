@@ -75,8 +75,7 @@ backgrounds. It must be installed via the system package manager.'
 		const paletteGroup = new Adw.PreferencesGroup({
 			title: _('Colour Palette'),
 			description: _(
-				'Choose the type of background colour to base the shell accent \
-colour from. The dominant colour may sometimes be the same as the highlight colour.'
+				'Choose the type of background colour to base the shell accent colour from'
 			)
 		})
 		settingsPage.add(paletteGroup)
@@ -100,7 +99,10 @@ colour from. The dominant colour may sometimes be the same as the highlight colo
 		})
 		const highlightColourRow = new Adw.ActionRow({
 			title: _('Highlight'),
-			subtitle: _('Use a contrasting yet complimentary colour from the background'),
+			subtitle: _(
+				'Use a contrasting yet complimentary colour from the background. \
+This may sometimes be the same as the dominant colour.'
+			),
 			activatable_widget: highlightColourRadio
 		})
 		highlightColourRow.add_prefix(highlightColourRadio)
