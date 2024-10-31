@@ -160,8 +160,6 @@ This may sometimes be the same as the dominant colour.'
 		})
 		cachePage.add(lightBackgroundGroup)
 
-		let testStr = ''
-
 		const lightNoCacheRow = new Adw.ActionRow({
 			title: noCacheMsg
 		})
@@ -170,7 +168,6 @@ This may sometimes be the same as the dominant colour.'
 		const lightHashRow = new Adw.ActionRow({
 			title: hashTitle,
 			subtitle_selectable: true,
-			subtitle: testStr,
 			css_classes: ['property']
 		})
 		lightBackgroundGroup.add(lightHashRow)
