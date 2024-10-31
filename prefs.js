@@ -303,10 +303,55 @@ This may sometimes be the same as the dominant colour.'
 		linksGroup.add(issueRow)
 		issueRow.add_suffix(issueBtn)
 
-		const licensesRow = new Adw.ActionRow({
+		const licensesRow = new Adw.ExpanderRow({
 			title: _('Licenses')
 		})
 		linksGroup.add(licensesRow)
+
+		const gplv3Btn = new Gtk.LinkButton({
+			label: 'GitHub',
+			valign: Gtk.Align.CENTER,
+			uri: 'https://github.com/Wartybix/GNOME-Auto-Accent-Colour/blob/main/LICENSE'
+		})
+
+		const autoAccentColourRow = new Adw.ActionRow({
+			title: _('Auto Accent Colour Extension'),
+			subtitle: _('GNU General Public License v3.0'),
+			activatable_widget: gplv3Btn,
+			css_classes: ['property']
+		})
+		autoAccentColourRow.add_suffix(gplv3Btn)
+		licensesRow.add_row(autoAccentColourRow)
+
+		const colorThiefLicenseBtn = new Gtk.LinkButton({
+			label: 'GitHub',
+			valign: Gtk.Align.CENTER,
+			uri: 'https://github.com/lokesh/color-thief/blob/master/LICENSE'
+		})
+
+		const colorThiefRow = new Adw.ActionRow({
+			title: _('ColorThief Module'),
+			subtitle: _('MIT License'),
+			activatable_widget: colorThiefLicenseBtn,
+			css_classes: ['property']
+		})
+		colorThiefRow.add_suffix(colorThiefLicenseBtn)
+		licensesRow.add_row(colorThiefRow)
+
+		const quantizeLicenseBtn = new Gtk.LinkButton({
+			label: 'GitHub',
+			valign: Gtk.Align.CENTER,
+			uri: 'https://github.com/olivierlesnicki/quantize/blob/master/LICENSE'
+		})
+
+		const quantizeRow = new Adw.ActionRow({
+			title: _('Quantize Module'),
+			subtitle: _('MIT License'),
+			activatable_widget: quantizeLicenseBtn,
+			css_classes: ['property']
+		})
+		quantizeRow.add_suffix(quantizeLicenseBtn)
+		licensesRow.add_row(quantizeRow)
 
 		const pigeonsGroup = new Adw.PreferencesGroup()
 		aboutPage.add(pigeonsGroup)
