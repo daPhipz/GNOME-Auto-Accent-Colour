@@ -243,6 +243,63 @@ This may sometimes be the same as the dominant colour.'
 		})
 		window.add(aboutPage)
 
+		const aboutGroup = new Adw.PreferencesGroup()
+		aboutPage.add(aboutGroup)
+
+		const title = new Gtk.Label({
+			label: _('Auto Accent Colour'),
+			css_classes: ['title-1']
+		})
+		aboutGroup.add(title)
+
+		const author = new Gtk.Label({
+			label: _('Created by Wartybix')
+		})
+		aboutGroup.add(author)
+
+		const specialThanks = new Adw.PreferencesGroup({
+			title: _('Special Thanks')
+		})
+		aboutPage.add(specialThanks)
+
+		const lokeshRow = new Adw.ActionRow({
+			title: 'Lokesh Dhakar',
+			subtitle: _('For creating the ColorThief JavaScript module, used for extracting colours from the background image')
+		})
+		specialThanks.add(lokeshRow)
+
+		const olivierlesnickiRow = new Adw.ActionRow({
+			title: 'Olivier Lesnicki',
+			subtitle: _('For creating the Quantize JavaScript module, used by ColorThief for colour quantization')
+		})
+		specialThanks.add(olivierlesnickiRow)
+
+		const linksGroup = new Adw.PreferencesGroup({})
+		aboutPage.add(linksGroup)
+
+		const repoRow = new Adw.ActionRow({
+			title: _('Project Repository')
+		})
+		linksGroup.add(repoRow)
+
+		const issueRow = new Adw.ActionRow({
+			title: _('Submit an Issue')
+		})
+		linksGroup.add(issueRow)
+
+		const licensesRow = new Adw.ActionRow({
+			title: _('Licenses')
+		})
+		linksGroup.add(licensesRow)
+
+		const pigeonsGroup = new Adw.PreferencesGroup()
+		aboutPage.add(pigeonsGroup)
+
+		const pigeonsText = new Gtk.Label({
+			label: _('Be kind to your local pigeons!')
+		})
+		pigeonsGroup.add(pigeonsText)
+
 		////////////////////////////////////////////////////////////////////////
 
 		const extensionPath = this.path
