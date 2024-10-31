@@ -277,15 +277,31 @@ This may sometimes be the same as the dominant colour.'
 		const linksGroup = new Adw.PreferencesGroup({})
 		aboutPage.add(linksGroup)
 
+		const repoBtn = new Gtk.LinkButton({
+			label: 'GitHub',
+			valign: Gtk.Align.CENTER,
+			uri: 'https://github.com/Wartybix/GNOME-Auto-Accent-Colour/'
+		})
+
 		const repoRow = new Adw.ActionRow({
-			title: _('Project Repository')
+			title: _('Project Repository'),
+			activatable_widget: repoBtn
 		})
 		linksGroup.add(repoRow)
+		repoRow.add_suffix(repoBtn)
+
+		const issueBtn = new Gtk.LinkButton({
+			label: 'GitHub',
+			valign: Gtk.Align.CENTER,
+			uri: 'https://github.com/Wartybix/GNOME-Auto-Accent-Colour/issues'
+		})
 
 		const issueRow = new Adw.ActionRow({
-			title: _('Submit an Issue')
+			title: _('Submit an Issue'),
+			activatable_widget: issueBtn
 		})
 		linksGroup.add(issueRow)
+		issueRow.add_suffix(issueBtn)
 
 		const licensesRow = new Adw.ActionRow({
 			title: _('Licenses')
