@@ -1,12 +1,10 @@
 // TODO: Add Extensions store page support
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Add accent colour preview in cache preferences
-// TODO: Review console logging
 // TODO: Add random accent colour mode?
 // TODO: Add descriptions to schema keys
 // TODO: Investigate imagemagick SVG conversion causing artefacts
 // TODO: Review duplicate script-runs from background file change and uri change
-// TODO: Review string concatenation, and switch to template literals
 // TODO: Research converting UI text into multiple languages
 // TODO: Investigate script sometimes not running when it should.
 // TODO: Consider moving some data structures to enable() local methods
