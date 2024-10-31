@@ -9,7 +9,6 @@
 // TODO: Investigate script sometimes not running when it should.
 // TODO: Consider moving some data structures to enable() local methods
 // TODO: Maybe remove some of the static string constants?
-// TODO: THE BACKGROUND FILE ALWAYS RETURNS THE SAME HASH!!!
 // TODO: Add 'keep converted background' option?
 
 import St from 'gi://St'
@@ -257,6 +256,7 @@ async function applyClosestAccent(
 	extensionPath,
 	backgroundPath,
 	cachedHash,
+	cachedLastChangeHash,
 	cachedAccentIndex,
 	addToCache,
 	highlightMode,
@@ -264,22 +264,30 @@ async function applyClosestAccent(
 	onFinish
 ) {
 	journal(`Cached hash: ${cachedHash}`)
+	journal(`Cached last change hash: ${cachedLastChangeHash}`)
 
 	const backgroundFile = Gio.File.new_for_path(backgroundPath)
 	const backgroundHash = backgroundFile.hash()
 	journal(`Background hash: ${backgroundHash}`)
 
-	if (backgroundHash == cachedHash) {
+	const backgroundFileInfo = await backgroundFile.query_info_async(
+		'standard::*,time::*',
+		Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+		GLib.PRIORITY_DEFAULT,
+		null
+	)
+
+	const backgroundLastChange = backgroundFileInfo.get_modification_date_time()
+	journal(`Background last changed: ${backgroundLastChange.format_iso8601()}`)
+
+	const backgroundLastChangeHash = backgroundLastChange.hash()
+	journal(`Background last changed hash: ${backgroundLastChangeHash}`)
+
+	if (backgroundHash == cachedHash && backgroundLastChangeHash == cachedLastChangeHash) {
 		const cachedAccent = accentColours[cachedAccentIndex]
 		journal(`Returning cached accent (${cachedAccent.name})`)
 		onFinish(cachedAccent)
 	} else {
-		const backgroundFileInfo = await backgroundFile.query_info_async(
-			'standard::*',
-			Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-			GLib.PRIORITY_DEFAULT,
-			null
-		)
 		const backgroundImgFormat = backgroundFileInfo.get_content_type()
 		journal(`Background image format: ${backgroundImgFormat}`)
 
@@ -321,7 +329,7 @@ async function applyClosestAccent(
 		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
 		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
 
-		addToCache(backgroundHash, dom_accent, hi_accent)
+		addToCache(backgroundHash, backgroundLastChangeHash, dom_accent, hi_accent)
 
 		const closestAccentIndex = highlightMode ? hi_accent : dom_accent
 		const closestAccent = accentColours[closestAccentIndex]
@@ -368,6 +376,11 @@ export default class AutoAccentColourExtension extends Extension {
 				getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash'
 			)
 		}
+		function getCachedLastChange() {
+			return settings.get_int64(
+				getColorScheme() == PREFER_DARK ? 'dark-last-change' : 'light-last-change'
+			)
+		}
 		function getCachedAccent() {
 			const theme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
 			const colourMode = settings.get_boolean('highlight-mode')
@@ -376,13 +389,14 @@ export default class AutoAccentColourExtension extends Extension {
 
 			return settings.get_enum(`${theme}-${colourMode}-accent`)
 		}
-		function cache(backgroundHash, dominantAccent, highlightAccent) {
+		function cache(backgroundHash, lastChange, dominantAccent, highlightAccent) {
 			const currentTheme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
 			const backgroundsAreSame = getBackgroundUri() == getDarkBackgroundUri()
 
 			for (const theme of ['dark', 'light']) {
 				if (currentTheme == theme || backgroundsAreSame) {
 					settings.set_int64(`${theme}-hash`, backgroundHash)
+					settings.set_int64(`${theme}-last-change`, lastChange)
 					settings.set_enum(`${theme}-dominant-accent`, dominantAccent)
 					settings.set_enum(`${theme}-highlight-accent`, highlightAccent)
 				}
@@ -446,6 +460,7 @@ export default class AutoAccentColourExtension extends Extension {
 				extensionPath,
 				backgroundPath,
 				getCachedHash(),
+				getCachedLastChange(),
 				getCachedAccent(),
 				cache,
 				highlightMode,

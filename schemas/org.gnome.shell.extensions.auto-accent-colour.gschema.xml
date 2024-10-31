@@ -25,6 +25,9 @@
     <key name="light-hash" type="x">
       <default>-1</default>
     </key>
+    <key name="light-last-change" type="x">
+      <default>-1</default>
+    </key>
     <key name="light-dominant-accent" enum="org.gnome.shell.extensions.auto-accent-colour.accents">
       <default>'blue'</default>
     </key>
@@ -32,6 +35,9 @@
       <default>'blue'</default>
     </key>
     <key name="dark-hash" type="x">
+      <default>-1</default>
+    </key>
+    <key name="dark-last-change" type="x">
       <default>-1</default>
     </key>
     <key name="dark-dominant-accent" enum="org.gnome.shell.extensions.auto-accent-colour.accents">

@@ -145,8 +145,9 @@ This may sometimes be the same as the dominant colour.'
 			})
 		}
 
-		const hashTitle = _('Hash')
+		const hashTitle = _('File Hash')
 		const noCacheMsg = _('Nothing cached')
+		const lastChangeTitle = _('Time Last Modified Hash')
 		const dominantAccentTitle = _('Dominant Accent')
 		const highlightAccentTitle = _('Highlight Accent')
 
@@ -171,6 +172,13 @@ This may sometimes be the same as the dominant colour.'
 			css_classes: ['property']
 		})
 		lightBackgroundGroup.add(lightHashRow)
+
+		const lightLastChangeRow = new Adw.ActionRow({
+			title: lastChangeTitle,
+			subtitle_selectable: true,
+			css_classes: ['property']
+		})
+		lightBackgroundGroup.add(lightLastChangeRow)
 
 		const lightDominantAccent = new Adw.ActionRow({
 			title: dominantAccentTitle,
@@ -205,6 +213,13 @@ This may sometimes be the same as the dominant colour.'
 			css_classes: ['property']
 		})
 		darkBackgroundGroup.add(darkHashRow)
+
+		const darkLastChangeRow = new Adw.ActionRow({
+			title: lastChangeTitle,
+			subtitle_selectable: true,
+			css_classes: ['property']
+		})
+		darkBackgroundGroup.add(darkLastChangeRow)
 
 		const darkDominantAccent = new Adw.ActionRow({
 			title: dominantAccentTitle,
@@ -331,6 +346,7 @@ This may sometimes be the same as the dominant colour.'
 			const noCacheRow = lightTheme ? lightNoCacheRow : darkNoCacheRow
 			const deleteBtn = lightTheme ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
 			const hashRow = lightTheme ? lightHashRow : darkHashRow
+			const lastChangeRow = lightTheme ? lightLastChangeRow : darkLastChangeRow
 			const dominantRow = lightTheme ? lightDominantAccent : darkDominantAccent
 			const highlightRow = lightTheme ? lightHighlightAccent : darkHighlightAccent
 			const hash = settings.get_int64(`${theme}-hash`)
@@ -339,10 +355,21 @@ This may sometimes be the same as the dominant colour.'
 			noCacheRow.visible = isHashDefault
 			deleteBtn.sensitive = !isHashDefault
 			hashRow.visible = !isHashDefault
+			lastChangeRow.visible = !isHashDefault
 			dominantRow.visible = !isHashDefault
 			highlightRow.visible = !isHashDefault
 
 			hashRow.subtitle = hash.toString()
+		}
+
+		function setLastChangeRow(theme) {
+			const lastChangeHash = settings.get_int64(`${theme}-last-change`)
+
+			const lastChangeRow = theme == LIGHT
+				? lightLastChangeRow
+				: darkLastChangeRow
+
+			lastChangeRow.subtitle = lastChangeHash.toString()
 		}
 
 		function setAccentRow(theme, colourType) {
@@ -355,10 +382,16 @@ This may sometimes be the same as the dominant colour.'
 
 		for (let theme of [LIGHT, DARK]) {
 			setHashRow(theme)
+			setLastChangeRow(theme)
 
 			window._settings.connect(
 				`changed::${theme}-hash`,
 				() => { setHashRow(theme) }
+			)
+
+			window._settings.connect(
+				`changed::${theme}-last-change`,
+				() => { setLastChangeRow(theme) }
 			)
 
 			for (let colourType of [DOMINANT, HIGHLIGHT]) {
