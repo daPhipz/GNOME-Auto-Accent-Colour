@@ -382,8 +382,6 @@ This may sometimes be the same as the dominant colour.'
 
 		////////////////////////////////////////////////////////////////////////
 
-		const installedLabel = new Gtk.Label({ label: _('Installed') })
-
 		function setImageMagickRow() {
 			const magickInstalled = isImageMagickInstalled()
 
