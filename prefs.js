@@ -22,6 +22,14 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
 	fillPreferencesWindow(window) {
 		window._settings = this.getSettings()
 		const settings = window._settings
+		const iconsDir = `${this.path}/icons`
+
+		function getIcon(iconName) {
+			return new Gtk.Image({
+				gicon: Gio.icon_new_for_string(`${iconsDir}/${iconName}.svg`)
+			})
+		}
+
 		// Dependencies page ///////////////////////////////////////////////////
 
 		const dependenciesPage = new Adw.PreferencesPage({
@@ -290,6 +298,9 @@ This may sometimes be the same as the dominant colour.'
 		linksGroup.add(repoRow)
 		repoRow.add_suffix(repoBtn)
 
+		const repoIcon = getIcon('code-symbolic')
+		repoRow.add_prefix(repoIcon)
+
 		const issueBtn = new Gtk.LinkButton({
 			label: 'GitHub',
 			valign: Gtk.Align.CENTER,
@@ -303,10 +314,16 @@ This may sometimes be the same as the dominant colour.'
 		linksGroup.add(issueRow)
 		issueRow.add_suffix(issueBtn)
 
+		const issueIcon = getIcon('bug-symbolic')
+		issueRow.add_prefix(issueIcon)
+
 		const licensesRow = new Adw.ExpanderRow({
 			title: _('Licenses')
 		})
 		linksGroup.add(licensesRow)
+
+		const licenseIcon = getIcon('license-symbolic')
+		licensesRow.add_prefix(licenseIcon)
 
 		const gplv3Btn = new Gtk.LinkButton({
 			label: 'GitHub',
@@ -363,7 +380,6 @@ This may sometimes be the same as the dominant colour.'
 
 		////////////////////////////////////////////////////////////////////////
 
-		const extensionPath = this.path
 		const installedLabel = new Gtk.Label({ label: _('Installed') })
 
 		function setImageMagickRow() {
