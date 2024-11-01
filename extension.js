@@ -572,6 +572,10 @@ export default class AutoAccentColourExtension extends Extension {
 			this._backgroundSettings.disconnect(this._darkBackgroundHandler)
 			this._darkBackgroundHandler = null
 		}
+		if (this._backgroundFileHandler) {
+			this._backgroundFileMonitor.disconnect(this._backgroundFileHandler)
+			this._backgroundFileHandler = null
+		}
 		if (this._colorSchemeHandler) {
 			this._interfaceSettings.disconnect(this._colorSchemeHandler)
 			this._colorSchemeHandler = null
@@ -580,9 +584,13 @@ export default class AutoAccentColourExtension extends Extension {
 			this._settings.disconnect(this._hideIndicatorHandler)
 			this._hideIndicatorHandler = null
 		}
-		if (this._backgroundFileHandler) {
-			this._backgroundFileMonitor.disconnect(this._backgroundFileHandler)
-			this._backgroundFileHandler = null
+		if (this._highlightModeHandler) {
+			this._settings.disconnect(this._highlightModeHandler)
+			this._hideIndicatorHandler = null
+		}
+		if (this._debugModeHandler) {
+			this._settings.disconnect(this._debugModeHandler)
+			this._debugModeHandler = null
 		}
 
 		this._indicator?.destroy()
