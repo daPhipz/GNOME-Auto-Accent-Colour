@@ -282,6 +282,8 @@ This may sometimes be the same as the dominant colour.'
 		})
 		specialThanks.add(olivierlesnickiRow)
 
+		//TODO: Ask other candidate at a reasonable time of the day
+
 		const linksGroup = new Adw.PreferencesGroup({})
 		aboutPage.add(linksGroup)
 
