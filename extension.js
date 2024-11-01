@@ -407,25 +407,21 @@ export default class AutoAccentColourExtension extends Extension {
 
 		setLogging(this._settings.get_boolean('debug-logging'))
 
+		function getIcon(iconName) {
+			return new St.Icon({
+				gicon: Gio.icon_new_for_string(
+					`${extensionPath}/icons/${iconName}.svg`
+				),
+				style_class: 'system-status-icon'
+			})
+		}
+
 		this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false)
 		const indicator = this._indicator
 
-		const normalIcon = new St.Icon({
-			gicon: Gio.icon_new_for_string(`${iconsPath}/color-symbolic.svg`),
-			style_class: 'system-status-icon'
-		})
-		const waitIcon = new St.Icon({
-			gicon: Gio.icon_new_for_string(
-				iconsPath + 'color-wait-symbolic.svg'
-			),
-			style_class: 'system-status-icon'
-		})
-		const alertIcon = new St.Icon({
-			gicon: Gio.icon_new_for_string(
-				iconsPath + 'color-alert-symbolic.svg'
-			),
-			style_class: 'system-status-icon'
-		})
+		const normalIcon = getIcon('color-symbolic')
+		const waitIcon = getIcon('color-wait-symbolic')
+		const alertIcon = getIcon('color-alert-symbolic')
 
 		let currentIcon = normalIcon
 		indicator.add_child(currentIcon)
