@@ -10,6 +10,8 @@
 // TODO: Consider moving some data structures to enable() local methods
 // TODO: Maybe remove some of the static string constants?
 // TODO: Add 'keep converted background' option?
+// TODO: Solve crash when applying custom background from GNOME appearance settings
+// TODO: Remove deprecated 'icon-name' property of preference rows in prefs.js
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
