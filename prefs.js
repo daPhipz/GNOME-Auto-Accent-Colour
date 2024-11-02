@@ -380,10 +380,12 @@ This may sometimes be the same as the dominant colour.'
 
 		////////////////////////////////////////////////////////////////////////
 
+		const tickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
+		const warningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
+
 		function setImageMagickRow() {
 			const magickInstalled = isImageMagickInstalled()
 
-			const iconName = magickInstalled ? 'emblem-ok-symbolic' : 'dialog-warning-symbolic'
 			const label = magickInstalled ? _('Installed') : _('Not Installed')
 			const css_classes = ['property']
 
@@ -394,7 +396,7 @@ This may sometimes be the same as the dominant colour.'
 			imageMagickRow.subtitle = label
 			imageMagickRow.css_classes = css_classes
 
-			const icon = Gtk.Image.new_from_icon_name(iconName)
+			const icon = magickInstalled ? tickIcon : warningIcon
 			imageMagickRow.add_suffix(icon)
 		}
 
