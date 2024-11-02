@@ -10,7 +10,6 @@
 // TODO: Consider moving some data structures to enable() local methods
 // TODO: Maybe remove some of the static string constants?
 // TODO: Add 'keep converted background' option?
-// TODO: Solve crash when applying custom background from GNOME appearance settings
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
@@ -255,7 +254,7 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 
 async function applyClosestAccent(
 	extensionPath,
-	backgroundPath,
+	backgroundUri,
 	cachedHash,
 	cachedLastChangeHash,
 	cachedAccentIndex,
@@ -267,8 +266,9 @@ async function applyClosestAccent(
 	journal(`Cached hash: ${cachedHash}`)
 	journal(`Cached last change hash: ${cachedLastChangeHash}`)
 
-	const backgroundFile = Gio.File.new_for_path(backgroundPath)
+	const backgroundFile = Gio.File.new_for_uri(backgroundUri)
 	const backgroundHash = backgroundFile.hash()
+	journal(`File URI: ${backgroundUri}`)
 	journal(`Background hash: ${backgroundHash}`)
 
 	const backgroundFileInfo = await backgroundFile.query_info_async(
@@ -309,6 +309,8 @@ async function applyClosestAccent(
 				return
 			}
 		}
+
+		const backgroundPath = backgroundFile.get_path()
 
 		const rasterPath = conversionRequired
 			? await convert(backgroundPath)
@@ -446,16 +448,15 @@ export default class AutoAccentColourExtension extends Extension {
 		function setAccent() {
 			changeIndicatorIcon(waitIcon)
 
-			const backgroundPath = (
-				getColorScheme() === PREFER_DARK ?
-					getDarkBackgroundUri() : getBackgroundUri()
-			).replace('file://', '')
+			const backgroundUri = getColorScheme() === PREFER_DARK
+					? getDarkBackgroundUri()
+					: getBackgroundUri()
 
 			const highlightMode = settings.get_boolean('highlight-mode')
 
 			applyClosestAccent(
 				extensionPath,
-				backgroundPath,
+				backgroundUri,
 				getCachedHash(),
 				getCachedLastChange(),
 				getCachedAccent(),
