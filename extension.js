@@ -7,7 +7,6 @@
 // TODO: Investigate script sometimes not running when it should.
 // TODO: Consider moving some data structures to enable() local methods
 // TODO: Maybe remove some of the static string constants?
-// TODO: Add 'keep converted background' option?
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
@@ -258,6 +257,7 @@ async function applyClosestAccent(
 	cachedAccentIndex,
 	addToCache,
 	highlightMode,
+	keepConversion,
 	onDependencyFail,
 	onFinish
 ) {
@@ -320,7 +320,9 @@ async function applyClosestAccent(
 			rasterPath
 		)
 
-		if (conversionRequired) { clearConvertedBackground() }
+		if (conversionRequired && !keepConversion) {
+			clearConvertedBackground()
+		}
 
 		journal('Getting dominant accent...')
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
@@ -390,6 +392,10 @@ export default class AutoAccentColourExtension extends Extension {
 
 			return settings.get_enum(`${theme}-${colourMode}-accent`)
 		}
+		function getKeepConversion() {
+			return settings.get_boolean('keep-conversion')
+		}
+
 		function cache(backgroundHash, lastChange, dominantAccent, highlightAccent) {
 			const currentTheme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
 			const backgroundsAreSame = getBackgroundUri() == getDarkBackgroundUri()
@@ -460,6 +466,7 @@ export default class AutoAccentColourExtension extends Extension {
 				getCachedAccent(),
 				cache,
 				highlightMode,
+				getKeepConversion(),
 				function() {
 					Main.notifyError(
 						_('ImageMagick not installed'),
@@ -555,6 +562,16 @@ export default class AutoAccentColourExtension extends Extension {
 			(settings, key) => {
 				setLogging(settings.get_boolean(key))
 				journal(`${key} = ${settings.get_value(key).print(true)}`)
+			}
+		)
+		this._keepConversionHandler = this._settings.connect(
+			'changed::keep-conversion',
+			(settings, key) => {
+				const value = settings.get_boolean(key)
+				journal(`${key} = ${value}`)
+				if (value == false) {
+					clearConvertedBackground()
+				}
 			}
 		)
 	}

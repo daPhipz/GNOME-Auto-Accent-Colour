@@ -127,6 +127,13 @@ This may sometimes be the same as the dominant colour.'
 		})
 		devToolsGroup.add(debugLoggingRow)
 
+		const keepConversionRow = new Adw.SwitchRow({
+			title: _('Keep Converted Background Image'),
+			subtitle: _("Don't auto-clear temporary conversions of SVG and JXL \
+backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-colour/.")
+		})
+		devToolsGroup.add(keepConversionRow)
+
 		////////////////////////////////////////////////////////////////////////
 
 		// Cache page //////////////////////////////////////////////////////////
@@ -433,6 +440,12 @@ This may sometimes be the same as the dominant colour.'
 		window._settings.bind(
 			'debug-logging',
 			debugLoggingRow,
+			'active',
+			Gio.SettingsBindFlags.DEFAULT
+		)
+		window._settings.bind(
+			'keep-conversion',
+			keepConversionRow,
 			'active',
 			Gio.SettingsBindFlags.DEFAULT
 		)
