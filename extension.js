@@ -32,7 +32,7 @@ function getHueFromRGB(r, g, b) {
 	let hue = 0
 
 	if (delta == 0) {
-		return hue // == 0
+		return hue // = 0
 	}
 
 	switch (maxColour) {
