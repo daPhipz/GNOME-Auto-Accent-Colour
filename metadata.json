@@ -4,5 +4,6 @@
 	"uuid": "auto-accent-colour@Wartybix",
 	"shell-version": [ "47" ],
 	"gettext-domain": "auto-accent-colour@Wartybix",
-	"settings-schema": "org.gnome.shell.extensions.auto-accent-colour"
+	"settings-schema": "org.gnome.shell.extensions.auto-accent-colour",
+	"url": "https://github.com/Wartybix/GNOME-Auto-Accent-Colour/"
 }
