@@ -1,6 +1,6 @@
 {
 	"name": "Auto Accent Colour",
-	"description": "Automatically set the GNOME accent colour based on the user's wallpaper",
+	"description": "Automatically set the GNOME accent colour based on the user's wallpaper.",
 	"uuid": "auto-accent-colour@Wartybix",
 	"shell-version": [ "47" ],
 	"gettext-domain": "auto-accent-colour@Wartybix",
