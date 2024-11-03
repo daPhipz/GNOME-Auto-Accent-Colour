@@ -5,7 +5,6 @@
 // TODO: Review duplicate script-runs from background file change and uri change
 // TODO: Research converting UI text into multiple languages
 // TODO: Investigate script sometimes not running when it should.
-// TODO: Consider moving some data structures to enable() local methods
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
@@ -86,31 +85,6 @@ class AccentColour {
 	}
 }
 
-/* Hue values are:
-0 = Red
-60 = Yellow
-120 = Green
-180 = Cyan
-240 = Blue
-300 = Magenta
-*/
-const accentColours = [
-	/* The RGB values set in these accent colour entries are *not* the RGB
-	values of the same accent colours you would find in the GNOME appearance
-	settings. They are exaggerated to add further distinction between them, so
-	that a greater variety of accents can be returned from different backgrounds
-	and their derived colours. */
-	new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
-	new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
-	new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
-	new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
-	new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
-	new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
-	new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
-	new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-	new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
-]
-
 // Thank you to andy.holmes on StackOverflow for this Promise wrapper
 // https://stackoverflow.com/a/61150669
 function execCommand(argv, input = null, cancellable = null) {
@@ -152,7 +126,7 @@ function isHueInRange(hue, hueRange) {
 	return false
 }
 
-function getClosestAccentColour(r, g, b) {
+function getClosestAccentColour(accentColours, r, g, b) {
 	let shortestDistance = Number.MAX_VALUE
 	let closestAccentIndex = -1
 
@@ -253,6 +227,7 @@ async function applyClosestAccent(
 	cachedHash,
 	cachedLastChangeHash,
 	cachedAccentIndex,
+	accentColours,
 	addToCache,
 	highlightMode,
 	keepConversion,
@@ -324,11 +299,21 @@ async function applyClosestAccent(
 
 		journal('Getting dominant accent...')
 		const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
-		const dom_accent = getClosestAccentColour(dom_r, dom_g, dom_b) // Dominant accent
+		const dom_accent = getClosestAccentColour(
+			accentColours,
+			dom_r,
+			dom_g,
+			dom_b
+		) // Dominant accent
 
 		journal('Getting highlight accent...')
 		const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
-		const hi_accent = getClosestAccentColour(hi_r, hi_g, hi_b) // Highlight accent
+		const hi_accent = getClosestAccentColour(
+			accentColours,
+			hi_r,
+			hi_g,
+			hi_b
+		) // Highlight accent
 
 		addToCache(backgroundHash, backgroundLastChangeHash, dom_accent, hi_accent)
 
@@ -343,6 +328,31 @@ async function applyClosestAccent(
 
 export default class AutoAccentColourExtension extends Extension {
 	enable() {
+		/* Hue values are:
+		0 = Red
+		60 = Yellow
+		120 = Green
+		180 = Cyan
+		240 = Blue
+		300 = Magenta
+		*/
+		const accentColours = [
+			/* The RGB values set in these accent colour entries are *not* the RGB
+			values of the same accent colours you would find in the GNOME appearance
+			settings. They are exaggerated to add further distinction between them, so
+			that a greater variety of accents can be returned from different backgrounds
+			and their derived colours. */
+			new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+			new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
+			new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
+			new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
+			new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
+			new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
+			new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
+			new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
+			new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
+		]
+
 		const extensionPath = this.path
 
 		this._settings = this.getSettings()
@@ -461,6 +471,7 @@ export default class AutoAccentColourExtension extends Extension {
 				getCachedHash(),
 				getCachedLastChange(),
 				getCachedAccent(),
+				accentColours,
 				cache,
 				highlightMode,
 				getKeepConversion(),
