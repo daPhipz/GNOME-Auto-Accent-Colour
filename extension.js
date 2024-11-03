@@ -344,7 +344,6 @@ async function applyClosestAccent(
 export default class AutoAccentColourExtension extends Extension {
 	enable() {
 		const extensionPath = this.path
-		const iconsPath = `${extensionPath}/icons/`
 
 		this._settings = this.getSettings()
 		const settings = this._settings
@@ -368,7 +367,7 @@ export default class AutoAccentColourExtension extends Extension {
 		function setAccentColor(colorName) {
 			interfaceSettings.set_string(ACCENT_COLOR, colorName)
 		}
-		function getAccentColor(colorName) {
+		function getAccentColor() {
 			interfaceSettings.get_string(ACCENT_COLOR)
 		}
 
