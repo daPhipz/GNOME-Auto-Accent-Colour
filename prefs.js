@@ -48,7 +48,7 @@ backgrounds. It must be installed via the system package manager.'
 		dependenciesPage.add(systemDependenciesGroup)
 
 		const imageMagickRow = new Adw.ActionRow({
-			title: _('ImageMagick')
+			title: 'ImageMagick'
 		})
 		systemDependenciesGroup.add(imageMagickRow)
 
