@@ -180,10 +180,10 @@ var MMCQ = (function() {
                     }
                 }
                 if (ntot) {
-                    vbox._avg = [~~(rsum / ntot), ~~ (gsum / ntot), ~~ (bsum / ntot)];
+                    vbox._avg = [~~(rsum / ntot), ~~(gsum / ntot), ~~(bsum / ntot)];
                 } else {
                     //console.log('empty box');
-                    vbox._avg = [~~(mult * (vbox.r1 + vbox.r2 + 1) / 2), ~~ (mult * (vbox.g1 + vbox.g2 + 1) / 2), ~~ (mult * (vbox.b1 + vbox.b2 + 1) / 2)];
+                    vbox._avg = [~~(mult * (vbox.r1 + vbox.r2 + 1) / 2), ~~(mult * (vbox.g1 + vbox.g2 + 1) / 2), ~~(mult * (vbox.b1 + vbox.b2 + 1) / 2)];
                 }
             }
             return vbox._avg;
@@ -377,8 +377,8 @@ var MMCQ = (function() {
                     left = i - vbox[dim1];
                     right = vbox[dim2] - i;
                     if (left <= right)
-                        d2 = Math.min(vbox[dim2] - 1, ~~ (i + right / 2));
-                    else d2 = Math.max(vbox[dim1], ~~ (i - 1 - left / 2));
+                        d2 = Math.min(vbox[dim2] - 1, ~~(i + right / 2));
+                    else d2 = Math.max(vbox[dim1], ~~(i - 1 - left / 2));
                     // avoid 0-count boxes
                     while (!partialsum[d2]) d2++;
                     count2 = lookaheadsum[d2];
@@ -395,7 +395,7 @@ var MMCQ = (function() {
         // determine the cut planes
         return maxw == rw ? doCut('r') :
             maxw == gw ? doCut('g') :
-            doCut('b');
+                doCut('b');
     }
 
     function quantize(pixels, maxcolors) {

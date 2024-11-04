@@ -4,6 +4,6 @@ const imagePath = ARGV[0]
 const palette = getPalette(imagePath)
 let output = ''
 for (let entry of palette) {
-	output += entry.join(',') + ";"
+    output += entry.join(',') + ";"
 }
 print(output)
