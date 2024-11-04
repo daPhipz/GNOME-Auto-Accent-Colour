@@ -2,7 +2,7 @@ import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
-import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import { ExtensionPreferences, gettext as _, pgettext } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 import { isImageMagickInstalled } from './utils.js'
 
 const LIGHT = 'light'
@@ -455,11 +455,11 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
             _('Teal'),
             _('Green'),
             _('Yellow'),
-            _('Orange'),
+            pgettext('The colour', 'Orange'),
             _('Red'),
             _('Pink'),
             _('Purple'),
-            _('Slate')
+            pgettext('The colour', 'Slate')
         ]
 
         function clearCache(theme) {
