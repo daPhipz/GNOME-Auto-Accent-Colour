@@ -138,7 +138,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
 
         const cacheDescriptionGroup = new Adw.PreferencesGroup({
             description: _(
-                'Information about backgrounds and their derived colours is cached to increase performance'
+                'Information about backgrounds and their derived accent colours is cached to increase performance'
             )
         })
         cachePage.add(cacheDescriptionGroup)
