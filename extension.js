@@ -1,7 +1,3 @@
-// TODO: Add Extensions store page support
-// TODO: Add some kind of fullscreen mode checker to prevent performance loss?
-// TODO: Add random accent colour mode?
-
 import St from 'gi://St'
 import Gio from 'gi://Gio'
 import GLib from 'gi://GLib'
