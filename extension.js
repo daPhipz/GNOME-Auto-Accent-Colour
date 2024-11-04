@@ -615,6 +615,10 @@ export default class AutoAccentColourExtension extends Extension {
             this._settings.disconnect(this._debugModeHandler)
             this._debugModeHandler = null
         }
+        if (this._keepConversionHandler) {
+            this._settings.disconnect(this._keepConversionHandler)
+            this._keepConversionHandler = null
+        }
 
         this._indicator?.destroy()
         this._indicator = null
