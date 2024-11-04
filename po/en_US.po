@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
 "POT-Creation-Date: 2024-11-04 07:12+0000\n"
-"PO-Revision-Date: 2024-11-04 08:54+0000\n"
+"PO-Revision-Date: 2024-11-04 09:17+0000\n"
 "Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
 "Language-Team: en_US\n"
 "Language: en_US\n"
@@ -68,7 +68,7 @@ msgstr ""
 
 #: prefs.js:76
 msgid "Colour Palette"
-msgstr ""
+msgstr "Color Palette"
 
 #: prefs.js:78
 msgid ""
@@ -124,7 +124,7 @@ msgstr ""
 
 #: prefs.js:141
 msgid ""
-"Information about backgrounds and their derived colours is cached to "
+"Information about backgrounds and their derived accent colours is cached to "
 "increase performance"
 msgstr ""
 "Information about backgrounds and their derived colors is cached to increase "
