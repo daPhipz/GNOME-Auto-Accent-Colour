@@ -5,14 +5,6 @@ import GLib from 'gi://GLib'
 import {ExtensionPreferences, gettext as _} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 import { isImageMagickInstalled } from './utils.js'
 
-// TODO: Merge into one with extension.js
-class AccentColour {
-	constructor(label, adwEnumEntry) {
-		this.label = label
-		this.rgba = Adw.AccentColor.to_rgba(adwEnumEntry)
-	}
-}
-
 const LIGHT = 'light'
 const DARK = 'dark'
 const DOMINANT = 'dominant'
@@ -458,16 +450,16 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
 			settings.set_boolean('highlight-mode', true)
 		})
 
-		const accents = [
-			new AccentColour(_('Blue'), Adw.AccentColor.BLUE),
-			new AccentColour(_('Teal'), Adw.AccentColor.TEAL),
-			new AccentColour(_('Green'), Adw.AccentColor.GREEN),
-			new AccentColour(_('Yellow'), Adw.AccentColor.YELLOW),
-			new AccentColour(_('Orange'), Adw.AccentColor.ORANGE),
-			new AccentColour(_('Red'), Adw.AccentColor.RED),
-			new AccentColour(_('Pink'), Adw.AccentColor.PINK),
-			new AccentColour(_('Purple'), Adw.AccentColor.PURPLE),
-			new AccentColour(_('Slate'), Adw.AccentColor.SLATE),
+		const accentNames = [
+			_('Blue'),
+			_('Teal'),
+			_('Green'),
+			_('Yellow'),
+			_('Orange'),
+			_('Red'),
+			_('Pink'),
+			_('Purple'),
+			_('Slate')
 		]
 
 		function clearCache(theme) {
@@ -489,7 +481,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
 
 		function getCachedAccent(theme, colourType) {
 			const index = settings.get_enum(`${theme}-${colourType}-accent`)
-			const accentName = accents[index].label
+			const accentName = accentNames[index]
 
 			return accentName.toString()
 		}
