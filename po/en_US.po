@@ -1,0 +1,277 @@
+# Auto Accent Colour.
+# Copyright (C) 2024
+# This file is distributed under the same license as the Auto Accent Colour package.
+# Wartybix <34974060+Wartybix@users.noreply.github.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
+"POT-Creation-Date: 2024-11-04 07:12+0000\n"
+"PO-Revision-Date: 2024-11-04 08:54+0000\n"
+"Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
+"Language-Team: en_US\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 46.1\n"
+
+#: extension.js:449
+msgid "Force Refresh"
+msgstr ""
+
+#: extension.js:454
+msgid "Preferences"
+msgstr ""
+
+#: extension.js:485
+msgid "ImageMagick not installed"
+msgstr ""
+
+#: extension.js:486
+msgid "ImageMagick is required to set an accent colour from this background"
+msgstr "ImageMagick is required to set an accent color from this background"
+
+#: prefs.js:28
+msgid "Setup"
+msgstr ""
+
+#: prefs.js:35
+msgid "Refresh"
+msgstr ""
+
+#: prefs.js:41
+msgid "System Dependencies"
+msgstr ""
+
+#: prefs.js:44
+msgid ""
+"ImageMagick is required to parse colour data from SVG and JXL backgrounds. "
+"It must be installed via the system package manager."
+msgstr ""
+"ImageMagick is required to parse color data from SVG and JXL backgrounds. It "
+"must be installed via the system package manager."
+
+#: prefs.js:60
+msgid "Settings"
+msgstr ""
+
+#: prefs.js:66
+msgid "Appearance"
+msgstr ""
+
+#: prefs.js:71
+msgid "Hide Indicator"
+msgstr ""
+
+#: prefs.js:76
+msgid "Colour Palette"
+msgstr ""
+
+#: prefs.js:78
+msgid ""
+"Choose the type of background colour to base the shell accent colour from"
+msgstr ""
+"Choose the type of background color to base the shell accent color from"
+
+#: prefs.js:88
+msgid "Dominant"
+msgstr ""
+
+#: prefs.js:89
+msgid "Use the most frequent colour from the background"
+msgstr "Use the most frequent color from the background"
+
+#: prefs.js:101
+msgid "Highlight"
+msgstr ""
+
+#: prefs.js:103
+msgid ""
+"Use a contrasting yet complimentary colour from the background. This may "
+"sometimes be the same as the dominant colour."
+msgstr ""
+"Use a contrasting yet complimentary color from the background. This may "
+"sometimes be the same as the dominant color."
+
+#: prefs.js:112
+msgid "Developer Tools"
+msgstr ""
+
+#: prefs.js:117
+msgid "Debug Logging"
+msgstr ""
+
+#: prefs.js:118
+msgid "Print debug messages to the system journal"
+msgstr ""
+
+#: prefs.js:123
+msgid "Keep Converted Background Image"
+msgstr ""
+
+#: prefs.js:124
+msgid ""
+"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
+"format. These files can be found at ~/.cache/auto-accent-colour/."
+msgstr ""
+
+#: prefs.js:134
+msgid "Cache"
+msgstr ""
+
+#: prefs.js:141
+msgid ""
+"Information about backgrounds and their derived colours is cached to "
+"increase performance"
+msgstr ""
+"Information about backgrounds and their derived colors is cached to increase "
+"performance"
+
+#: prefs.js:149
+msgid "Clear"
+msgstr ""
+
+#: prefs.js:155
+msgid "File Hash"
+msgstr ""
+
+#: prefs.js:156
+msgid "Nothing cached"
+msgstr ""
+
+#: prefs.js:157
+msgid "Time Last Modified Hash"
+msgstr ""
+
+#: prefs.js:158
+msgid "Dominant Accent"
+msgstr ""
+
+#: prefs.js:159
+msgid "Highlight Accent"
+msgstr ""
+
+#: prefs.js:166
+msgid "Light Background"
+msgstr ""
+
+#: prefs.js:207
+msgid "Dark Background"
+msgstr ""
+
+#: prefs.js:248
+msgid "About"
+msgstr ""
+
+#: prefs.js:257
+msgid "Auto Accent Colour"
+msgstr "Auto Accent Color"
+
+#: prefs.js:263
+msgid "Created by Wartybix"
+msgstr ""
+
+#: prefs.js:268
+msgid "Special Thanks"
+msgstr ""
+
+#: prefs.js:274
+msgid ""
+"For creating the ColorThief JavaScript module, used for extracting colours "
+"from the background image"
+msgstr ""
+"For creating the ColorThief JavaScript module, used for extracting colors "
+"from the background image"
+
+#: prefs.js:280
+msgid ""
+"For creating the Quantize JavaScript module, used by ColorThief for colour "
+"quantization"
+msgstr ""
+"For creating the Quantize JavaScript module, used by ColorThief for color "
+"quantization"
+
+#: prefs.js:294
+msgid "Project Repository"
+msgstr ""
+
+#: prefs.js:310
+msgid "Submit an Issue"
+msgstr ""
+
+#: prefs.js:320
+msgid "Licenses"
+msgstr ""
+
+#: prefs.js:334
+msgid "Auto Accent Colour Extension"
+msgstr "Auto Accent Color Extension"
+
+#: prefs.js:335
+msgid "GNU General Public License v3.0"
+msgstr ""
+
+#: prefs.js:349
+msgid "ColorThief Module"
+msgstr ""
+
+#: prefs.js:350 prefs.js:365
+msgid "MIT License"
+msgstr ""
+
+#: prefs.js:364
+msgid "Quantize Module"
+msgstr ""
+
+#: prefs.js:376
+msgid "Be kind to your local pigeons!"
+msgstr ""
+
+#: prefs.js:390
+msgid "Installed"
+msgstr ""
+
+#: prefs.js:390
+msgid "Not Installed"
+msgstr ""
+
+#: prefs.js:454
+msgid "Blue"
+msgstr ""
+
+#: prefs.js:455
+msgid "Teal"
+msgstr ""
+
+#: prefs.js:456
+msgid "Green"
+msgstr ""
+
+#: prefs.js:457
+msgid "Yellow"
+msgstr ""
+
+#: prefs.js:458
+msgctxt "The colour"
+msgid "Orange"
+msgstr ""
+
+#: prefs.js:459
+msgid "Red"
+msgstr ""
+
+#: prefs.js:460
+msgid "Pink"
+msgstr ""
+
+#: prefs.js:461
+msgid "Purple"
+msgstr ""
+
+#: prefs.js:462
+msgctxt "The colour"
+msgid "Slate"
+msgstr ""
