@@ -2,7 +2,6 @@
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Add random accent colour mode?
 // TODO: Research converting UI text into multiple languages
-// TODO: Investigate script sometimes not running when it should.
 
 import St from 'gi://St'
 import Gio from 'gi://Gio'
