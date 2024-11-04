@@ -1,7 +1,6 @@
 // TODO: Add Extensions store page support
 // TODO: Add some kind of fullscreen mode checker to prevent performance loss?
 // TODO: Add random accent colour mode?
-// TODO: Review duplicate script-runs from background file change and uri change
 // TODO: Research converting UI text into multiple languages
 // TODO: Investigate script sometimes not running when it should.
 
@@ -443,6 +442,8 @@ export default class AutoAccentColourExtension extends Extension {
 			indicator.add_child(currentIcon)
 		}
 
+		let running = false
+
 		Main.panel.addToStatusArea(this.uuid, this._indicator)
 
 		indicator.menu.addAction(
@@ -456,6 +457,12 @@ export default class AutoAccentColourExtension extends Extension {
 		)
 
 		function setAccent() {
+			if (running) {
+				return
+			}
+
+			running = true
+
 			changeIndicatorIcon(waitIcon)
 
 			const backgroundUri = getColorScheme() === PREFER_DARK
@@ -480,11 +487,13 @@ export default class AutoAccentColourExtension extends Extension {
 						_('ImageMagick is required to set an accent colour from this background')
 					)
 					changeIndicatorIcon(alertIcon)
+					running = false
 				},
 				function(newAccent) {
 					setAccentColor(newAccent.name)
 					journal(`New accent: ${getAccentColor()}`)
 					changeIndicatorIcon(normalIcon)
+					running = false
 				}
 			)
 		}
