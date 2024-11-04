@@ -190,7 +190,7 @@ solution, please feel free to submit a pull request.
 async function runColorThief(imagePath, extensionPath) {
     try {
         const resultStr = await execCommand(
-            ['gjs', '-m', `${extensionPath}/tools/run-color-thief.js`, imagePath]
+            ['gjs', '-m', `${extensionPath}/color-thief/run-color-thief.js`, imagePath]
         )
 
         const palette = resultStr.split(';')
