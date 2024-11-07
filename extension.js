@@ -69,8 +69,8 @@ class HueRange {
 
 class AccentColour {
     constructor(name, r, g, b, hueRange) {
-        this.name = name,
-            this.r = r
+        this.name = name
+        this.r = r
         this.g = g
         this.b = b
         this.hueRange = hueRange
