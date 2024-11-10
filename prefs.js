@@ -260,7 +260,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         aboutGroup.add(title)
 
         const author = new Gtk.Label({
-            label: _('Created by Wartybix')
+            label: _('Created by Wartybix and contributors')
         })
         aboutGroup.add(author)
 
@@ -315,6 +315,24 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
 
         const issueIcon = getIcon('bug-symbolic')
         issueRow.add_prefix(issueIcon)
+
+        const contributorsBtn = new Gtk.LinkButton({
+            label: 'GitHub',
+            valign: Gtk.Align.CENTER,
+            uri: 'https://github.com/Wartybix/GNOME-Auto-Accent-Colour/graphs/contributors'
+        })
+
+        const contributorsRow = new Adw.ActionRow({
+            title: _('Contributors'),
+            activatable_widget: contributorsBtn
+        })
+        linksGroup.add(contributorsRow)
+        contributorsRow.add_suffix(contributorsBtn)
+
+        const contributorsIcon = Gtk.Image.new_from_icon_name(
+            'system-users-symbolic'
+        )
+        contributorsRow.add_prefix(contributorsIcon)
 
         const licensesRow = new Adw.ExpanderRow({
             title: _('Licenses')
