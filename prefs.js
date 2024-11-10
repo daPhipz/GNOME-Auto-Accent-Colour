@@ -264,6 +264,15 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         })
         aboutGroup.add(author)
 
+        const versionNo = this.metadata.version || 0
+
+        const versionLabel = new Gtk.Label({
+            label: _('Version %d').format(versionNo.toString()),
+            css_classes: ['title-4'],
+            margin_top: 8
+        })
+        aboutGroup.add(versionLabel)
+
         const specialThanks = new Adw.PreferencesGroup({
             title: _('Special Thanks')
         })
