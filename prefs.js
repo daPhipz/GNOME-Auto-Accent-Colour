@@ -487,7 +487,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         }
 
         function setHashRow(theme) {
-            const lightTheme = theme == LIGHT
+            const lightTheme = theme === LIGHT
 
             const noCacheRow = lightTheme ? lightNoCacheRow : darkNoCacheRow
             const deleteBtn = lightTheme ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
@@ -496,7 +496,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
             const dominantRow = lightTheme ? lightDominantAccent : darkDominantAccent
             const highlightRow = lightTheme ? lightHighlightAccent : darkHighlightAccent
             const hash = settings.get_int64(`${theme}-hash`)
-            const isHashDefault = hash == -1
+            const isHashDefault = hash === -1
 
             noCacheRow.visible = isHashDefault
             deleteBtn.sensitive = !isHashDefault
@@ -511,7 +511,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         function setLastChangeRow(theme) {
             const lastChangeHash = settings.get_int64(`${theme}-last-change`)
 
-            const lastChangeRow = theme == LIGHT
+            const lastChangeRow = theme === LIGHT
                 ? lightLastChangeRow
                 : darkLastChangeRow
 
@@ -519,10 +519,10 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         }
 
         function setAccentRow(theme, colourType) {
-            const [dominantAccent, highlightAccent] = theme == LIGHT
+            const [dominantAccent, highlightAccent] = theme === LIGHT
                 ? [lightDominantAccent, lightHighlightAccent]
                 : [darkDominantAccent, darkHighlightAccent]
-            const row = colourType == DOMINANT ? dominantAccent : highlightAccent
+            const row = colourType === DOMINANT ? dominantAccent : highlightAccent
             row.subtitle = getCachedAccent(theme, colourType)
         }
 

@@ -24,7 +24,7 @@ function getHueFromRGB(r, g, b) {
 
     let hue = 0
 
-    if (delta == 0) {
+    if (delta === 0) {
         return hue // = 0
     }
 
@@ -53,7 +53,7 @@ function getSaturationFromRGB(r, g, b) {
 
     let saturation = 0.0
 
-    if (maxColourPercentage != 0.0) {
+    if (maxColourPercentage !== 0.0) {
         saturation = delta / maxColourPercentage
     }
 
@@ -85,14 +85,14 @@ function execCommand(argv, input = null, cancellable = null) {
     if (input !== null)
         flags |= Gio.SubprocessFlags.STDIN_PIPE;
 
-    let proc = new Gio.Subprocess({
+    let process = new Gio.Subprocess({
         argv: argv,
         flags: flags
     });
-    proc.init(cancellable);
+    process.init(cancellable);
 
     return new Promise((resolve, reject) => {
-        proc.communicate_utf8_async(input, cancellable, (proc, res) => {
+        process.communicate_utf8_async(input, cancellable, (proc, res) => {
             try {
                 resolve(proc.communicate_utf8_finish(res)[1]);
             } catch (e) {
@@ -163,17 +163,18 @@ async function clearConvertedBackground() {
 }
 
 async function convert(imagePath) {
+    const cacheDirPath = getExtensionCacheDir()
+    const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
+
     try {
-        const cacheDirPath = getExtensionCacheDir()
         GLib.mkdir_with_parents(cacheDirPath, 755)
 
-        const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
         await execCommand(['magick', imagePath, convertedPath])
-
-        return convertedPath
     } catch (e) {
-        logError(e)
+        console.error(e)
     }
+
+    return convertedPath
 }
 
 /*
@@ -195,7 +196,8 @@ async function runColorThief(imagePath, extensionPath) {
         }
         return palette
     } catch (e) {
-        logError(e)
+        console.error(e)
+        return Array(5).fill([0, 0, 0])
     }
 }
 
@@ -209,7 +211,8 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 
         return [dominantColourTuple, highlightColourTuple]
     } catch (e) {
-        logError(e)
+        console.error(e)
+        return Array(2).fill([0, 0, 0])
     }
 }
 
@@ -247,7 +250,7 @@ async function applyClosestAccent(
     const backgroundLastChangeHash = backgroundLastChange.hash()
     journal(`Background last changed hash: ${backgroundLastChangeHash}`)
 
-    if (backgroundHash == cachedHash && backgroundLastChangeHash == cachedLastChangeHash) {
+    if (backgroundHash === cachedHash && backgroundLastChangeHash === cachedLastChangeHash) {
         const cachedAccent = accentColours[cachedAccentIndex]
         journal(`Returning cached accent (${cachedAccent.name})`)
         onFinish(cachedAccent)
@@ -348,7 +351,7 @@ export default class AutoAccentColourExtension extends Extension {
         const extensionPath = this.path
 
         this._settings = this.getSettings()
-        const settings = this._settings
+        const extensionSettings = this._settings
 
         this._backgroundSettings = new Gio.Settings({
             schema: BACKGROUND_SCHEMA
@@ -374,37 +377,37 @@ export default class AutoAccentColourExtension extends Extension {
         }
 
         function getCachedHash() {
-            return settings.get_int64(
-                getColorScheme() == PREFER_DARK ? 'dark-hash' : 'light-hash'
+            return extensionSettings.get_int64(
+                getColorScheme() === PREFER_DARK ? 'dark-hash' : 'light-hash'
             )
         }
         function getCachedLastChange() {
-            return settings.get_int64(
-                getColorScheme() == PREFER_DARK ? 'dark-last-change' : 'light-last-change'
+            return extensionSettings.get_int64(
+                getColorScheme() === PREFER_DARK ? 'dark-last-change' : 'light-last-change'
             )
         }
         function getCachedAccent() {
-            const theme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
-            const colourMode = settings.get_boolean('highlight-mode')
+            const theme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
+            const colourMode = extensionSettings.get_boolean('highlight-mode')
                 ? 'highlight'
                 : 'dominant'
 
-            return settings.get_enum(`${theme}-${colourMode}-accent`)
+            return extensionSettings.get_enum(`${theme}-${colourMode}-accent`)
         }
         function getKeepConversion() {
-            return settings.get_boolean('keep-conversion')
+            return extensionSettings.get_boolean('keep-conversion')
         }
 
         function cache(backgroundHash, lastChange, dominantAccent, highlightAccent) {
-            const currentTheme = getColorScheme() == PREFER_DARK ? 'dark' : 'light'
-            const backgroundsAreSame = getBackgroundUri() == getDarkBackgroundUri()
+            const currentTheme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
+            const backgroundsAreSame = getBackgroundUri() === getDarkBackgroundUri()
 
             for (const theme of ['dark', 'light']) {
-                if (currentTheme == theme || backgroundsAreSame) {
-                    settings.set_int64(`${theme}-hash`, backgroundHash)
-                    settings.set_int64(`${theme}-last-change`, lastChange)
-                    settings.set_enum(`${theme}-dominant-accent`, dominantAccent)
-                    settings.set_enum(`${theme}-highlight-accent`, highlightAccent)
+                if (currentTheme === theme || backgroundsAreSame) {
+                    extensionSettings.set_int64(`${theme}-hash`, backgroundHash)
+                    extensionSettings.set_int64(`${theme}-last-change`, lastChange)
+                    extensionSettings.set_enum(`${theme}-dominant-accent`, dominantAccent)
+                    extensionSettings.set_enum(`${theme}-highlight-accent`, highlightAccent)
                 }
             }
         }
@@ -463,7 +466,7 @@ export default class AutoAccentColourExtension extends Extension {
                 ? getDarkBackgroundUri()
                 : getBackgroundUri()
 
-            const highlightMode = settings.get_boolean('highlight-mode')
+            const highlightMode = extensionSettings.get_boolean('highlight-mode')
 
             applyClosestAccent(
                 extensionPath,
@@ -533,7 +536,7 @@ export default class AutoAccentColourExtension extends Extension {
         this._backgroundFileHandler = this._backgroundFileMonitor.connect(
             'changed',
             (_fileMonitor, file, otherFile, eventType) => {
-                if (eventType == Gio.FileMonitorEvent.CREATED) {
+                if (eventType === Gio.FileMonitorEvent.CREATED) {
                     journal('Background file changed.')
                     setAccent()
                 }
@@ -579,7 +582,7 @@ export default class AutoAccentColourExtension extends Extension {
             (settings, key) => {
                 const value = settings.get_boolean(key)
                 journal(`${key} = ${value}`)
-                if (value == false) {
+                if (value === false) {
                     clearConvertedBackground()
                 }
             }
