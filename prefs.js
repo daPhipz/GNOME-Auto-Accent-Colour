@@ -58,7 +58,7 @@ backgrounds. It must be installed via the system package manager.'
 
         const settingsPage = new Adw.PreferencesPage({
             title: _('Settings'),
-            icon_name: 'org.gnome.Settings-symbolic'
+            icon_name: 'applications-system-symbolic'
         })
         window.add(settingsPage)
 
@@ -246,7 +246,7 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
 
         const aboutPage = new Adw.PreferencesPage({
             title: _('About'),
-            icon_name: 'user-info-symbolic'
+            icon_name: 'help-about-symbolic'
         })
         window.add(aboutPage)
 
