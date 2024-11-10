@@ -1,3 +1,5 @@
+#!@GJS@ -m
+
 import getPalette from './color-thief.js'
 
 const imagePath = ARGV[0]
