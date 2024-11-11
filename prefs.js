@@ -57,7 +57,7 @@ but it won\'t work on SVG and JXL files.'
         systemDependenciesGroup.add(imageMagickRow)
 
         const rsvgConvertRow = new Adw.ActionRow({
-            title: _('rsvg-convert'),
+            title: 'rsvg-convert',
             css_classes: ['property']
         })
         systemDependenciesGroup.add(rsvgConvertRow)
