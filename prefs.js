@@ -121,8 +121,10 @@ This may sometimes be the same as the dominant colour.'
 
         const keepConversionRow = new Adw.SwitchRow({
             title: _('Keep Converted Background Image'),
-            subtitle: _("Don't auto-clear temporary conversions of SVG and JXL \
-backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-colour/.")
+            subtitle: _(
+                "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
+into JPG format. These files can be found at %s."
+            ).format('~/.cache/auto-accent-colour/')
         })
         devToolsGroup.add(keepConversionRow)
 
@@ -268,7 +270,7 @@ performance.")
         aboutGroup.add(title)
 
         const author = new Gtk.Label({
-            label: _('Created by Wartybix and contributors')
+            label: _('Created by %s and contributors').format('Wartybix')
         })
         aboutGroup.add(author)
 
