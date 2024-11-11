@@ -170,9 +170,11 @@ async function convert(imagePath) {
         GLib.mkdir_with_parents(cacheDirPath, 755)
 
         if (isImageMagickInstalled()) {
+            journal('Converting via ImageMagick...')
             await execCommand(['magick', imagePath, convertedPath])
         } else if (isRsvgConvertAvailable()) {
-            await execCommand(['rsvg-convert', imagePath, '>', convertedPath])
+            journal('Converting via rsvg-convert...')
+            await execCommand(['sh', '-c', `rsvg-convert ${imagePath} > ${convertedPath}`])
         } else {
             return imagePath
         }
