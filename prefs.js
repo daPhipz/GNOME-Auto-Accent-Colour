@@ -426,12 +426,14 @@ performance.")
 
         ////////////////////////////////////////////////////////////////////////
 
-        const tickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
-        const warningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
+        const magickTickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
+        const magickWarningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
+        const rsvgTickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
+        const rsvgWarningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
         const notNeededLabel = new Gtk.Label({ label: _('Not Needed') })
 
-        let currentMagickIcon = tickIcon
-        let currentRsvgSuffix = tickIcon
+        let currentMagickIcon = magickTickIcon
+        let currentRsvgSuffix = rsvgTickIcon
 
         function setDependencyRows() {
             const magickInstalled = isImageMagickInstalled()
@@ -441,9 +443,8 @@ performance.")
             imageMagickRow.subtitle = magickLabel
 
             imageMagickRow.remove(currentMagickIcon)
-            const magickIcon = magickInstalled ? tickIcon : warningIcon
-            currentMagickIcon = magickIcon
-            imageMagickRow.add_suffix(magickIcon)
+            currentMagickIcon = magickInstalled ? magickTickIcon : magickWarningIcon
+            imageMagickRow.add_suffix(currentMagickIcon)
 
 
             const rsvgConvertAvailable = isRsvgConvertAvailable()
@@ -459,7 +460,7 @@ performance.")
             if (magickInstalled) {
                 currentRsvgSuffix = notNeededLabel
             } else {
-                currentRsvgSuffix = rsvgConvertAvailable ? tickIcon : warningIcon
+                currentRsvgSuffix = rsvgConvertAvailable ? rsvgTickIcon : rsvgWarningIcon
             }
 
             rsvgConvertRow.add_suffix(currentRsvgSuffix)
