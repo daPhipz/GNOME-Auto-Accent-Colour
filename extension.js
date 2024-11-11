@@ -264,7 +264,7 @@ async function applyClosestAccent(
         cause crashes or return incorrect colours as a result, requiring conversion.
         If you know of any other formats that don't work well with this extension,
         please submit an issue or pull request. */
-        const incompatibleFormats = ['image/svg+xml', 'image/jxl']
+        const incompatibleFormats = ['image/svg+xml', 'image/jxl', 'application/xml']
         const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
 
         journal(`Conversion to JPG required: ${conversionRequired}`)
