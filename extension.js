@@ -167,7 +167,7 @@ async function convert(imagePath) {
     const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
 
     try {
-        GLib.mkdir_with_parents(cacheDirPath, 755)
+        GLib.mkdir_with_parents(cacheDirPath, 0o0755)
 
         if (isImageMagickInstalled()) {
             journal('Converting via ImageMagick...')
