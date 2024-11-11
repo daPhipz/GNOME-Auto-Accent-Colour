@@ -1,8 +1,15 @@
 import GLib from 'gi://GLib'
 
 function isImageMagickInstalled() {
-    const lookup = GLib.find_program_in_path('magick')
+    let lookup = GLib.find_program_in_path('magick')
+    if (!lookup) {
+        lookup = GLib.find_program_in_path('convert')
+    }
     return lookup !== null
+}
+
+function getConvertCommand() {
+    return GLib.find_program_in_path('magick') ? 'magick' : 'convert'
 }
 
 let loggingEnabled = false
@@ -17,4 +24,10 @@ function journal(msg) {
     }
 }
 
-export { isImageMagickInstalled, loggingEnabled, setLogging, journal }
+export {
+    isImageMagickInstalled,
+    getConvertCommand,
+    loggingEnabled,
+    setLogging,
+    journal
+}

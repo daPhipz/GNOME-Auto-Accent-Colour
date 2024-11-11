@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import { isImageMagickInstalled, setLogging, journal } from './utils.js'
+import { isImageMagickInstalled, getConvertCommand, setLogging, journal } from './utils.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const PREFER_DARK = 'prefer-dark'
@@ -169,7 +169,9 @@ async function convert(imagePath) {
     try {
         GLib.mkdir_with_parents(cacheDirPath, 755)
 
-        await execCommand(['magick', imagePath, convertedPath])
+        const convertCommand = getConvertCommand()
+
+        await execCommand([convertCommand, imagePath, convertedPath])
     } catch (e) {
         console.error(e)
     }
