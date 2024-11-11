@@ -62,6 +62,40 @@ but it won\'t work on SVG and JXL files.'
         })
         systemDependenciesGroup.add(rsvgConvertRow)
 
+
+        const examplesGroup = new Adw.PreferencesGroup({
+            title: _('Example Install Commands'),
+            description: _(
+                'Commands to enable support for optional file types in popular \
+Linux distributions'
+            )
+        })
+        dependenciesPage.add(examplesGroup)
+
+        const archRow = new Adw.ActionRow({
+            title: 'Arch Linux',
+            subtitle: 'sudo pacman -S imagemagick',
+            subtitle_selectable: true,
+            css_classes: ['property', 'monospace']
+        })
+        examplesGroup.add(archRow)
+
+        const fedoraRow = new Adw.ActionRow({
+            title: 'Fedora',
+            subtitle: 'sudo dnf install ImageMagick',
+            subtitle_selectable: true,
+            css_classes: ['property', 'monospace']
+        })
+        examplesGroup.add(fedoraRow)
+
+        const debianRow = new Adw.ActionRow({
+            title: 'Debian/Ubuntu',
+            subtitle: 'sudo apt install librsvg2-bin',
+            subtitle_selectable: true,
+            css_classes: ['property', 'monospace']
+        })
+        examplesGroup.add(debianRow)
+
         ////////////////////////////////////////////////////////////////////////
 
         // Settings page ///////////////////////////////////////////////////////
