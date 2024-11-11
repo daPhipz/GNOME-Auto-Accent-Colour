@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import { isImageMagickInstalled, getConvertCommand, setLogging, journal } from './utils.js'
+import { isImageMagickInstalled, isRsvgConvertAvailable, setLogging, journal } from './utils.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const PREFER_DARK = 'prefer-dark'
@@ -169,9 +169,13 @@ async function convert(imagePath) {
     try {
         GLib.mkdir_with_parents(cacheDirPath, 755)
 
-        const convertCommand = getConvertCommand()
-
-        await execCommand([convertCommand, imagePath, convertedPath])
+        if (isImageMagickInstalled()) {
+            await execCommand(['magick', imagePath, convertedPath])
+        } else if (isRsvgConvertAvailable()) {
+            await execCommand(['rsvg-convert', imagePath, '>', convertedPath])
+        } else {
+            return imagePath
+        }
     } catch (e) {
         console.error(e)
     }
@@ -276,11 +280,18 @@ async function applyClosestAccent(
         journal(`Conversion to JPG required: ${conversionRequired}`)
 
         if (conversionRequired) {
-            const magickInstalled = isImageMagickInstalled()
-            if (!magickInstalled) {
-                journal('Imagemagick not installed !!')
-                onDependencyFail()
-                return
+            if (!isImageMagickInstalled()) {
+                if (backgroundImgFormat === 'image/svg+xml') {
+                    if (!isRsvgConvertAvailable()) {
+                        journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
+                        onDependencyFail()
+                        return
+                    }
+                } else {
+                    journal('ImageMagick v7+ not installed !!')
+                    onDependencyFail()
+                    return
+                }
             }
         }
 
@@ -495,8 +506,8 @@ export default class AutoAccentColourExtension extends Extension {
                 getKeepConversion(),
                 function() {
                     Main.notifyError(
-                        _('ImageMagick not installed'),
-                        _('ImageMagick is required to set an accent colour from this background')
+                        _('ImageMagick 7+ not installed'),
+                        _('ImageMagick 7+ is required to set an accent colour from this background')
                     )
                     changeIndicatorIcon(alertIcon)
                     running = false

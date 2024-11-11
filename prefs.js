@@ -3,7 +3,7 @@ import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
 import { ExtensionPreferences, gettext as _, pgettext } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
-import { isImageMagickInstalled } from './utils.js'
+import { isImageMagickInstalled, isRsvgConvertAvailable } from './utils.js'
 
 const LIGHT = 'light'
 const DARK = 'dark'
@@ -41,16 +41,26 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
             title: _('System Dependencies'),
             header_suffix: refreshButton,
             description: _(
-                'ImageMagick is required to parse colour data from SVG and JXL \
-backgrounds. It must be installed via the system package manager.'
+                'ImageMagick v7+ is required to parse colour data from SVG and JXL \
+backgrounds. It must be installed via the system package manager. In cases where \
+only older versions ImageMagick are available, rsvg-convert can be used as a fallback \
+for SVG files only. This extension will still function without either dependency, \
+but it won\'t work on SVG and JXL files.'
             )
         })
         dependenciesPage.add(systemDependenciesGroup)
 
         const imageMagickRow = new Adw.ActionRow({
-            title: 'ImageMagick'
+            title: 'ImageMagick v7+',
+            css_classes: ['property']
         })
         systemDependenciesGroup.add(imageMagickRow)
+
+        const rsvgConvertRow = new Adw.ActionRow({
+            title: _('rsvg-convert'),
+            css_classes: ['property']
+        })
+        systemDependenciesGroup.add(rsvgConvertRow)
 
         ////////////////////////////////////////////////////////////////////////
 
@@ -418,32 +428,46 @@ performance.")
 
         const tickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
         const warningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
+        const notNeededLabel = new Gtk.Label({ label: _('Not Needed') })
 
-        let currentIcon = tickIcon
+        let currentMagickIcon = tickIcon
+        let currentRsvgSuffix = tickIcon
 
-        function setImageMagickRow() {
+        function setDependencyRows() {
             const magickInstalled = isImageMagickInstalled()
 
-            const label = magickInstalled ? _('Installed') : _('Not Installed')
-            const css_classes = ['property']
+            const magickLabel = magickInstalled ? _('Installed') : _('Not Installed')
 
-            if (!magickInstalled) {
-                css_classes.push('warning')
+            imageMagickRow.subtitle = magickLabel
+
+            imageMagickRow.remove(currentMagickIcon)
+            const magickIcon = magickInstalled ? tickIcon : warningIcon
+            currentMagickIcon = magickIcon
+            imageMagickRow.add_suffix(magickIcon)
+
+
+            const rsvgConvertAvailable = isRsvgConvertAvailable()
+
+            const rsvgAvailableText = rsvgConvertAvailable
+                ? _('Available')
+                : _('Unavailable')
+
+            rsvgConvertRow.subtitle = rsvgAvailableText
+
+            rsvgConvertRow.remove(currentRsvgSuffix)
+
+            if (magickInstalled) {
+                currentRsvgSuffix = notNeededLabel
+            } else {
+                currentRsvgSuffix = rsvgConvertAvailable ? tickIcon : warningIcon
             }
 
-            imageMagickRow.subtitle = label
-            imageMagickRow.css_classes = css_classes
-
-            imageMagickRow.remove(currentIcon)
-
-            const icon = magickInstalled ? tickIcon : warningIcon
-            currentIcon = icon
-            imageMagickRow.add_suffix(icon)
+            rsvgConvertRow.add_suffix(currentRsvgSuffix)
         }
 
-        setImageMagickRow()
+        setDependencyRows()
 
-        refreshButton.connect('clicked', () => { setImageMagickRow() })
+        refreshButton.connect('clicked', () => { setDependencyRows() })
 
         window._settings.bind(
             'hide-indicator',
