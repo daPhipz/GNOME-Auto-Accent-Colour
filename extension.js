@@ -229,6 +229,7 @@ async function applyClosestAccent(
     highlightMode,
     keepConversion,
     onDependencyFail,
+    onXmlDetected,
     onFinish
 ) {
     journal(`Cached hash: ${cachedHash}`)
@@ -260,11 +261,16 @@ async function applyClosestAccent(
         const backgroundImgFormat = backgroundFileInfo.get_content_type()
         journal(`Background image format: ${backgroundImgFormat}`)
 
+        if (backgroundImgFormat === 'application/xml') {
+            onXmlDetected()
+            return
+        }
+
         /* List of image formats that don't work well with colorthief, and often
         cause crashes or return incorrect colours as a result, requiring conversion.
         If you know of any other formats that don't work well with this extension,
         please submit an issue or pull request. */
-        const incompatibleFormats = ['image/svg+xml', 'image/jxl', 'application/xml']
+        const incompatibleFormats = ['image/svg+xml', 'image/jxl']
         const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
 
         journal(`Conversion to JPG required: ${conversionRequired}`)
@@ -491,6 +497,14 @@ export default class AutoAccentColourExtension extends Extension {
                     Main.notifyError(
                         _('ImageMagick not installed'),
                         _('ImageMagick is required to set an accent colour from this background')
+                    )
+                    changeIndicatorIcon(alertIcon)
+                    running = false
+                },
+                function() {
+                    Main.notifyError(
+                        _('XML backgrounds not supported'),
+                        _('Auto Accent Colour will not run on this background')
                     )
                     changeIndicatorIcon(alertIcon)
                     running = false
