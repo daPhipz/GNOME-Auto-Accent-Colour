@@ -126,6 +126,14 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         })
         devToolsGroup.add(keepConversionRow)
 
+        const ignoreCachesRow = new Adw.SwitchRow({
+            title: _('Ignore Caches'),
+            subtitle: _("Always parse colours from the background, even if accent \
+colours from a given background have already been derived and cached. This reduces \
+performance.")
+        })
+        devToolsGroup.add(ignoreCachesRow)
+
         ////////////////////////////////////////////////////////////////////////
 
         // Cache page //////////////////////////////////////////////////////////
@@ -465,6 +473,12 @@ backgrounds into JPG format. These files can be found at ~/.cache/auto-accent-co
         window._settings.bind(
             'keep-conversion',
             keepConversionRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        window._settings.bind(
+            'ignore-caches',
+            ignoreCachesRow,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )

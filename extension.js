@@ -376,7 +376,14 @@ export default class AutoAccentColourExtension extends Extension {
             interfaceSettings.get_string(ACCENT_COLOR)
         }
 
+        function getIgnoreCaches() {
+            return extensionSettings.get_boolean('ignore-caches')
+        }
         function getCachedHash() {
+            if (getIgnoreCaches()) {
+                return -1
+            }
+
             return extensionSettings.get_int64(
                 getColorScheme() === PREFER_DARK ? 'dark-hash' : 'light-hash'
             )
