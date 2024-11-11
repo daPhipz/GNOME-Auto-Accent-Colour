@@ -38,7 +38,7 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
         })
 
         const systemDependenciesGroup = new Adw.PreferencesGroup({
-            title: _('System Dependencies'),
+            title: _('Optional Dependencies'),
             header_suffix: refreshButton,
             description: _(
                 'ImageMagick v7+ is required to parse colour data from SVG and JXL \
