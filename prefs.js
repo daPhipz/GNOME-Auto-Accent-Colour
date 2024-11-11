@@ -277,7 +277,7 @@ performance.")
         const versionNo = this.metadata.version || 0
 
         const versionLabel = new Gtk.Label({
-            label: _('Version %d').format(versionNo.toString()),
+            label: _('Version %d').format(versionNo),
             css_classes: ['title-4'],
             margin_top: 8
         })
