@@ -309,27 +309,12 @@ async function applyClosestAccent(
         clearConvertedBackground()
     }
 
-    // TODO: avoid redundant computation here?
+    const accentType = highlightMode ? 'highlight' : 'dominant';
+    const paletteIndex = highlightMode ? 1 : 0;
+    const [r, g, b] = backgroundPalette[paletteIndex];
 
-    journal('Getting dominant accent...')
-    const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
-    const dom_accent = getClosestAccentColour(
-        accentColours,
-        dom_r,
-        dom_g,
-        dom_b
-    ) // Dominant accent
-
-    journal('Getting highlight accent...')
-    const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
-    const hi_accent = getClosestAccentColour(
-        accentColours,
-        hi_r,
-        hi_g,
-        hi_b
-    ) // Highlight accent
-
-    const closestAccentIndex = highlightMode ? hi_accent : dom_accent
+    journal(`Getting ${accentType} accent...`)
+    const closestAccentIndex = getClosestAccentColour(accentColours, r, g, b)
     const closestAccent = accentColours[closestAccentIndex]
 
     journal(`Accent to apply: ${closestAccent.name}`)
@@ -492,9 +477,7 @@ export default class AutoAccentColourExtension extends Extension {
             function set(key, data) {
                 const file = _file(key);
                 journal(`Writing cache entry to ${file.get_path()}...`);
-                journal(`${data}`);
                 const cereal = JSON.stringify(data);
-                journal(`${cereal}`);
                 const bytes = new GLib.Bytes(cereal);
                 const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
                 stream.write_bytes(bytes, null);
