@@ -508,8 +508,8 @@ export default class AutoAccentColourExtension extends Extension {
                 getKeepConversion(),
                 function() {
                     Main.notifyError(
-                        _('ImageMagick 7+ not installed'),
-                        _('ImageMagick 7+ is required to set an accent colour from this background')
+                        _('Optional dependencies required for this background'),
+                        _('Visit Auto Accent Colour\'s preferences page to learn more')
                     )
                     changeIndicatorIcon(alertIcon)
                     running = false
