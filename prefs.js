@@ -42,8 +42,8 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
             header_suffix: refreshButton,
             description: _(
                 'ImageMagick v7+ is required to parse colour data from SVG and JXL \
-backgrounds. It must be installed via the system package manager. In cases where \
-only older versions ImageMagick are available, rsvg-convert can be used as a fallback \
+backgrounds. It must be installed via the system package manager. If only older \
+versions of ImageMagick are available, rsvg-convert can be used as an alternative \
 for SVG files only. This extension will still function without either dependency, \
 but it won\'t work on SVG and JXL files.'
             )
