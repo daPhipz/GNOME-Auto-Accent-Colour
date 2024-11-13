@@ -163,6 +163,7 @@ async function clearConvertedBackground() {
 }
 
 async function convert(imagePath) {
+    // TODO: reuse caching mechanism for converted files?
     const cacheDirPath = getExtensionCacheDir()
     GLib.mkdir_with_parents(cacheDirPath, 0o0755)
 
@@ -226,7 +227,6 @@ async function applyClosestAccent(
     extensionPath,
     accentColours,
     backgroundUri,
-    accentColours,
     cache,
     highlightMode,
     keepConversion,
@@ -292,7 +292,7 @@ async function applyClosestAccent(
         }
     }
 
-    // TODO: potentially allow for other hashing methods? e.g. pass cache_keyer func as arg?
+    // TODO: maybe allow for other hashing methods? e.g. pass cache_keyer func as arg?
     const [bytes, _] = rasterFile.load_bytes(null);
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${rasterFile.get_path()} is ${backgroundHash}...`);
@@ -334,7 +334,7 @@ function noCache() {
 }
 
 // simple file-based cache
-// TODO: async?
+// TODO: make it async? I'm not great at this and the docs seem a little off?
 function fileBasedCache(cachedir) {
     function _setup() {
         journal(`Ensuring cache directory ${cachedir} exists...`);
@@ -451,20 +451,14 @@ export default class AutoAccentColourExtension extends Extension {
             return interfaceSettings.get_string('gtk-theme')
         }
 
+        function getIgnoreCaches() {
+            return extensionSettings.get_boolean('ignore-caches')
+        }
         function getCache() {
-            // return noCache();
-            return fileBasedCache(getExtensionCacheDir());
+            return getIgnoreCaches() ? noCache() : fileBasedCache(getExtensionCacheDir())
         }
 
         // TODO: remove these then edit schema
-        // maybe third iface?
-        // test properly
-
-        // TODO: this can be replaced by using a dummy cache interface instead
-        // function getIgnoreCaches() {
-        //     return extensionSettings.get_boolean('ignore-caches')
-        // }
-        // TODO: remove these here and in schema?
         // function getCachedHash() {
         //     if (getIgnoreCaches()) {
         //         return -1
@@ -671,7 +665,6 @@ export default class AutoAccentColourExtension extends Extension {
                 extensionPath,
                 accentColours,
                 backgroundUri,
-                accentColours,
                 getCache(),
                 highlightMode,
                 getKeepConversion(),
