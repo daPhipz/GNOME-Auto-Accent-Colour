@@ -321,6 +321,58 @@ async function applyClosestAccent(
     onFinish(closestAccent)
 }
 
+// fake cache that does nothing
+// serves as an interface reference
+// but can also be used to disable caching
+// (also ya... i can do oop js... for sure...)
+function noCache() {
+    function get(key) { return null; }
+    function set(key, data) { }
+    // function delete ...
+    // function clear ...
+    return { get: get, set: set };
+}
+
+// simple file-based cache
+// TODO: async?
+function fileBasedCache(cachedir) {
+    function _setup() {
+        journal(`Ensuring cache directory ${cachedir} exists...`);
+        GLib.mkdir_with_parents(cachedir, 0o0755);
+    }
+    function _file(key) {
+        return Gio.File.new_for_path(`${cachedir}/${key}`);
+    }
+    function get(key) {
+        const file = _file(key);
+        if (!file.query_exists(null)) {
+            return null;
+        }
+        journal(`Reading cache entry from ${file.get_path()}...`);
+        const [_ok, contents, _etag] = file.load_contents(null);
+        const decoder = new TextDecoder('utf-8');
+        const contentsString = decoder.decode(contents);
+        try {
+            return JSON.parse(contentsString);
+        } catch (err) {
+            journal(`unable to parse ${file.get_path()}: ${err}`);
+            return null;
+        }
+    }
+    function set(key, data) {
+        const file = _file(key);
+        journal(`Writing cache entry to ${file.get_path()}...`);
+        const cereal = JSON.stringify(data);
+        const bytes = new GLib.Bytes(cereal);
+        const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
+        stream.write_bytes(bytes, null);
+    }
+    // function delete ...
+    // function clear ...
+    _setup();
+    return { get: get, set: set };
+}
+
 export default class AutoAccentColourExtension extends Extension {
     enable() {
         /* Hue values are:
@@ -399,11 +451,19 @@ export default class AutoAccentColourExtension extends Extension {
             return interfaceSettings.get_string('gtk-theme')
         }
 
-        // TODO: this can be replaced by using a dummy cache interface instead
-        function getIgnoreCaches() {
-            return extensionSettings.get_boolean('ignore-caches')
+        function getCache() {
+            // return noCache();
+            return fileBasedCache(getExtensionCacheDir());
         }
 
+        // TODO: remove these then edit schema
+        // maybe third iface?
+        // test properly
+
+        // TODO: this can be replaced by using a dummy cache interface instead
+        // function getIgnoreCaches() {
+        //     return extensionSettings.get_boolean('ignore-caches')
+        // }
         // TODO: remove these here and in schema?
         // function getCachedHash() {
         //     if (getIgnoreCaches()) {
@@ -612,7 +672,7 @@ export default class AutoAccentColourExtension extends Extension {
                 accentColours,
                 backgroundUri,
                 accentColours,
-                cache(getExtensionCacheDir()),
+                getCache(),
                 highlightMode,
                 getKeepConversion(),
                 function() {
