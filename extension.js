@@ -243,6 +243,7 @@ async function applyClosestAccent(
     const onUbuntu = de === 'ubuntu'
     journal(`Running on Ubuntu: ${onUbuntu}`)
 
+    // TODO: Move these back into enable(), find some other way to reference them
     /* Hue values are:
     0 = Red
     60 = Yellow
@@ -413,7 +414,19 @@ export default class AutoAccentColourExtension extends Extension {
             interfaceSettings.set_string(ACCENT_COLOR, colorName)
         }
         function getAccentColor() {
-            interfaceSettings.get_string(ACCENT_COLOR)
+            return interfaceSettings.get_string(ACCENT_COLOR)
+        }
+        function setIconTheme(theme) {
+            interfaceSettings.set_string('icon-theme', theme)
+        }
+        function getIconTheme() {
+            return interfaceSettings.get_string('icon-theme')
+        }
+        function setGtkTheme(theme) {
+            interfaceSettings.set_string('gtk-theme', theme)
+        }
+        function getGtkTheme() {
+            return interfaceSettings.get_string('gtk-theme')
         }
 
         function getIgnoreCaches() {
@@ -456,6 +469,64 @@ export default class AutoAccentColourExtension extends Extension {
                     extensionSettings.set_enum(`${theme}-dominant-accent`, dominantAccent)
                     extensionSettings.set_enum(`${theme}-highlight-accent`, highlightAccent)
                 }
+            }
+        }
+
+        function applyYaruTheme() {
+            const iconTheme = getIconTheme()
+            const gtkTheme = getGtkTheme()
+
+            const yaruThemes = [
+                'Yaru-blue',
+                'Yaru-blue-dark',
+                'Yaru-prussiangreen',
+                'Yaru-prussiangreen-dark',
+                'Yaru-olive',
+                'Yaru-olive-dark',
+                'Yaru-yellow',
+                'Yaru-yellow-dark',
+                'Yaru',
+                'Yaru-dark',
+                'Yaru-red',
+                'Yaru-red-dark',
+                'Yaru-magenta',
+                'Yaru-magenta-dark',
+                'Yaru-purple',
+                'Yaru-purple-dark',
+                'Yaru-sage',
+                'Yaru-sage-dark',
+                'Yaru-wartybrown',
+                'Yaru-wartybrown-dark'
+            ]
+
+            function getYaruColour() {
+                switch (getAccentColor()) {
+                    case 'blue': return '-blue'
+                    case 'teal': return '-prussiangreen'
+                    case 'green': return '-olive'
+                    case 'yellow': return '-yellow'
+                    case 'orange': return ''
+                    case 'red': return '-red'
+                    case 'pink': return '-magenta'
+                    case 'purple': return '-purple'
+                    case 'slate': return '-sage'
+                    case 'brown': return '-wartybrown'
+                    default: return ''
+                }
+            }
+
+            const yaruDark = getColorScheme() === PREFER_DARK ? '-dark' : ''
+
+            const yaruTheme = `Yaru${getYaruColour()}${yaruDark}`
+
+            if (yaruThemes.includes(iconTheme)) {
+                setIconTheme(yaruTheme)
+                journal(`Applied icon theme as ${yaruTheme}`)
+            }
+
+            if (yaruThemes.includes(gtkTheme)) {
+                setGtkTheme(yaruTheme)
+                journal(`Applied GTK theme as ${yaruTheme}`)
             }
         }
 
@@ -542,6 +613,7 @@ export default class AutoAccentColourExtension extends Extension {
                 },
                 function(newAccent) {
                     setAccentColor(newAccent.name)
+                    applyYaruTheme(),
                     journal(`New accent: ${getAccentColor()}`)
                     changeIndicatorIcon(normalIcon)
                     running = false
