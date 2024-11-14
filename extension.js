@@ -451,36 +451,12 @@ export default class AutoAccentColourExtension extends Extension {
             return interfaceSettings.get_string('gtk-theme')
         }
 
-        function getIgnoreCaches() {
-            return extensionSettings.get_boolean('ignore-caches')
+        function getDisableCache() {
+            return extensionSettings.get_boolean('disable-cache')
         }
         function getCache() {
-            return getIgnoreCaches() ? noCache() : fileBasedCache(getExtensionCacheDir())
+            return getDisableCache() ? noCache() : fileBasedCache(getExtensionCacheDir())
         }
-
-        // TODO: remove these then edit schema
-        // function getCachedHash() {
-        //     if (getIgnoreCaches()) {
-        //         return -1
-        //     }
-        //
-        //     return extensionSettings.get_int64(
-        //         getColorScheme() === PREFER_DARK ? 'dark-hash' : 'light-hash'
-        //     )
-        // }
-        // function getCachedLastChange() {
-        //     return extensionSettings.get_int64(
-        //         getColorScheme() === PREFER_DARK ? 'dark-last-change' : 'light-last-change'
-        //     )
-        // }
-        // function getCachedAccent() {
-        //     const theme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
-        //     const colourMode = extensionSettings.get_boolean('highlight-mode')
-        //         ? 'highlight'
-        //         : 'dominant'
-        //
-        //     return extensionSettings.get_enum(`${theme}-${colourMode}-accent`)
-        // }
 
         function getKeepConversion() {
             return extensionSettings.get_boolean('keep-conversion')
