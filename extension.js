@@ -277,7 +277,7 @@ async function applyClosestAccent(
         new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
         new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
         new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-        new AccentColour('slate', 166, 166, 166, new HueRange(180, 300)),
+        new AccentColour('slate', 166, 166, 166, new HueRange(50, 180)),
         new AccentColour('brown', 89, 46, 0, new HueRange(0, 70))
     ]
     const accentColours = onUbuntu ? ubuntuAccents : gnomeAccents
