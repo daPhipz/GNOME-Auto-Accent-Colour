@@ -1,0 +1,346 @@
+# German translation for Auto Accent Colour.
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGENAME package.
+# Philipp Kiemle <l10n@prly.mozmail.com>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: 1\n"
+"Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
+"POT-Creation-Date: 2024-11-14 21:39+0100\n"
+"PO-Revision-Date: 2024-11-14 22:46+0100\n"
+"Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.5\n"
+
+#: extension.js:494
+msgid "Force Refresh"
+msgstr "Aktualisierung erzwingen"
+
+#: extension.js:499
+msgid "Preferences"
+msgstr "Einstellungen"
+
+#: extension.js:529
+msgid "Optional dependencies required for this background"
+msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
+
+#: extension.js:530
+msgid "Visit Auto Accent Colour's preferences page to learn more"
+msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
+
+#: extension.js:537
+msgid "XML backgrounds not supported"
+msgstr "XML-Hintergründe nicht unterstützt"
+
+#: extension.js:538
+msgid "Auto Accent Colour will not run on this background"
+msgstr "Auto Accent Colour funktioniert nicht mit diesem Hintergrund"
+
+#: prefs.js:28
+msgid "Setup"
+msgstr "Einrichtung"
+
+#: prefs.js:35
+msgid "Refresh"
+msgstr "Aktualisieren"
+
+#: prefs.js:41
+msgid "Optional Dependencies"
+msgstr "Optionale Abhängigkeiten"
+
+#: prefs.js:44
+msgid ""
+"ImageMagick v7+ is required to parse colour data from SVG and JXL "
+"backgrounds. It must be installed via the system package manager. If only "
+"older versions of ImageMagick are available, rsvg-convert can be used as an "
+"alternative for SVG files only. This extension will still function without "
+"either dependency, but it won't work on SVG and JXL files."
+msgstr ""
+"Um Farbdaten von SVG- und JXL-Bildern zu verarbeiten, ist ImageMagick v7+ "
+"erforderlich. Bitte installieren Sie das Programm über die Paketverwaltung "
+"Ihres Systems. Falls nur ältere Versionen von ImageMagick verfügbar sind, "
+"kann für SVGs »rsvg-convert« als Alternative verwendet werden."
+
+#: prefs.js:67
+msgid "Example Install Commands"
+msgstr "Beispiele für Installationsbefehle"
+
+#: prefs.js:69
+msgid ""
+"Commands to enable support for optional file types in popular Linux "
+"distributions"
+msgstr ""
+"Befehle, um die Unterstützung für optionale Dateitypen auf beliebten Linux-"
+"Distributionen zu aktivieren"
+
+#: prefs.js:104
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: prefs.js:110
+msgid "Appearance"
+msgstr "Erscheinungsbild"
+
+#: prefs.js:115
+msgid "Hide Indicator"
+msgstr "Indikator ausblenden"
+
+#: prefs.js:120
+msgid "Colour Palette"
+msgstr "Farbpalette"
+
+#: prefs.js:122
+msgid ""
+"Choose the type of background colour to base the shell accent colour from"
+msgstr ""
+"Wählen Sie die Art der Hintergrundfarbe, auf der die Shell-Akzentfarbe "
+"basieren soll"
+
+#: prefs.js:132
+msgid "Dominant"
+msgstr "Dominant"
+
+#: prefs.js:133
+msgid "Use the most frequent colour from the background"
+msgstr "Die häufigste Farbe des Hintergrundes wählen"
+
+#: prefs.js:145
+msgid "Highlight"
+msgstr "Highlight"
+
+#: prefs.js:147
+msgid ""
+"Use a contrasting yet complimentary colour from the background. This may "
+"sometimes be the same as the dominant colour."
+msgstr ""
+"Verwenden Sie eine kontrastreiche, aber dennoch passende Farbe aus dem "
+"Hintergrundbild. Diese kann manchmal gleich der dominanten Farbe sein."
+
+#: prefs.js:156
+msgid "Developer Tools"
+msgstr "Entwicklerwerkzeuge"
+
+#: prefs.js:161
+msgid "Debug Logging"
+msgstr "Debug-Logging"
+
+#: prefs.js:162
+msgid "Print debug messages to the system journal"
+msgstr "Debug-Nachrichten in das System-Journal ausgeben"
+
+#: prefs.js:167
+msgid "Keep Converted Background Image"
+msgstr "Konvertiertes Hintergrundbild behalten"
+
+#: prefs.js:169
+#, javascript-format
+msgid ""
+"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
+"format. These files can be found at %s."
+msgstr ""
+"Temporäre Konvertierungen von SVG- und JXL-Hintergrundbildern nicht "
+"automatisch löschen. Diese Dateien können unter %s gefunden werden."
+
+#: prefs.js:176
+msgid "Ignore Caches"
+msgstr "Zwischenspeicher ignorieren"
+
+#: prefs.js:177
+msgid ""
+"Always parse colours from the background, even if accent colours from a "
+"given background have already been derived and cached. This reduces "
+"performance."
+msgstr ""
+"Farben immer aus dem Hintergrundbild berechnen, selbst wenn die Akzentfarben "
+"eines Hintergrundbildes bereits berechnet und zwischengespeichert wurden. "
+"Diese Einstellung reduziert die Performance."
+
+#: prefs.js:188
+msgid "Cache"
+msgstr "Zwischenspeicher"
+
+#: prefs.js:195
+msgid ""
+"Information about backgrounds and their derived accent colours is cached to "
+"increase performance"
+msgstr ""
+"Informationen über Hintergründe und ihre abgeleiteten Akzentfarben wird "
+"zwischengespeichert, um die Performance zu erhöhen"
+
+#: prefs.js:203
+msgid "Clear"
+msgstr "Löschen"
+
+#: prefs.js:209
+msgid "File Hash"
+msgstr "Datei-Hash"
+
+#: prefs.js:210
+msgid "Nothing cached"
+msgstr "Nichts zwischengespeichert"
+
+#: prefs.js:211
+msgid "Time Last Modified Hash"
+msgstr ""
+
+#: prefs.js:212
+msgid "Dominant Accent"
+msgstr "Dominant Akzent"
+
+#: prefs.js:213
+msgid "Highlight Accent"
+msgstr "Highlight Akzent"
+
+#: prefs.js:220
+msgid "Light Background"
+msgstr "Heller Hintergrund"
+
+#: prefs.js:261
+msgid "Dark Background"
+msgstr "Dunkler Hintergrund"
+
+#: prefs.js:302
+msgid "About"
+msgstr "Info"
+
+#: prefs.js:311
+msgid "Auto Accent Colour"
+msgstr "Automatische Akzentfarbe"
+
+#: prefs.js:317
+#, javascript-format
+msgid "Created by %s and contributors"
+msgstr "Programmiert von %s und Beitragenden"
+
+#: prefs.js:324
+#, javascript-format
+msgid "Version %d"
+msgstr "Version %d"
+
+#: prefs.js:331
+msgid "Special Thanks"
+msgstr "Besonderer Dank"
+
+#: prefs.js:337
+msgid ""
+"For creating the ColorThief JavaScript module, used for extracting colours "
+"from the background image"
+msgstr ""
+"Für das Erstellen des JavaScript-Moduls »ColorThief«, genutzt um Farben aus "
+"dem Hintergrundbild zu erhalten"
+
+#: prefs.js:343
+msgid ""
+"For creating the Quantize JavaScript module, used by ColorThief for colour "
+"quantization"
+msgstr ""
+"Für das Erstellen des JavaScript-Moduls »Quantize«, von »ColorThief« für die "
+"Farbreduktion verwendet"
+
+#: prefs.js:357
+msgid "Project Repository"
+msgstr "Projekt-Repository"
+
+#: prefs.js:373
+msgid "Submit an Issue"
+msgstr "Einen Fehler melden"
+
+#: prefs.js:389
+msgid "Contributors"
+msgstr "Beitragende"
+
+#: prefs.js:401
+msgid "Licenses"
+msgstr "Lizenzen"
+
+#: prefs.js:415
+msgid "Auto Accent Colour Extension"
+msgstr "Auto Accent Colour-Extension"
+
+#: prefs.js:416
+msgid "GNU General Public License v3.0"
+msgstr "GNU General Public License v3.0"
+
+#: prefs.js:430
+msgid "ColorThief Module"
+msgstr "ColorThief-Modul"
+
+#: prefs.js:431 prefs.js:446
+msgid "MIT License"
+msgstr "MIT-Lizenz"
+
+#: prefs.js:445
+msgid "Quantize Module"
+msgstr "Quantize-Modul"
+
+#: prefs.js:457
+msgid "Be kind to your local pigeons!"
+msgstr "Seien Sie nett zu Ihren Tauben!"
+
+#: prefs.js:467
+msgid "Not Needed"
+msgstr "Nicht benötigt"
+
+#: prefs.js:475
+msgid "Installed"
+msgstr "Installiert"
+
+#: prefs.js:475
+msgid "Not Installed"
+msgstr "Nicht installiert"
+
+#: prefs.js:487
+msgid "Available"
+msgstr "Verfügbar"
+
+#: prefs.js:488
+msgid "Unavailable"
+msgstr "Nicht verfügbar"
+
+#: prefs.js:556
+msgid "Blue"
+msgstr "Blau"
+
+#: prefs.js:557
+msgid "Teal"
+msgstr "Türkis"
+
+#: prefs.js:558
+msgid "Green"
+msgstr "Grün"
+
+#: prefs.js:559
+msgid "Yellow"
+msgstr "Gelb"
+
+#: prefs.js:560
+msgctxt "The colour"
+msgid "Orange"
+msgstr "Orange"
+
+#: prefs.js:561
+msgid "Red"
+msgstr "Rot"
+
+#: prefs.js:562
+msgid "Pink"
+msgstr "Pink"
+
+#: prefs.js:563
+msgid "Purple"
+msgstr "Violett"
+
+#: prefs.js:564
+msgctxt "The colour"
+msgid "Slate"
+msgstr "Schiefergrau"
+
+#: prefs.js:565
+msgid "Warty Brown"
+msgstr "Warziges Braun"
