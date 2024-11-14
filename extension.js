@@ -6,6 +6,7 @@ import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
 import { isImageMagickInstalled, isRsvgConvertAvailable, setLogging, journal } from './utils.js'
+import { getExtensionCacheDir, noCache, fileBasedCache } from './cache.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const PREFER_DARK = 'prefer-dark'
@@ -153,10 +154,6 @@ function getClosestAccentColour(accentColours, r, g, b) {
     return closestAccentIndex
 }
 
-function getExtensionCacheDir() {
-    return `${GLib.get_home_dir()}/.cache/auto-accent-colour`
-}
-
 async function clearConvertedBackground() {
     const cacheDirPath = getExtensionCacheDir()
     GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
@@ -292,7 +289,6 @@ async function applyClosestAccent(
         }
     }
 
-    // TODO: maybe allow for other hashing methods? e.g. pass cache_keyer func as arg?
     const [bytes, _] = rasterFile.load_bytes(null);
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${rasterFile.get_path()} is ${backgroundHash}...`);
@@ -319,58 +315,6 @@ async function applyClosestAccent(
 
     journal(`Accent to apply: ${closestAccent.name}`)
     onFinish(closestAccent)
-}
-
-// fake cache that does nothing
-// serves as an interface reference
-// but can also be used to disable caching
-// (also ya... i can do oop js... for sure...)
-function noCache() {
-    function get(key) { return null; }
-    function set(key, data) { }
-    // function delete ...
-    // function clear ...
-    return { get: get, set: set };
-}
-
-// simple file-based cache
-// TODO: make it async? I'm not great at this and the docs seem a little off?
-function fileBasedCache(cachedir) {
-    function _setup() {
-        journal(`Ensuring cache directory ${cachedir} exists...`);
-        GLib.mkdir_with_parents(cachedir, 0o0755);
-    }
-    function _file(key) {
-        return Gio.File.new_for_path(`${cachedir}/${key}`);
-    }
-    function get(key) {
-        const file = _file(key);
-        if (!file.query_exists(null)) {
-            return null;
-        }
-        journal(`Reading cache entry from ${file.get_path()}...`);
-        const [_ok, contents, _etag] = file.load_contents(null);
-        const decoder = new TextDecoder('utf-8');
-        const contentsString = decoder.decode(contents);
-        try {
-            return JSON.parse(contentsString);
-        } catch (err) {
-            journal(`unable to parse ${file.get_path()}: ${err}`);
-            return null;
-        }
-    }
-    function set(key, data) {
-        const file = _file(key);
-        journal(`Writing cache entry to ${file.get_path()}...`);
-        const cereal = JSON.stringify(data);
-        const bytes = new GLib.Bytes(cereal);
-        const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
-        stream.write_bytes(bytes, null);
-    }
-    // function delete ...
-    // function clear ...
-    _setup();
-    return { get: get, set: set };
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -460,62 +404,6 @@ export default class AutoAccentColourExtension extends Extension {
 
         function getKeepConversion() {
             return extensionSettings.get_boolean('keep-conversion')
-        }
-
-        // function cache(backgroundHash, lastChange, dominantAccent, highlightAccent) {
-        //     const currentTheme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
-        //     const backgroundsAreSame = getBackgroundUri() === getDarkBackgroundUri()
-        //
-        //     for (const theme of ['dark', 'light']) {
-        //         if (currentTheme === theme || backgroundsAreSame) {
-        //             extensionSettings.set_int64(`${theme}-hash`, backgroundHash)
-        //             extensionSettings.set_int64(`${theme}-last-change`, lastChange)
-        //             extensionSettings.set_enum(`${theme}-dominant-accent`, dominantAccent)
-        //             extensionSettings.set_enum(`${theme}-highlight-accent`, highlightAccent)
-        //         }
-        //     }
-        // }
-
-        // cache interface
-        // simple file-based cache
-        // TODO: async?
-        // (ya... i can do oop js... for sure...)
-        function cache(cachedir) {
-            function _setup() {
-                journal(`Ensuring cache directory ${cachedir} exists...`);
-                GLib.mkdir_with_parents(cachedir, 0o0755);
-            }
-            function _file(key) {
-                return Gio.File.new_for_path(`${cachedir}/${key}`);
-            }
-            function get(key) {
-                const file = _file(key);
-                if (!file.query_exists(null)) {
-                    return null;
-                }
-                journal(`Reading cache entry from ${file.get_path()}...`);
-                const [_ok, contents, _etag] = file.load_contents(null);
-                const decoder = new TextDecoder('utf-8');
-                const contentsString = decoder.decode(contents);
-                try {
-                    return JSON.parse(contentsString);
-                } catch (err) {
-                    journal(`unable to parse ${file.get_path()}: ${err}`);
-                    return null;
-                }
-            }
-            function set(key, data) {
-                const file = _file(key);
-                journal(`Writing cache entry to ${file.get_path()}...`);
-                const cereal = JSON.stringify(data);
-                const bytes = new GLib.Bytes(cereal);
-                const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
-                stream.write_bytes(bytes, null);
-            }
-            // function delete ...
-            // function clear ...
-            _setup();
-            return { get: get, set: set };
         }
 
         function applyYaruTheme() {
