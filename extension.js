@@ -238,6 +238,12 @@ async function applyClosestAccent(
     onXmlDetected,
     onFinish
 ) {
+    const de = (await execCommand(['sh', '-c', 'echo $DESKTOP_SESSION'])).trim()
+    // Above will be 'ubuntu' on Ubuntu, rather than the standard 'gnome'
+    journal(`Desktop environment: ${de}`)
+    const onUbuntu = de === 'ubuntu'
+    journal(`Running on Ubuntu: ${onUbuntu}`)
+
     journal(`Cached hash: ${cachedHash}`)
     journal(`Cached last change hash: ${cachedLastChangeHash}`)
 
