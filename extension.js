@@ -387,8 +387,7 @@ export default class AutoAccentColourExtension extends Extension {
             new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
             new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
             new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-            new AccentColour('slate', 166, 166, 166, new HueRange(50, 180)),
-            new AccentColour('brown', 128, 128, 128, new HueRange(0, 70))
+            new AccentColour('slate', 166, 166, 166, new HueRange(50, 180))
         ]
         const extensionPath = this.path
 
@@ -511,7 +510,6 @@ export default class AutoAccentColourExtension extends Extension {
                     case 'pink': return '-magenta'
                     case 'purple': return '-purple'
                     case 'slate': return '-sage'
-                    case 'brown': return '-wartybrown'
                     default: return ''
                 }
             }
