@@ -1,22 +1,21 @@
-# Auto Accent Colour.
-# Copyright (C) 2024
-# This file is distributed under the same license as the Auto Accent Colour package.
-# Wartybix <34974060+Wartybix@users.noreply.github.com>, 2024.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: 1\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
 "POT-Creation-Date: 2024-11-14 23:09+0100\n"
-"PO-Revision-Date: 2024-11-12 02:27+0000\n"
-"Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
-"Language-Team: en_US\n"
-"Language: en_US\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 46.1\n"
 
 #: extension.js:494
 msgid "Force Refresh"
@@ -32,7 +31,7 @@ msgstr ""
 
 #: extension.js:530
 msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr "Visit Auto Accent Color's preferences page to learn more"
+msgstr ""
 
 #: extension.js:537
 msgid "XML backgrounds not supported"
@@ -40,7 +39,7 @@ msgstr ""
 
 #: extension.js:538
 msgid "Auto Accent Colour will not run on this background"
-msgstr "Auto Accent Color will not run on this background"
+msgstr ""
 
 #: prefs.js:28
 msgid "Setup"
@@ -62,11 +61,6 @@ msgid ""
 "alternative for SVG files only. This extension will still function without "
 "either dependency, but it won't work on SVG and JXL files."
 msgstr ""
-"ImageMagick v7+ is required to parse color data from SVG and JXL "
-"backgrounds. It must be installed via the system package manager. If only "
-"older versions of ImageMagick are available, rsvg-convert can be used as an "
-"alternative for SVG files only. This extension will still function without "
-"either dependency, but it won't work on SVG and JXL files."
 
 #: prefs.js:67
 msgid "Example Install Commands"
@@ -92,13 +86,12 @@ msgstr ""
 
 #: prefs.js:120
 msgid "Colour Palette"
-msgstr "Color Palette"
+msgstr ""
 
 #: prefs.js:122
 msgid ""
 "Choose the type of background colour to base the shell accent colour from"
 msgstr ""
-"Choose the type of background color to base the shell accent color from"
 
 #: prefs.js:132
 msgid "Dominant"
@@ -106,7 +99,7 @@ msgstr ""
 
 #: prefs.js:133
 msgid "Use the most frequent colour from the background"
-msgstr "Use the most frequent color from the background"
+msgstr ""
 
 #: prefs.js:145
 msgid "Highlight"
@@ -117,8 +110,6 @@ msgid ""
 "Use a contrasting yet complimentary colour from the background. This may "
 "sometimes be the same as the dominant colour."
 msgstr ""
-"Use a contrasting yet complimentary color from the background. This may "
-"sometimes be the same as the dominant color."
 
 #: prefs.js:156
 msgid "Developer Tools"
@@ -153,8 +144,6 @@ msgid ""
 "given background have already been derived and cached. This reduces "
 "performance."
 msgstr ""
-"Always parse colors from the background, even if accent colors from a given "
-"background have already been derived and cached. This reduces performance."
 
 #: prefs.js:188
 msgid "Cache"
@@ -165,8 +154,6 @@ msgid ""
 "Information about backgrounds and their derived accent colours is cached to "
 "increase performance"
 msgstr ""
-"Information about backgrounds and their derived colors is cached to increase "
-"performance"
 
 #: prefs.js:203
 msgid "Clear"
@@ -206,7 +193,7 @@ msgstr ""
 
 #: prefs.js:311
 msgid "Auto Accent Colour"
-msgstr "Auto Accent Color"
+msgstr ""
 
 #: prefs.js:317
 #, javascript-format
@@ -227,16 +214,12 @@ msgid ""
 "For creating the ColorThief JavaScript module, used for extracting colours "
 "from the background image"
 msgstr ""
-"For creating the ColorThief JavaScript module, used for extracting colors "
-"from the background image"
 
 #: prefs.js:343
 msgid ""
 "For creating the Quantize JavaScript module, used by ColorThief for colour "
 "quantization"
 msgstr ""
-"For creating the Quantize JavaScript module, used by ColorThief for color "
-"quantization"
 
 #: prefs.js:357
 msgid "Project Repository"
@@ -256,7 +239,7 @@ msgstr ""
 
 #: prefs.js:415
 msgid "Auto Accent Colour Extension"
-msgstr "Auto Accent Color Extension"
+msgstr ""
 
 #: prefs.js:416
 msgid "GNU General Public License v3.0"
@@ -340,13 +323,3 @@ msgstr ""
 #: prefs.js:565
 msgid "Warty Brown"
 msgstr ""
-
-#~ msgid "ImageMagick is required to set an accent colour from this background"
-#~ msgstr "ImageMagick is required to set an accent color from this background"
-
-#~ msgid ""
-#~ "ImageMagick is required to parse colour data from SVG and JXL "
-#~ "backgrounds. It must be installed via the system package manager."
-#~ msgstr ""
-#~ "ImageMagick is required to parse color data from SVG and JXL backgrounds. "
-#~ "It must be installed via the system package manager."

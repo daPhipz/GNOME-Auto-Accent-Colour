@@ -554,7 +554,7 @@ performance.")
 
         const accentNames = [
             _('Blue'),
-            _('Teal'),
+            pgettext('The colour', 'Teal'),
             _('Green'),
             _('Yellow'),
             pgettext('The colour', 'Orange'),
