@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-15 00:25+0000\n"
+"POT-Creation-Date: 2024-11-15 13:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:564
+#: extension.js:560
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:569
+#: extension.js:565
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:601
+#: extension.js:596
 msgid "Optional dependencies required for this background"
 msgstr ""
 
-#: extension.js:602
+#: extension.js:597
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr ""
 
-#: extension.js:609
+#: extension.js:604
 msgid "XML backgrounds not supported"
 msgstr ""
 
-#: extension.js:610
+#: extension.js:605
 msgid "Auto Accent Colour will not run on this background"
 msgstr ""
 
