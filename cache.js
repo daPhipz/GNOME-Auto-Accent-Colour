@@ -7,16 +7,18 @@ function getExtensionCacheDir() {
     return `${GLib.get_home_dir()}/.cache/auto-accent-colour`
 }
 
+// (ya... i can do oop js... for sure...)
+
 // fake cache that does nothing
 // serves as an interface reference
 // but can also be used to disable caching
-// (also ya... i can do oop js... for sure...)
 function noCache() {
     function get(key) { return null; }
     function set(key, data) { }
-    // function delete ...
-    // function clear ...
-    return { get: get, set: set };
+    function remove(key) { }
+    function keys() { return []; }
+    function clear() { }
+    return { get: get, set: set, remove: remove, keys: keys, clear: clear };
 }
 
 // simple file-based cache
@@ -53,10 +55,24 @@ function fileBasedCache(cachedir) {
         const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
         stream.write_bytes(bytes, null);
     }
-    // function delete ...
-    // function clear ...
+    function remove(key) {
+        const file = _file(key);
+        try {
+            file.delete(null);
+        } catch { }
+    }
+    function keys() {
+        const dir = Gio.File.new_for_path(cachedir);
+        const files = dir.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        return Array.from(files).map((finfo) => finfo.get_name());
+    }
+    function clear() {
+        for (const key of keys()) {
+            remove(key);
+        }
+    }
     _setup();
-    return { get: get, set: set };
+    return { get: get, set: set, remove: remove, keys: keys, clear: clear };
 }
 
 export {
