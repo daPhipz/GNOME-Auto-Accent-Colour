@@ -226,6 +226,8 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 
 async function applyClosestAccent(
     extensionPath,
+    gnomeAccents,
+    ubuntuAccents,
     backgroundUri,
     cachedHash,
     cachedLastChangeHash,
@@ -243,43 +245,6 @@ async function applyClosestAccent(
     const onUbuntu = de === 'ubuntu'
     journal(`Running on Ubuntu: ${onUbuntu}`)
 
-    /* Hue values are:
-    0 = Red
-    60 = Yellow
-    120 = Green
-    180 = Cyan
-    240 = Blue
-    300 = Magenta
-    */
-    const gnomeAccents = [
-        /* The RGB values set in these accent colour entries are *not* the RGB
-        values of the same accent colours you would find in the GNOME appearance
-        settings. They are exaggerated to add further distinction between them, so
-        that a greater variety of accents can be returned from different backgrounds
-        and their derived colours. */
-        new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
-        new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
-        new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
-        new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
-        new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
-        new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
-        new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
-        new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-        new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
-    ]
-    const ubuntuAccents = [
-        /* The same as above applies to these accents */
-        new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
-        new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
-        new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
-        new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
-        new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
-        new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
-        new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
-        new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-        new AccentColour('slate', 166, 166, 166, new HueRange(50, 180)),
-        new AccentColour('brown', 128, 128, 128, new HueRange(0, 70))
-    ]
     const accentColours = onUbuntu ? ubuntuAccents : gnomeAccents
 
     journal(`Cached hash: ${cachedHash}`)
@@ -388,6 +353,42 @@ async function applyClosestAccent(
 
 export default class AutoAccentColourExtension extends Extension {
     enable() {
+        /* Hue values are:
+        0 = Red
+        60 = Yellow
+        120 = Green
+        180 = Cyan
+        240 = Blue
+        300 = Magenta
+        */
+        const gnomeAccents = [
+            /* The RGB values set in these accent colour entries are *not* the RGB
+            values of the same accent colours you would find in the GNOME appearance
+            settings. They are exaggerated to add further distinction between them, so
+            that a greater variety of accents can be returned from different backgrounds
+            and their derived colours. */
+            new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+            new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
+            new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
+            new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
+            new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
+            new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
+            new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
+            new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
+            new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
+        ]
+        const ubuntuAccents = [
+            /* The same as above applies to these accents */
+            new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+            new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
+            new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
+            new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
+            new AccentColour('orange', 237, 91, 0, new HueRange(0, 70)),
+            new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
+            new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
+            new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
+            new AccentColour('slate', 166, 166, 166, new HueRange(50, 180))
+        ]
         const extensionPath = this.path
 
         this._settings = this.getSettings()
@@ -413,7 +414,19 @@ export default class AutoAccentColourExtension extends Extension {
             interfaceSettings.set_string(ACCENT_COLOR, colorName)
         }
         function getAccentColor() {
-            interfaceSettings.get_string(ACCENT_COLOR)
+            return interfaceSettings.get_string(ACCENT_COLOR)
+        }
+        function setIconTheme(theme) {
+            interfaceSettings.set_string('icon-theme', theme)
+        }
+        function getIconTheme() {
+            return interfaceSettings.get_string('icon-theme')
+        }
+        function setGtkTheme(theme) {
+            interfaceSettings.set_string('gtk-theme', theme)
+        }
+        function getGtkTheme() {
+            return interfaceSettings.get_string('gtk-theme')
         }
 
         function getIgnoreCaches() {
@@ -456,6 +469,63 @@ export default class AutoAccentColourExtension extends Extension {
                     extensionSettings.set_enum(`${theme}-dominant-accent`, dominantAccent)
                     extensionSettings.set_enum(`${theme}-highlight-accent`, highlightAccent)
                 }
+            }
+        }
+
+        function applyYaruTheme() {
+            const iconTheme = getIconTheme()
+            const gtkTheme = getGtkTheme()
+
+            const yaruThemes = [
+                'Yaru-blue',
+                'Yaru-blue-dark',
+                'Yaru-prussiangreen',
+                'Yaru-prussiangreen-dark',
+                'Yaru-olive',
+                'Yaru-olive-dark',
+                'Yaru-yellow',
+                'Yaru-yellow-dark',
+                'Yaru',
+                'Yaru-dark',
+                'Yaru-red',
+                'Yaru-red-dark',
+                'Yaru-magenta',
+                'Yaru-magenta-dark',
+                'Yaru-purple',
+                'Yaru-purple-dark',
+                'Yaru-sage',
+                'Yaru-sage-dark',
+                'Yaru-wartybrown',
+                'Yaru-wartybrown-dark'
+            ]
+
+            function getYaruColour() {
+                switch (getAccentColor()) {
+                    case 'blue': return '-blue'
+                    case 'teal': return '-prussiangreen'
+                    case 'green': return '-olive'
+                    case 'yellow': return '-yellow'
+                    case 'orange': return ''
+                    case 'red': return '-red'
+                    case 'pink': return '-magenta'
+                    case 'purple': return '-purple'
+                    case 'slate': return '-sage'
+                    default: return ''
+                }
+            }
+
+            const yaruDark = getColorScheme() === PREFER_DARK ? '-dark' : ''
+
+            const yaruTheme = `Yaru${getYaruColour()}${yaruDark}`
+
+            if (yaruThemes.includes(iconTheme)) {
+                setIconTheme(yaruTheme)
+                journal(`Applied icon theme as ${yaruTheme}`)
+            }
+
+            if (yaruThemes.includes(gtkTheme)) {
+                setGtkTheme(yaruTheme)
+                journal(`Applied GTK theme as ${yaruTheme}`)
             }
         }
 
@@ -517,6 +587,8 @@ export default class AutoAccentColourExtension extends Extension {
 
             applyClosestAccent(
                 extensionPath,
+                gnomeAccents,
+                ubuntuAccents,
                 backgroundUri,
                 getCachedHash(),
                 getCachedLastChange(),
@@ -542,6 +614,7 @@ export default class AutoAccentColourExtension extends Extension {
                 },
                 function(newAccent) {
                     setAccentColor(newAccent.name)
+                    applyYaruTheme(),
                     journal(`New accent: ${getAccentColor()}`)
                     changeIndicatorIcon(normalIcon)
                     running = false

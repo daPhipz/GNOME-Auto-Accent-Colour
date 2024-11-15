@@ -561,8 +561,7 @@ performance.")
             _('Red'),
             _('Pink'),
             _('Purple'),
-            pgettext('The colour', 'Slate'),
-            _('Warty Brown')
+            pgettext('The colour', 'Slate')
         ]
 
         function clearCache(theme) {

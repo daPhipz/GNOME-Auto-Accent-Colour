@@ -10,7 +10,6 @@
     <value nick="pink" value="6"/>
     <value nick="purple" value="7"/>
     <value nick="slate" value="8"/>
-    <value nick="brown" value="9"/>
   </enum>
 
   <schema id="org.gnome.shell.extensions.auto-accent-colour" path="/org/gnome/shell/extensions/auto-accent-colour/">
