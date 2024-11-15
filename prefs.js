@@ -2,13 +2,9 @@ import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
-import { ExtensionPreferences, gettext as _, pgettext } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 import { isImageMagickInstalled, isRsvgConvertAvailable } from './utils.js'
-
-const LIGHT = 'light'
-const DARK = 'dark'
-const DOMINANT = 'dominant'
-const HIGHLIGHT = 'highlight'
+import { getExtensionCacheDir, fileBasedCache } from './cache.js'
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
     fillPreferencesWindow(window) {
@@ -152,6 +148,45 @@ This may sometimes be the same as the dominant colour.'
         highlightColourRow.add_prefix(highlightColourRadio)
         paletteGroup.add(highlightColourRow)
 
+        const cacheGroup = new Adw.PreferencesGroup({
+            title: _('Palette Cache'),
+            description: _(
+                'The colour palette computed from each background you switch to \
+is cached to increase performance.'
+            )
+        })
+        settingsPage.add(cacheGroup)
+
+        const cache = fileBasedCache(getExtensionCacheDir());
+        function getCacheCountMsg() {
+            const cachedCount = cache.keys().length;
+            return _(`The cache contains ${cachedCount} entries.`)
+        }
+
+        const clearCacheBtn = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            tooltip_text: _('Clear'),
+            icon_name: 'user-trash-symbolic',
+            css_classes: ['destructive-action', 'flat']
+        })
+        const clearCacheRow = new Adw.ActionRow({
+            title: _('Clear Cache'),
+            subtitle: getCacheCountMsg(),
+        });
+        clearCacheBtn.connect('clicked', () => {
+            cache.clear();
+            clearCacheRow.subtitle = getCacheCountMsg();
+        })
+        clearCacheRow.add_suffix(clearCacheBtn);
+        cacheGroup.add(clearCacheRow);
+
+        const disableCacheRow = new Adw.SwitchRow({
+            title: _('Disable Cache'),
+            subtitle: _("Always parse colours from the background, even if accent \
+colours from a given background have already been derived and cached.")
+        })
+        cacheGroup.add(disableCacheRow)
+
         const devToolsGroup = new Adw.PreferencesGroup({
             title: _('Developer Tools')
         })
@@ -168,131 +203,9 @@ This may sometimes be the same as the dominant colour.'
             subtitle: _(
                 "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
 into JPG format. These files can be found at %s."
-            ).format('~/.cache/auto-accent-colour/')
+            ).format(getExtensionCacheDir())
         })
         devToolsGroup.add(keepConversionRow)
-
-        const ignoreCachesRow = new Adw.SwitchRow({
-            title: _('Ignore Caches'),
-            subtitle: _("Always parse colours from the background, even if accent \
-colours from a given background have already been derived and cached. This reduces \
-performance.")
-        })
-        devToolsGroup.add(ignoreCachesRow)
-
-        ////////////////////////////////////////////////////////////////////////
-
-        // Cache page //////////////////////////////////////////////////////////
-
-        const cachePage = new Adw.PreferencesPage({
-            title: _('Cache'),
-            icon_name: 'drive-harddisk-symbolic'
-        })
-        window.add(cachePage)
-
-        const cacheDescriptionGroup = new Adw.PreferencesGroup({
-            description: _(
-                'Information about backgrounds and their derived accent colours is cached to increase performance'
-            )
-        })
-        cachePage.add(cacheDescriptionGroup)
-
-        function createDeleteButton() {
-            return new Gtk.Button({
-                valign: Gtk.Align.CENTER,
-                tooltip_text: _('Clear'),
-                icon_name: 'user-trash-symbolic',
-                css_classes: ['destructive-action', 'flat']
-            })
-        }
-
-        const hashTitle = _('File Hash')
-        const noCacheMsg = _('Nothing cached')
-        const lastChangeTitle = _('Time Last Modified Hash')
-        const dominantAccentTitle = _('Dominant Accent')
-        const highlightAccentTitle = _('Highlight Accent')
-
-        // Light background
-
-        const lightBackgroundDeleteBtn = createDeleteButton()
-
-        const lightBackgroundGroup = new Adw.PreferencesGroup({
-            title: _('Light Background'),
-            header_suffix: lightBackgroundDeleteBtn
-        })
-        cachePage.add(lightBackgroundGroup)
-
-        const lightNoCacheRow = new Adw.ActionRow({
-            title: noCacheMsg
-        })
-        lightBackgroundGroup.add(lightNoCacheRow)
-
-        const lightHashRow = new Adw.ActionRow({
-            title: hashTitle,
-            subtitle_selectable: true,
-            css_classes: ['property']
-        })
-        lightBackgroundGroup.add(lightHashRow)
-
-        const lightLastChangeRow = new Adw.ActionRow({
-            title: lastChangeTitle,
-            subtitle_selectable: true,
-            css_classes: ['property']
-        })
-        lightBackgroundGroup.add(lightLastChangeRow)
-
-        const lightDominantAccent = new Adw.ActionRow({
-            title: dominantAccentTitle,
-            css_classes: ['property']
-        })
-        lightBackgroundGroup.add(lightDominantAccent)
-
-        const lightHighlightAccent = new Adw.ActionRow({
-            title: highlightAccentTitle,
-            css_classes: ['property']
-        })
-        lightBackgroundGroup.add(lightHighlightAccent)
-
-        // Dark background
-
-        const darkBackgroundDeleteBtn = createDeleteButton()
-
-        const darkBackgroundGroup = new Adw.PreferencesGroup({
-            title: _('Dark Background'),
-            header_suffix: darkBackgroundDeleteBtn
-        })
-        cachePage.add(darkBackgroundGroup)
-
-        const darkNoCacheRow = new Adw.ActionRow({
-            title: noCacheMsg
-        })
-        darkBackgroundGroup.add(darkNoCacheRow)
-
-        const darkHashRow = new Adw.ActionRow({
-            title: hashTitle,
-            subtitle_selectable: true,
-            css_classes: ['property']
-        })
-        darkBackgroundGroup.add(darkHashRow)
-
-        const darkLastChangeRow = new Adw.ActionRow({
-            title: lastChangeTitle,
-            subtitle_selectable: true,
-            css_classes: ['property']
-        })
-        darkBackgroundGroup.add(darkLastChangeRow)
-
-        const darkDominantAccent = new Adw.ActionRow({
-            title: dominantAccentTitle,
-            css_classes: ['property']
-        })
-        darkBackgroundGroup.add(darkDominantAccent)
-
-        const darkHighlightAccent = new Adw.ActionRow({
-            title: highlightAccentTitle,
-            css_classes: ['property']
-        })
-        darkBackgroundGroup.add(darkHighlightAccent)
 
         ////////////////////////////////////////////////////////////////////////
 
@@ -480,7 +393,6 @@ performance.")
             currentMagickIcon = magickInstalled ? magickTickIcon : magickWarningIcon
             imageMagickRow.add_suffix(currentMagickIcon)
 
-
             const rsvgConvertAvailable = isRsvgConvertAvailable()
 
             const rsvgAvailableText = rsvgConvertAvailable
@@ -538,8 +450,15 @@ performance.")
             Gio.SettingsBindFlags.DEFAULT
         )
         window._settings.bind(
-            'ignore-caches',
-            ignoreCachesRow,
+            'disable-cache',
+            disableCacheRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        // TODO
+        window._settings.bind(
+            'disable-cache',
+            clearCacheRow,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
@@ -551,108 +470,6 @@ performance.")
         highlightColourRadio.connect('activate', () => {
             settings.set_boolean('highlight-mode', true)
         })
-
-        const accentNames = [
-            _('Blue'),
-            pgettext('The colour', 'Teal'),
-            _('Green'),
-            _('Yellow'),
-            pgettext('The colour', 'Orange'),
-            _('Red'),
-            _('Pink'),
-            _('Purple'),
-            pgettext('The colour', 'Slate')
-        ]
-
-        function clearCache(theme) {
-            settings.reset(`${theme}-hash`)
-            settings.reset(`${theme}-dominant-accent`)
-            settings.reset(`${theme}-highlight-accent`)
-        }
-
-        lightBackgroundDeleteBtn.connect('clicked', () => { clearCache('light') })
-        darkBackgroundDeleteBtn.connect('clicked', () => { clearCache('dark') })
-
-        /* I would use Gio.Settings.bind_with_mapping to show the values in the
-        cache tab, except I have no clue how its 'get_mapping' parameter is
-        supposed to work. Instead, this longer, less sophisticated code will
-        work in the	meantime:
-        (TODO for the future -- change to bind_with_mapping calls once
-        documentation either elaborates further or I see something that actually
-        explains how this thing works) */
-
-        function getCachedAccent(theme, colourType) {
-            const index = settings.get_enum(`${theme}-${colourType}-accent`)
-            const accentName = accentNames[index]
-
-            return accentName.toString()
-        }
-
-        function setHashRow(theme) {
-            const lightTheme = theme === LIGHT
-
-            const noCacheRow = lightTheme ? lightNoCacheRow : darkNoCacheRow
-            const deleteBtn = lightTheme ? lightBackgroundDeleteBtn : darkBackgroundDeleteBtn
-            const hashRow = lightTheme ? lightHashRow : darkHashRow
-            const lastChangeRow = lightTheme ? lightLastChangeRow : darkLastChangeRow
-            const dominantRow = lightTheme ? lightDominantAccent : darkDominantAccent
-            const highlightRow = lightTheme ? lightHighlightAccent : darkHighlightAccent
-            const hash = settings.get_int64(`${theme}-hash`)
-            const isHashDefault = hash === -1
-
-            noCacheRow.visible = isHashDefault
-            deleteBtn.sensitive = !isHashDefault
-            hashRow.visible = !isHashDefault
-            lastChangeRow.visible = !isHashDefault
-            dominantRow.visible = !isHashDefault
-            highlightRow.visible = !isHashDefault
-
-            hashRow.subtitle = hash.toString()
-        }
-
-        function setLastChangeRow(theme) {
-            const lastChangeHash = settings.get_int64(`${theme}-last-change`)
-
-            const lastChangeRow = theme === LIGHT
-                ? lightLastChangeRow
-                : darkLastChangeRow
-
-            lastChangeRow.subtitle = lastChangeHash.toString()
-        }
-
-        function setAccentRow(theme, colourType) {
-            const [dominantAccent, highlightAccent] = theme === LIGHT
-                ? [lightDominantAccent, lightHighlightAccent]
-                : [darkDominantAccent, darkHighlightAccent]
-            const row = colourType === DOMINANT ? dominantAccent : highlightAccent
-            row.subtitle = getCachedAccent(theme, colourType)
-        }
-
-        for (let theme of [LIGHT, DARK]) {
-            setHashRow(theme)
-            setLastChangeRow(theme)
-
-            window._settings.connect(
-                `changed::${theme}-hash`,
-                () => { setHashRow(theme) }
-            )
-
-            window._settings.connect(
-                `changed::${theme}-last-change`,
-                () => { setLastChangeRow(theme) }
-            )
-
-            for (let colourType of [DOMINANT, HIGHLIGHT]) {
-                setAccentRow(theme, colourType)
-
-                window._settings.connect(
-                    `changed::${theme}-${colourType}-accent`,
-                    () => { setAccentRow(theme, colourType) }
-                )
-            }
-        }
     }
 }
-
-
 
