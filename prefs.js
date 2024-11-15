@@ -182,8 +182,7 @@ is cached to increase performance.'
 
         const disableCacheRow = new Adw.SwitchRow({
             title: _('Disable Cache'),
-            subtitle: _("Always parse colours from the background, even if accent \
-colours from a given background have already been derived and cached.")
+            subtitle: _("Always parse colours from the background, even if the palette for a given background is in the cache. Do not cache computed palettes.")
         })
         cacheGroup.add(disableCacheRow)
 
