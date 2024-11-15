@@ -226,8 +226,7 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 
 async function applyClosestAccent(
     extensionPath,
-    gnomeAccents,
-    ubuntuAccents,
+    accentColours,
     backgroundUri,
     cachedHash,
     cachedLastChangeHash,
@@ -239,14 +238,6 @@ async function applyClosestAccent(
     onXmlDetected,
     onFinish
 ) {
-    const de = (await execCommand(['sh', '-c', 'echo $DESKTOP_SESSION'])).trim()
-    // Above will be 'ubuntu' on Ubuntu, rather than the standard 'gnome'
-    journal(`Desktop environment: ${de}`)
-    const onUbuntu = de === 'ubuntu'
-    journal(`Running on Ubuntu: ${onUbuntu}`)
-
-    const accentColours = onUbuntu ? ubuntuAccents : gnomeAccents
-
     journal(`Cached hash: ${cachedHash}`)
     journal(`Cached last change hash: ${cachedLastChangeHash}`)
 
@@ -531,6 +522,11 @@ export default class AutoAccentColourExtension extends Extension {
 
         setLogging(this._settings.get_boolean('debug-logging'))
 
+        const onUbuntu = Main.sessionMode.currentMode === 'ubuntu'
+        journal(`Running on Ubuntu: ${onUbuntu}`)
+
+        const accentColours = onUbuntu ? ubuntuAccents : gnomeAccents
+
         function getIcon(iconName) {
             return new St.Icon({
                 gicon: Gio.icon_new_for_string(
@@ -587,8 +583,7 @@ export default class AutoAccentColourExtension extends Extension {
 
             applyClosestAccent(
                 extensionPath,
-                gnomeAccents,
-                ubuntuAccents,
+                accentColours,
                 backgroundUri,
                 getCachedHash(),
                 getCachedLastChange(),
