@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-14 23:09+0100\n"
+"POT-Creation-Date: 2024-11-15 00:25+0000\n"
 "PO-Revision-Date: 2024-11-12 02:27+0000\n"
 "Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
 "Language-Team: en_US\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: extension.js:494
+#: extension.js:564
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:499
+#: extension.js:569
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:529
+#: extension.js:601
 msgid "Optional dependencies required for this background"
 msgstr ""
 
-#: extension.js:530
+#: extension.js:602
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr "Visit Auto Accent Color's preferences page to learn more"
 
-#: extension.js:537
+#: extension.js:609
 msgid "XML backgrounds not supported"
 msgstr ""
 
-#: extension.js:538
+#: extension.js:610
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Color will not run on this background"
 
@@ -335,10 +335,6 @@ msgstr ""
 #: prefs.js:564
 msgctxt "The colour"
 msgid "Slate"
-msgstr ""
-
-#: prefs.js:565
-msgid "Warty Brown"
 msgstr ""
 
 #~ msgid "ImageMagick is required to set an accent colour from this background"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-14 23:09+0100\n"
+"POT-Creation-Date: 2024-11-15 00:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,27 +17,27 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:494
+#: extension.js:564
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:499
+#: extension.js:569
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:529
+#: extension.js:601
 msgid "Optional dependencies required for this background"
 msgstr ""
 
-#: extension.js:530
+#: extension.js:602
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr ""
 
-#: extension.js:537
+#: extension.js:609
 msgid "XML backgrounds not supported"
 msgstr ""
 
-#: extension.js:538
+#: extension.js:610
 msgid "Auto Accent Colour will not run on this background"
 msgstr ""
 
@@ -318,8 +318,4 @@ msgstr ""
 #: prefs.js:564
 msgctxt "The colour"
 msgid "Slate"
-msgstr ""
-
-#: prefs.js:565
-msgid "Warty Brown"
 msgstr ""

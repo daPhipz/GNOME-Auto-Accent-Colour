@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-14 21:39+0100\n"
+"POT-Creation-Date: 2024-11-15 00:25+0000\n"
 "PO-Revision-Date: 2024-11-14 22:46+0100\n"
 "Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
 "Language-Team: \n"
@@ -18,27 +18,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
-#: extension.js:494
+#: extension.js:564
 msgid "Force Refresh"
 msgstr "Aktualisierung erzwingen"
 
-#: extension.js:499
+#: extension.js:569
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: extension.js:529
+#: extension.js:601
 msgid "Optional dependencies required for this background"
 msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
 
-#: extension.js:530
+#: extension.js:602
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
 
-#: extension.js:537
+#: extension.js:609
 msgid "XML backgrounds not supported"
 msgstr "XML-Hintergründe nicht unterstützt"
 
-#: extension.js:538
+#: extension.js:610
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Colour funktioniert nicht mit diesem Hintergrund"
 
@@ -308,6 +308,8 @@ msgid "Blue"
 msgstr "Blau"
 
 #: prefs.js:557
+#, fuzzy
+msgctxt "The colour"
 msgid "Teal"
 msgstr "Türkis"
 
@@ -341,6 +343,5 @@ msgctxt "The colour"
 msgid "Slate"
 msgstr "Schiefergrau"
 
-#: prefs.js:565
-msgid "Warty Brown"
-msgstr "Warziges Braun"
+#~ msgid "Warty Brown"
+#~ msgstr "Warziges Braun"
