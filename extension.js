@@ -160,7 +160,6 @@ async function clearConvertedBackground() {
 }
 
 async function convert(imagePath) {
-    // TODO: reuse caching mechanism for converted files?
     const cacheDirPath = getExtensionCacheDir()
     GLib.mkdir_with_parents(cacheDirPath, 0o0755)
 
@@ -232,78 +231,80 @@ async function applyClosestAccent(
     onFinish
 ) {
     const backgroundFile = Gio.File.new_for_uri(backgroundUri);
-    const backgroundFileInfo = await backgroundFile.query_info_async(
-        'standard::*,time::*',
-        Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-        GLib.PRIORITY_DEFAULT,
-        null
-    )
-    const backgroundImgFormat = backgroundFileInfo.get_content_type()
-
-    journal(`Background image format: ${backgroundImgFormat}`)
-
-    /* suggestion (HM); replace below logic with map of image type to converters (array of functions); e.g.
-     * const converter_map = {
-     *     'image/svg+xml': [magick, rsvg],
-     *     'image/jxl': [magick],
-     *     'application/xml': [panic],
-     * }
-     * const converters = converter_map[backgroundImgFormat]
-     * then loop converters until one works, returning converted fp, or panic (maybe collect errs)
-     */
-
-    if (backgroundImgFormat === 'application/xml') {
-        onXmlDetected()
-        return
-    }
-
-    /* List of image formats that don't work well with colorthief, and often
-    cause crashes or return incorrect colours as a result, requiring conversion.
-    If you know of any other formats that don't work well with this extension,
-    please submit an issue or pull request. */
-    const incompatibleFormats = ['image/svg+xml', 'image/jxl']
-    const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
-    journal(`Conversion to JPG required: ${conversionRequired}`)
-
-    let rasterFile = backgroundFile;
-    if (conversionRequired) {
-        if (!isImageMagickInstalled()) {
-            if (backgroundImgFormat === 'image/svg+xml') {
-                if (!isRsvgConvertAvailable()) {
-                    journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
-                    onDependencyFail()
-                    return
-                }
-            } else {
-                journal('ImageMagick v7+ not installed !!')
-                onDependencyFail()
-                return
-            }
-        }
-
-        try {
-            rasterFile = await convert(backgroundFile.get_path());
-        } catch (err) {
-            console.log(`Failed to convert background: ${err}`);
-            return;
-        }
-    }
-
-    const bytes = rasterFile.load_bytes(null)[0];
+    const bytes = backgroundFile.load_bytes(null)[0];
     const backgroundHash = bytes.hash();
-    journal(`Hash of background in ${rasterFile.get_path()} is ${backgroundHash}...`);
+    journal(`Hash of background in ${backgroundFile.get_path()} is ${backgroundHash}...`);
     let backgroundPalette = cache.get(backgroundHash)
     if (backgroundPalette === null) {
         journal(`Cache miss: recomputing palette...`);
+
+        const backgroundFileInfo = await backgroundFile.query_info_async(
+            'standard::*',
+            Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+            GLib.PRIORITY_DEFAULT,
+            null
+        )
+        const backgroundImgFormat = backgroundFileInfo.get_content_type()
+
+        journal(`Background image format: ${backgroundImgFormat}`)
+
+        /* suggestion (HM); replace below logic with map of image type to converters (array of functions); e.g.
+         * const converter_map = {
+         *     'image/svg+xml': [magick, rsvg],
+         *     'image/jxl': [magick],
+         *     'application/xml': [panic],
+         * }
+         * const converters = converter_map[backgroundImgFormat]
+         * then loop converters until one works, returning converted fp, or panic (maybe collect errs)
+         */
+
+        if (backgroundImgFormat === 'application/xml') {
+            onXmlDetected()
+            return
+        }
+
+        /* List of image formats that don't work well with colorthief, and often
+        cause crashes or return incorrect colours as a result, requiring conversion.
+        If you know of any other formats that don't work well with this extension,
+        please submit an issue or pull request. */
+        const incompatibleFormats = ['image/svg+xml', 'image/jxl']
+        const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
+        journal(`Conversion to JPG required: ${conversionRequired}`)
+
+        let rasterFile = backgroundFile;
+        if (conversionRequired) {
+            if (!isImageMagickInstalled()) {
+                if (backgroundImgFormat === 'image/svg+xml') {
+                    if (!isRsvgConvertAvailable()) {
+                        journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
+                        onDependencyFail()
+                        return
+                    }
+                } else {
+                    journal('ImageMagick v7+ not installed !!')
+                    onDependencyFail()
+                    return
+                }
+            }
+
+            try {
+                rasterFile = await convert(backgroundFile.get_path());
+            } catch (err) {
+                console.error(`Failed to convert background: ${err}`);
+                return;
+            }
+        }
+
         const rasterPath = rasterFile.get_path();
         backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
+
+        if (conversionRequired && !keepConversion) {
+            clearConvertedBackground()
+        }
+
         cache.set(backgroundHash, backgroundPalette);
     }
     journal(`Palette: ${backgroundPalette}...`);
-
-    if (conversionRequired && !keepConversion) {
-        clearConvertedBackground()
-    }
 
     const accentType = highlightMode ? 'highlight' : 'dominant';
     const paletteIndex = highlightMode ? 1 : 0;
