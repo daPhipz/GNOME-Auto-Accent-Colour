@@ -13,9 +13,9 @@ function getExtensionCacheDir() {
 // serves as an interface reference
 // but can also be used to disable caching
 function noCache() {
-    function get(key) { return null; }
-    function set(key, data) { }
-    function remove(key) { }
+    function get() { return null; }
+    function set() { }
+    function remove() { }
     function keys() { return []; }
     function clear() { }
     return { get: get, set: set, remove: remove, keys: keys, clear: clear };
@@ -59,7 +59,7 @@ function fileBasedCache(cachedir) {
         const file = _file(key);
         try {
             file.delete(null);
-        } catch { }
+        } catch { return }
     }
     function keys() {
         const dir = Gio.File.new_for_path(cachedir);

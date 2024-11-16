@@ -265,7 +265,7 @@ async function applyClosestAccent(
     const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
     journal(`Conversion to JPG required: ${conversionRequired}`)
 
-    var rasterFile = backgroundFile;
+    let rasterFile = backgroundFile;
     if (conversionRequired) {
         if (!isImageMagickInstalled()) {
             if (backgroundImgFormat === 'image/svg+xml') {
@@ -289,10 +289,10 @@ async function applyClosestAccent(
         }
     }
 
-    const [bytes, _] = rasterFile.load_bytes(null);
+    const bytes = rasterFile.load_bytes(null)[0];
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${rasterFile.get_path()} is ${backgroundHash}...`);
-    var backgroundPalette = cache.get(backgroundHash)
+    let backgroundPalette = cache.get(backgroundHash)
     if (backgroundPalette === null) {
         journal(`Cache miss: recomputing palette...`);
         const rasterPath = rasterFile.get_path();
