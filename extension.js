@@ -6,6 +6,7 @@ import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
 import { isImageMagickInstalled, isRsvgConvertAvailable, setLogging, journal } from './utils.js'
+import { getExtensionCacheDir, noCache, fileBasedCache } from './cache.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
 const PREFER_DARK = 'prefer-dark'
@@ -153,36 +154,31 @@ function getClosestAccentColour(accentColours, r, g, b) {
     return closestAccentIndex
 }
 
-function getExtensionCacheDir() {
-    return `${GLib.get_home_dir()}/.cache/auto-accent-colour`
-}
-
 async function clearConvertedBackground() {
     const cacheDirPath = getExtensionCacheDir()
     GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
 }
 
 async function convert(imagePath) {
+    // TODO: reuse caching mechanism for converted files?
     const cacheDirPath = getExtensionCacheDir()
+    GLib.mkdir_with_parents(cacheDirPath, 0o0755)
+
     const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
+    const convertedFile = Gio.File.new_for_path(convertedPath);
 
-    try {
-        GLib.mkdir_with_parents(cacheDirPath, 0o0755)
-
-        if (isImageMagickInstalled()) {
-            journal('Converting via ImageMagick...')
-            await execCommand(['magick', imagePath, convertedPath])
-        } else if (isRsvgConvertAvailable()) {
-            journal('Converting via rsvg-convert...')
-            await execCommand(['sh', '-c', `rsvg-convert ${imagePath} > ${convertedPath}`])
-        } else {
-            return imagePath
-        }
-    } catch (e) {
-        console.error(e)
+    if (isImageMagickInstalled()) {
+        await execCommand(['magick', imagePath, convertedPath])
+    } else if (isRsvgConvertAvailable()) {
+        await execCommand(['rsvg-convert', imagePath, '>', convertedPath])
+    } else {
+        throw new Error(`No conversion methods available!`);
     }
 
-    return convertedPath
+    if (!convertedFile.query_exists(null)) {
+        throw new Error(`Conversion finished but ${convertedFile.get_path()} does not exist!`);
+    }
+    return convertedFile;
 }
 
 /*
@@ -228,118 +224,97 @@ async function applyClosestAccent(
     extensionPath,
     accentColours,
     backgroundUri,
-    cachedHash,
-    cachedLastChangeHash,
-    cachedAccentIndex,
-    addToCache,
+    cache,
     highlightMode,
     keepConversion,
     onDependencyFail,
     onXmlDetected,
     onFinish
 ) {
-    journal(`Cached hash: ${cachedHash}`)
-    journal(`Cached last change hash: ${cachedLastChangeHash}`)
-
-    const backgroundFile = Gio.File.new_for_uri(backgroundUri)
-    const backgroundHash = backgroundFile.hash()
-    journal(`File URI: ${backgroundUri}`)
-    journal(`Background hash: ${backgroundHash}`)
-
+    const backgroundFile = Gio.File.new_for_uri(backgroundUri);
     const backgroundFileInfo = await backgroundFile.query_info_async(
         'standard::*,time::*',
         Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
         GLib.PRIORITY_DEFAULT,
         null
     )
+    const backgroundImgFormat = backgroundFileInfo.get_content_type()
 
-    const backgroundLastChange = backgroundFileInfo.get_modification_date_time()
-    journal(`Background last changed: ${backgroundLastChange.format_iso8601()}`)
+    journal(`Background image format: ${backgroundImgFormat}`)
 
-    const backgroundLastChangeHash = backgroundLastChange.hash()
-    journal(`Background last changed hash: ${backgroundLastChangeHash}`)
+    /* suggestion (HM); replace below logic with map of image type to converters (array of functions); e.g.
+     * const converter_map = {
+     *     'image/svg+xml': [magick, rsvg],
+     *     'image/jxl': [magick],
+     *     'application/xml': [panic],
+     * }
+     * const converters = converter_map[backgroundImgFormat]
+     * then loop converters until one works, returning converted fp, or panic (maybe collect errs)
+     */
 
-    if (backgroundHash === cachedHash && backgroundLastChangeHash === cachedLastChangeHash) {
-        const cachedAccent = accentColours[cachedAccentIndex]
-        journal(`Returning cached accent (${cachedAccent.name})`)
-        onFinish(cachedAccent)
-    } else {
-        const backgroundImgFormat = backgroundFileInfo.get_content_type()
-        journal(`Background image format: ${backgroundImgFormat}`)
+    if (backgroundImgFormat === 'application/xml') {
+        onXmlDetected()
+        return
+    }
 
-        if (backgroundImgFormat === 'application/xml') {
-            onXmlDetected()
-            return
-        }
+    /* List of image formats that don't work well with colorthief, and often
+    cause crashes or return incorrect colours as a result, requiring conversion.
+    If you know of any other formats that don't work well with this extension,
+    please submit an issue or pull request. */
+    const incompatibleFormats = ['image/svg+xml', 'image/jxl']
+    const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
+    journal(`Conversion to JPG required: ${conversionRequired}`)
 
-        /* List of image formats that don't work well with colorthief, and often
-        cause crashes or return incorrect colours as a result, requiring conversion.
-        If you know of any other formats that don't work well with this extension,
-        please submit an issue or pull request. */
-        const incompatibleFormats = ['image/svg+xml', 'image/jxl']
-        const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
-
-        journal(`Conversion to JPG required: ${conversionRequired}`)
-
-        if (conversionRequired) {
-            if (!isImageMagickInstalled()) {
-                if (backgroundImgFormat === 'image/svg+xml') {
-                    if (!isRsvgConvertAvailable()) {
-                        journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
-                        onDependencyFail()
-                        return
-                    }
-                } else {
-                    journal('ImageMagick v7+ not installed !!')
+    var rasterFile = backgroundFile;
+    if (conversionRequired) {
+        if (!isImageMagickInstalled()) {
+            if (backgroundImgFormat === 'image/svg+xml') {
+                if (!isRsvgConvertAvailable()) {
+                    journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
                     onDependencyFail()
                     return
                 }
+            } else {
+                journal('ImageMagick v7+ not installed !!')
+                onDependencyFail()
+                return
             }
         }
 
-        const backgroundPath = backgroundFile.get_path()
-
-        const rasterPath = conversionRequired
-            ? await convert(backgroundPath)
-            : backgroundPath
-        journal(`Raster path: ${rasterPath}`)
-
-        const backgroundPalette = await getBackgroundPalette(
-            extensionPath,
-            rasterPath
-        )
-
-        if (conversionRequired && !keepConversion) {
-            clearConvertedBackground()
+        try {
+            rasterFile = await convert(backgroundFile.get_path());
+        } catch (err) {
+            console.log(`Failed to convert background: ${err}`);
+            return;
         }
-
-        journal('Getting dominant accent...')
-        const [dom_r, dom_g, dom_b] = backgroundPalette[0] // Dominant RGB value
-        const dom_accent = getClosestAccentColour(
-            accentColours,
-            dom_r,
-            dom_g,
-            dom_b
-        ) // Dominant accent
-
-        journal('Getting highlight accent...')
-        const [hi_r, hi_g, hi_b] = backgroundPalette[1] // Highlight RGB value
-        const hi_accent = getClosestAccentColour(
-            accentColours,
-            hi_r,
-            hi_g,
-            hi_b
-        ) // Highlight accent
-
-        addToCache(backgroundHash, backgroundLastChangeHash, dom_accent, hi_accent)
-
-        const closestAccentIndex = highlightMode ? hi_accent : dom_accent
-        const closestAccent = accentColours[closestAccentIndex]
-
-        journal(`Accent to apply: ${closestAccent.name}`)
-
-        onFinish(closestAccent)
     }
+
+    const [bytes, _] = rasterFile.load_bytes(null);
+    const backgroundHash = bytes.hash();
+    journal(`Hash of background in ${rasterFile.get_path()} is ${backgroundHash}...`);
+    var backgroundPalette = cache.get(backgroundHash)
+    if (backgroundPalette === null) {
+        journal(`Cache miss: recomputing palette...`);
+        const rasterPath = rasterFile.get_path();
+        backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
+        cache.set(backgroundHash, backgroundPalette);
+    }
+    journal(`Palette: ${backgroundPalette}...`);
+
+    if (conversionRequired && !keepConversion) {
+        clearConvertedBackground()
+    }
+
+    const accentType = highlightMode ? 'highlight' : 'dominant';
+    const paletteIndex = highlightMode ? 1 : 0;
+    const [r, g, b] = backgroundPalette[paletteIndex];
+
+    journal(`Getting ${accentType} accent...`)
+    const closestAccentIndex = getClosestAccentColour(accentColours, r, g, b)
+    const closestAccent = accentColours[closestAccentIndex]
+
+    journal(`Accent to apply: ${closestAccent.name}`)
+    onFinish(closestAccent)
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -420,47 +395,15 @@ export default class AutoAccentColourExtension extends Extension {
             return interfaceSettings.get_string('gtk-theme')
         }
 
-        function getIgnoreCaches() {
-            return extensionSettings.get_boolean('ignore-caches')
+        function getDisableCache() {
+            return extensionSettings.get_boolean('disable-cache')
         }
-        function getCachedHash() {
-            if (getIgnoreCaches()) {
-                return -1
-            }
+        function getCache() {
+            return getDisableCache() ? noCache() : fileBasedCache(getExtensionCacheDir())
+        }
 
-            return extensionSettings.get_int64(
-                getColorScheme() === PREFER_DARK ? 'dark-hash' : 'light-hash'
-            )
-        }
-        function getCachedLastChange() {
-            return extensionSettings.get_int64(
-                getColorScheme() === PREFER_DARK ? 'dark-last-change' : 'light-last-change'
-            )
-        }
-        function getCachedAccent() {
-            const theme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
-            const colourMode = extensionSettings.get_boolean('highlight-mode')
-                ? 'highlight'
-                : 'dominant'
-
-            return extensionSettings.get_enum(`${theme}-${colourMode}-accent`)
-        }
         function getKeepConversion() {
             return extensionSettings.get_boolean('keep-conversion')
-        }
-
-        function cache(backgroundHash, lastChange, dominantAccent, highlightAccent) {
-            const currentTheme = getColorScheme() === PREFER_DARK ? 'dark' : 'light'
-            const backgroundsAreSame = getBackgroundUri() === getDarkBackgroundUri()
-
-            for (const theme of ['dark', 'light']) {
-                if (currentTheme === theme || backgroundsAreSame) {
-                    extensionSettings.set_int64(`${theme}-hash`, backgroundHash)
-                    extensionSettings.set_int64(`${theme}-last-change`, lastChange)
-                    extensionSettings.set_enum(`${theme}-dominant-accent`, dominantAccent)
-                    extensionSettings.set_enum(`${theme}-highlight-accent`, highlightAccent)
-                }
-            }
         }
 
         function applyYaruTheme() {
@@ -568,6 +511,7 @@ export default class AutoAccentColourExtension extends Extension {
 
         function setAccent() {
             if (running) {
+                journal(`Already running...`)
                 return
             }
 
@@ -585,10 +529,7 @@ export default class AutoAccentColourExtension extends Extension {
                 extensionPath,
                 accentColours,
                 backgroundUri,
-                getCachedHash(),
-                getCachedLastChange(),
-                getCachedAccent(),
-                cache,
+                getCache(),
                 highlightMode,
                 getKeepConversion(),
                 function() {
