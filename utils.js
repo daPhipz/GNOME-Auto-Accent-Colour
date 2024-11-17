@@ -1,12 +1,7 @@
 import GLib from 'gi://GLib'
 
-function isImageMagickInstalled() {
-    const lookup = GLib.find_program_in_path('magick')
-    return lookup !== null
-}
-
-function isRsvgConvertAvailable() {
-    const lookup = GLib.find_program_in_path('rsvg-convert')
+function isCmdAvailable(cmd) {
+    const lookup = GLib.find_program_in_path(cmd)
     return lookup !== null
 }
 
@@ -23,8 +18,7 @@ function journal(msg) {
 }
 
 export {
-    isImageMagickInstalled,
-    isRsvgConvertAvailable,
+    isCmdAvailable,
     loggingEnabled,
     setLogging,
     journal

@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import { isImageMagickInstalled, isRsvgConvertAvailable, setLogging, journal } from './utils.js'
+import { isCmdAvailable, setLogging, journal } from './utils.js'
 import { getExtensionCacheDir, noCache, fileBasedCache } from './cache.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
@@ -159,19 +159,31 @@ async function clearConvertedBackground() {
     GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
 }
 
-async function convert(imagePath) {
+async function convert(imagePath, conversionMethod) {
     const cacheDirPath = getExtensionCacheDir()
     GLib.mkdir_with_parents(cacheDirPath, 0o0755)
 
     const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
     const convertedFile = Gio.File.new_for_path(convertedPath);
 
-    if (isImageMagickInstalled()) {
-        await execCommand(['magick', imagePath, convertedPath])
-    } else if (isRsvgConvertAvailable()) {
-        await execCommand(['rsvg-convert', imagePath, '>', convertedPath])
-    } else {
-        throw new Error(`No conversion methods available!`);
+    const conversionCommands = {
+        'magick': `magick ${imagePath} ${convertedPath}`,
+        'rsvg-convert': `rsvg-convert ${imagePath} > ${convertedPath}`
+    }
+
+    const conversionMethodValid =
+        Object.keys(conversionCommands).includes(conversionMethod)
+
+    if (!conversionMethodValid) {
+        throw new Error(`Invalid conversion method: ${conversionMethod}`)
+    }
+
+    const commandToUse = conversionCommands[conversionMethod]
+
+    try {
+        await execCommand(['sh', '-c', commandToUse])
+    } catch(e) {
+        throw new Error(e)
     }
 
     if (!convertedFile.query_exists(null)) {
@@ -227,13 +239,14 @@ async function applyClosestAccent(
     highlightMode,
     keepConversion,
     onDependencyFail,
-    onXmlDetected,
+    onIncompatibleImg,
     onFinish
 ) {
     const backgroundFile = Gio.File.new_for_uri(backgroundUri);
+    const backgroundPath = backgroundFile.get_path()
     const bytes = backgroundFile.load_bytes(null)[0];
     const backgroundHash = bytes.hash();
-    journal(`Hash of background in ${backgroundFile.get_path()} is ${backgroundHash}...`);
+    journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
     let backgroundPalette = cache.get(backgroundHash)
     if (backgroundPalette === null) {
         journal(`Cache miss: recomputing palette...`);
@@ -248,47 +261,45 @@ async function applyClosestAccent(
 
         journal(`Background image format: ${backgroundImgFormat}`)
 
-        /* suggestion (HM); replace below logic with map of image type to converters (array of functions); e.g.
-         * const converter_map = {
-         *     'image/svg+xml': [magick, rsvg],
-         *     'image/jxl': [magick],
-         *     'application/xml': [panic],
-         * }
-         * const converters = converter_map[backgroundImgFormat]
-         * then loop converters until one works, returning converted fp, or panic (maybe collect errs)
-         */
-
-        if (backgroundImgFormat === 'application/xml') {
-            onXmlDetected()
+        const incompatibleFormats = ['application/xml']
+        if (incompatibleFormats.includes(backgroundImgFormat)) {
+            onIncompatibleImg()
             return
         }
 
-        /* List of image formats that don't work well with colorthief, and often
-        cause crashes or return incorrect colours as a result, requiring conversion.
-        If you know of any other formats that don't work well with this extension,
-        please submit an issue or pull request. */
-        const incompatibleFormats = ['image/svg+xml', 'image/jxl']
-        const conversionRequired = incompatibleFormats.includes(backgroundImgFormat)
+        /* These image formats need converting to JPG before colour data can be
+        parsed from them. */
+        const converterMap = {
+            'image/svg+xml': ['magick', 'rsvg-convert'],
+            'image/jxl': ['magick']
+        }
+
+        const conversionRequired =
+            Object.keys(converterMap).includes(backgroundImgFormat)
         journal(`Conversion to JPG required: ${conversionRequired}`)
 
         let rasterFile = backgroundFile;
+
         if (conversionRequired) {
-            if (!isImageMagickInstalled()) {
-                if (backgroundImgFormat === 'image/svg+xml') {
-                    if (!isRsvgConvertAvailable()) {
-                        journal('ImageMagick v7+ not installed nor rsvg-convert available !!')
-                        onDependencyFail()
-                        return
-                    }
-                } else {
-                    journal('ImageMagick v7+ not installed !!')
-                    onDependencyFail()
-                    return
+            const availableCommands = converterMap[backgroundImgFormat]
+            let cmdToRun = null
+
+            for (const command of availableCommands) {
+                if (isCmdAvailable(command)) {
+                    cmdToRun = command
+                    journal(`Found converter command: ${cmdToRun}`)
+                    break
                 }
             }
 
+            if (cmdToRun === null) {
+                journal('Could not find an installed converter for this file :(')
+                onDependencyFail()
+                return
+            }
+
             try {
-                rasterFile = await convert(backgroundFile.get_path());
+                rasterFile = await convert(backgroundPath, cmdToRun)
             } catch (err) {
                 console.error(`Failed to convert background: ${err}`);
                 return;
@@ -543,7 +554,7 @@ export default class AutoAccentColourExtension extends Extension {
                 },
                 function() {
                     Main.notifyError(
-                        _('XML backgrounds not supported'),
+                        _('Background format not supported'),
                         _('Auto Accent Colour will not run on this background')
                     )
                     changeIndicatorIcon(alertIcon)

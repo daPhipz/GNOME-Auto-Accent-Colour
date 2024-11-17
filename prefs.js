@@ -3,7 +3,7 @@ import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
 import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
-import { isImageMagickInstalled, isRsvgConvertAvailable } from './utils.js'
+import { isCmdAvailable } from './utils.js'
 import { getExtensionCacheDir, fileBasedCache } from './cache.js'
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
@@ -382,7 +382,7 @@ into JPG format. These files can be found at %s."
         let currentRsvgSuffix = rsvgTickIcon
 
         function setDependencyRows() {
-            const magickInstalled = isImageMagickInstalled()
+            const magickInstalled = isCmdAvailable('magick')
 
             const magickLabel = magickInstalled ? _('Installed') : _('Not Installed')
 
@@ -392,7 +392,7 @@ into JPG format. These files can be found at %s."
             currentMagickIcon = magickInstalled ? magickTickIcon : magickWarningIcon
             imageMagickRow.add_suffix(currentMagickIcon)
 
-            const rsvgConvertAvailable = isRsvgConvertAvailable()
+            const rsvgConvertAvailable = isCmdAvailable('rsvg-convert')
 
             const rsvgAvailableText = rsvgConvertAvailable
                 ? _('Available')
