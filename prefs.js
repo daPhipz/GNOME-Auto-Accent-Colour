@@ -148,6 +148,16 @@ This may sometimes be the same as the dominant colour.'
         highlightColourRow.add_prefix(highlightColourRadio)
         paletteGroup.add(highlightColourRow)
 
+        ////////////////////////////////////////////////////////////////////////
+
+        // Debug page //////////////////////////////////////////////////////////
+
+        const debugPage = new Adw.PreferencesPage({
+            title: _('Debug'),
+            icon_name: 'preferences-other-symbolic'
+        })
+        window.add(debugPage)
+
         const cacheGroup = new Adw.PreferencesGroup({
             title: _('Palette Cache'),
             description: _(
@@ -155,7 +165,7 @@ This may sometimes be the same as the dominant colour.'
 is cached to increase performance.'
             )
         })
-        settingsPage.add(cacheGroup)
+        debugPage.add(cacheGroup)
 
         const cache = fileBasedCache(getExtensionCacheDir());
         function getCacheCountMsg() {
@@ -189,7 +199,7 @@ is cached to increase performance.'
         const devToolsGroup = new Adw.PreferencesGroup({
             title: _('Developer Tools')
         })
-        settingsPage.add(devToolsGroup)
+        debugPage.add(devToolsGroup)
 
         const debugLoggingRow = new Adw.SwitchRow({
             title: _('Debug Logging'),
@@ -205,8 +215,6 @@ into JPG format. These files can be found at %s."
             ).format(getExtensionCacheDir())
         })
         devToolsGroup.add(keepConversionRow)
-
-        ////////////////////////////////////////////////////////////////////////
 
         // About page //////////////////////////////////////////////////////////
 
