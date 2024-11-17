@@ -221,24 +221,27 @@ increase performance'
         })
         devToolsGroup.add(debugLoggingRow)
 
-        const keepConversionSwitch = new Gtk.Switch({
-            valign: Gtk.Align.CENTER
-        })
-
-        const keepConversionRow = new Adw.ActionRow({
+        const keepConversionRow = new Adw.SwitchRow({
             title: _('Keep Converted Background Image'),
             subtitle: _(
                 "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
 into JPG format"
-            ).format(getExtensionCacheDir()),
-            activatable_widget: keepConversionSwitch
+            ).format(getExtensionCacheDir())
         })
         devToolsGroup.add(keepConversionRow)
 
-        const viewImageBtn = new Gtk.Button({
-            label: _('View'),
-            valign: Gtk.Align.CENTER
+        const keepConversionSeparator = new Gtk.Separator({
+            orientation: Gtk.Orientation.VERTICAL,
+            margin_top: 12,
+            margin_bottom: 12
         })
+        const viewImageBtn = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            tooltip_text: _('Open Image'),
+            css_classes: ['flat']
+        })
+        const viewImageIcon = getIcon('external-link-symbolic')
+        viewImageBtn.set_child(viewImageIcon)
 
         const convertedImgFile = Gio.File.new_for_path(
             `${getExtensionCacheDir()}/converted_bg.jpg`
@@ -247,8 +250,8 @@ into JPG format"
             Gio.AppInfo.launch_default_for_uri(convertedImgFile.get_uri(), null)
         })
 
+        keepConversionRow.add_suffix(keepConversionSeparator)
         keepConversionRow.add_suffix(viewImageBtn)
-        keepConversionRow.add_suffix(keepConversionSwitch)
 
         // About page //////////////////////////////////////////////////////////
 
@@ -486,7 +489,7 @@ into JPG format"
         )
         window._settings.bind(
             'keep-conversion',
-            keepConversionSwitch,
+            keepConversionRow,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
