@@ -171,19 +171,15 @@ increase performance'
         debugPage.add(cacheGroup)
 
         const cache = fileBasedCache(getExtensionCacheDir());
-        function getCacheCountMsg() {
-            const cachedCount = cache.keys().length;
-            return cachedCount.toString()
-        }
 
         const viewCacheBtn = new Gtk.Button({
             valign: Gtk.Align.CENTER,
             label: _('View')
         })
 
-        const cacheFile = Gio.File.new_for_path(getExtensionCacheDir())
+        const cacheDir = Gio.File.new_for_path(getExtensionCacheDir())
         viewCacheBtn.connect('clicked', () => {
-            Gio.AppInfo.launch_default_for_uri(cacheFile.get_uri(), null)
+            Gio.AppInfo.launch_default_for_uri(cacheDir.get_uri(), null)
         })
 
         const clearCacheBtn = new Gtk.Button({
@@ -193,12 +189,10 @@ increase performance'
         })
         const clearCacheRow = new Adw.ActionRow({
             title: _('Files in Cache'),
-            subtitle: getCacheCountMsg(),
             css_classes: ['property']
         });
         clearCacheBtn.connect('clicked', () => {
             cache.clear();
-            clearCacheRow.subtitle = getCacheCountMsg();
         })
         clearCacheRow.add_suffix(viewCacheBtn)
         clearCacheRow.add_suffix(clearCacheBtn);
@@ -235,20 +229,43 @@ into JPG format"
             margin_top: 12,
             margin_bottom: 12
         })
-        const viewImageBtn = new Gtk.Button({
-            valign: Gtk.Align.CENTER,
-            tooltip_text: _('Open Image'),
-            css_classes: ['flat']
-        })
-        const viewImageIcon = getIcon('external-link-symbolic')
-        viewImageBtn.set_child(viewImageIcon)
 
         const convertedImgFile = Gio.File.new_for_path(
             `${getExtensionCacheDir()}/converted_bg.jpg`
         )
+        const viewImageBtn = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            tooltip_text: _('Open Image'),
+            css_classes: ['flat'],
+            sensitive: convertedImgFile.query_exists(null)
+        })
+        const viewImageIcon = getIcon('external-link-symbolic')
+        viewImageBtn.set_child(viewImageIcon)
+
         viewImageBtn.connect('clicked', () => {
             Gio.AppInfo.launch_default_for_uri(convertedImgFile.get_uri(), null)
         })
+
+        function refreshDebugDetails() {
+            const cachedCount = cache.keys().length;
+            clearCacheRow.subtitle = cachedCount.toString()
+            viewCacheBtn.sensitive = cacheDir.query_exists(null)
+            clearCacheBtn.sensitive = cachedCount > 0
+            viewImageBtn.sensitive = convertedImgFile.query_exists(null)
+        }
+
+        refreshDebugDetails()
+
+        this._cacheDirMonitor = cacheDir.monitor(
+            Gio.FileMonitorFlags.WATCH_MOVES,
+            null
+        )
+        this._cacheDirMonitor.connect(
+            'changed',
+            (_fileMonitor) => {
+                refreshDebugDetails()
+            }
+        )
 
         keepConversionRow.add_suffix(keepConversionSeparator)
         keepConversionRow.add_suffix(viewImageBtn)
@@ -499,7 +516,6 @@ into JPG format"
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
-        // TODO
         window._settings.bind(
             'disable-cache',
             clearCacheRow,
