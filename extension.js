@@ -248,63 +248,83 @@ async function applyClosestAccent(
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
     let backgroundPalette = cache.get(backgroundHash)
-    if (backgroundPalette === null) {
-        journal(`Cache miss: recomputing palette...`);
 
-        const backgroundFileInfo = await backgroundFile.query_info_async(
-            'standard::*',
-            Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
-            GLib.PRIORITY_DEFAULT,
-            null
-        )
-        const backgroundImgFormat = backgroundFileInfo.get_content_type()
+    const backgroundFileInfo = await backgroundFile.query_info_async(
+        'standard::*',
+        Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+        GLib.PRIORITY_DEFAULT,
+        null
+    )
+    const backgroundImgFormat = backgroundFileInfo.get_content_type()
 
-        journal(`Background image format: ${backgroundImgFormat}`)
+    journal(`Background image format: ${backgroundImgFormat}`)
 
-        const incompatibleFormats = ['application/xml']
-        if (incompatibleFormats.includes(backgroundImgFormat)) {
-            onIncompatibleImg()
+    const incompatibleFormats = ['application/xml']
+    if (incompatibleFormats.includes(backgroundImgFormat)) {
+        onIncompatibleImg()
+        return
+    }
+
+    /* These image formats need converting to JPG before colour data can be
+    parsed from them. */
+    const converterMap = {
+        'image/svg+xml': ['magick', 'rsvg-convert'],
+        'image/jxl': ['magick']
+    }
+
+    const conversionRequired =
+        Object.keys(converterMap).includes(backgroundImgFormat)
+    journal(`Conversion to JPG required: ${conversionRequired}`)
+
+    let rasterFile = backgroundFile;
+    let converterChanged = null;
+
+    if (conversionRequired) {
+        const availableCommands = converterMap[backgroundImgFormat]
+        let cmdToRun = null
+
+        for (const command of availableCommands) {
+            if (isCmdAvailable(command)) {
+                cmdToRun = command
+                journal(`Found converter command: ${cmdToRun}`)
+                break
+            }
+        }
+
+        if (cmdToRun === null) {
+            journal('Could not find an installed converter for this file :(')
+            onDependencyFail()
             return
         }
 
-        /* These image formats need converting to JPG before colour data can be
-        parsed from them. */
-        const converterMap = {
-            'image/svg+xml': ['magick', 'rsvg-convert'],
-            'image/jxl': ['magick']
-        }
+        const converterVersion = await execCommand([cmdToRun, '--version'])
+        journal(`Converter version: ${converterVersion}`)
 
-        const conversionRequired =
-            Object.keys(converterMap).includes(backgroundImgFormat)
-        journal(`Conversion to JPG required: ${conversionRequired}`)
+        const conversionMetadataKey = `${backgroundHash}-conversion-metadata`
 
-        let rasterFile = backgroundFile;
+        const cachedConverterVersion = cache.get(conversionMetadataKey)
+        journal(`Cached converter version: ${cachedConverterVersion}`)
 
-        if (conversionRequired) {
-            const availableCommands = converterMap[backgroundImgFormat]
-            let cmdToRun = null
+        converterChanged = converterVersion !== cachedConverterVersion
+        journal(`Converter changed: ${converterChanged}`)
 
-            for (const command of availableCommands) {
-                if (isCmdAvailable(command)) {
-                    cmdToRun = command
-                    journal(`Found converter command: ${cmdToRun}`)
-                    break
-                }
+        if (converterChanged) {
+            if (cachedConverterVersion === null) {
+                journal('No cached converter version found')
             }
-
-            if (cmdToRun === null) {
-                journal('Could not find an installed converter for this file :(')
-                onDependencyFail()
-                return
-            }
-
             try {
                 rasterFile = await convert(backgroundPath, cmdToRun)
             } catch (err) {
                 console.error(`Failed to convert background: ${err}`);
                 return;
             }
+
+            cache.set(conversionMetadataKey, converterVersion)
         }
+    }
+
+    if (backgroundPalette === null || converterChanged) {
+        journal(`Cache miss: recomputing palette...`);
 
         const rasterPath = rasterFile.get_path();
         backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
