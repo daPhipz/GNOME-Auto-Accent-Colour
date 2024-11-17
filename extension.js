@@ -238,6 +238,7 @@ async function applyClosestAccent(
     cache,
     highlightMode,
     keepConversion,
+    onWaitStart,
     onDependencyFail,
     onIncompatibleImg,
     onFinish
@@ -313,9 +314,11 @@ async function applyClosestAccent(
                 journal('No cached converter version found')
             }
             try {
+                onWaitStart()
                 rasterFile = await convert(backgroundPath, cmdToRun)
             } catch (err) {
                 console.error(`Failed to convert background: ${err}`);
+                onIncompatibleImg();
                 return;
             }
 
@@ -325,6 +328,7 @@ async function applyClosestAccent(
 
     if (backgroundPalette === null || converterChanged) {
         journal(`Cache miss: recomputing palette...`);
+        onWaitStart()
 
         const rasterPath = rasterFile.get_path();
         backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
@@ -549,8 +553,6 @@ export default class AutoAccentColourExtension extends Extension {
 
             running = true
 
-            changeIndicatorIcon(waitIcon)
-
             const backgroundUri = getColorScheme() === PREFER_DARK
                 ? getDarkBackgroundUri()
                 : getBackgroundUri()
@@ -564,6 +566,7 @@ export default class AutoAccentColourExtension extends Extension {
                 getCache(),
                 highlightMode,
                 getKeepConversion(),
+                function() { changeIndicatorIcon(waitIcon) },
                 function() {
                     Main.notifyError(
                         _('Optional dependencies required for this background'),
