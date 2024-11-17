@@ -1,3 +1,4 @@
 *.po~
 *.compiled
 node_modules/*
+*.zip
