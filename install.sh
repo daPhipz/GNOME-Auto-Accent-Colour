@@ -8,7 +8,7 @@ sh pack.sh
 
 rm -rf $AAC_DIR
 mkdir -p $EXTENSIONS_DIR
-unzip $ZIP_FILE -d $AAC_DIR
+unzip -q $ZIP_FILE -d $AAC_DIR
 rm $ZIP_FILE
 
 glib-compile-schemas $AAC_DIR/schemas
