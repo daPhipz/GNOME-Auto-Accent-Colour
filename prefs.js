@@ -2,7 +2,10 @@ import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
 import GLib from 'gi://GLib'
-import { ExtensionPreferences, gettext as _ } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
+import {
+    ExtensionPreferences,
+    gettext as _
+} from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
 import { isCmdAvailable } from './utils.js'
 import { getExtensionCacheDir, fileBasedCache } from './cache.js'
 
@@ -161,8 +164,8 @@ This may sometimes be the same as the dominant colour.'
         const cacheGroup = new Adw.PreferencesGroup({
             title: _('Palette Cache'),
             description: _(
-                'The colour palette computed from each background you switch to \
-is cached to increase performance.'
+                'The colour palette of each background applied is cached to \
+increase performance'
             )
         })
         debugPage.add(cacheGroup)
@@ -170,23 +173,28 @@ is cached to increase performance.'
         const cache = fileBasedCache(getExtensionCacheDir());
         function getCacheCountMsg() {
             const cachedCount = cache.keys().length;
-            return _(`The cache contains ${cachedCount} entries.`)
+            return cachedCount.toString()
         }
 
+        const viewCacheBtn = new Gtk.Button({
+            valign: Gtk.Align.CENTER,
+            label: _('View')
+        })
         const clearCacheBtn = new Gtk.Button({
             valign: Gtk.Align.CENTER,
-            tooltip_text: _('Clear'),
-            icon_name: 'user-trash-symbolic',
-            css_classes: ['destructive-action', 'flat']
+            label: _('Clear'),
+            css_classes: ['destructive-action']
         })
         const clearCacheRow = new Adw.ActionRow({
-            title: _('Clear Cache'),
+            title: _('Files in Cache'),
             subtitle: getCacheCountMsg(),
+            css_classes: ['property']
         });
         clearCacheBtn.connect('clicked', () => {
             cache.clear();
             clearCacheRow.subtitle = getCacheCountMsg();
         })
+        clearCacheRow.add_suffix(viewCacheBtn)
         clearCacheRow.add_suffix(clearCacheBtn);
         cacheGroup.add(clearCacheRow);
 
@@ -207,14 +215,26 @@ is cached to increase performance.'
         })
         devToolsGroup.add(debugLoggingRow)
 
-        const keepConversionRow = new Adw.SwitchRow({
+        const keepConversionSwitch = new Gtk.Switch({
+            valign: Gtk.Align.CENTER
+        })
+
+        const keepConversionRow = new Adw.ActionRow({
             title: _('Keep Converted Background Image'),
             subtitle: _(
                 "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
-into JPG format. These files can be found at %s."
-            ).format(getExtensionCacheDir())
+into JPG format"
+            ).format(getExtensionCacheDir()),
+            activatable_widget: keepConversionSwitch
         })
         devToolsGroup.add(keepConversionRow)
+
+        const viewImageBtn = new Gtk.Button({
+            label: _('View'),
+            valign: Gtk.Align.CENTER
+        })
+        keepConversionRow.add_suffix(viewImageBtn)
+        keepConversionRow.add_suffix(keepConversionSwitch)
 
         // About page //////////////////////////////////////////////////////////
 
