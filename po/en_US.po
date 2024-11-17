@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
 "POT-Creation-Date: 2024-11-17 21:41+0000\n"
-"PO-Revision-Date: 2024-11-12 02:27+0000\n"
+"PO-Revision-Date: 2024-11-17 21:47+0000\n"
 "Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
 "Language-Team: en_US\n"
 "Language: en_US\n"
@@ -129,12 +129,11 @@ msgid "Palette Cache"
 msgstr ""
 
 #: prefs.js:167
-#, fuzzy
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
 msgstr ""
-"Information about backgrounds and their derived colors is cached to increase "
+"The color palette of each background applied is cached to increase "
 "performance"
 
 #: prefs.js:177
@@ -154,13 +153,12 @@ msgid "Disable Cache"
 msgstr ""
 
 #: prefs.js:204
-#, fuzzy
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
 msgstr ""
-"Always parse colors from the background, even if accent colors from a given "
-"background have already been derived and cached. This reduces performance."
+"Always parse colors from the background, even if the palette for a given "
+"background is in the cache. Do not cache computed palettes."
 
 #: prefs.js:211
 msgid "Developer Tools"
