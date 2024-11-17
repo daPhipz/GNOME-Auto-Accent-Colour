@@ -472,7 +472,7 @@ into JPG format"
         )
         window._settings.bind(
             'keep-conversion',
-            keepConversionRow,
+            keepConversionSwitch,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
