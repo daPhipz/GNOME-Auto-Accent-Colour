@@ -9,15 +9,8 @@ To avoid this, navigate away from the Appearance page (or close the Settings win
 ## Development
 Get the source:
 ```
-mkdir -p ~/.local/share/gnome-shell/extensions
-cd !$
-git clone https://github.com/Wartybix/GNOME-Auto-Accent-Colour auto-accent-colour@Wartybix
-cd !$
+git clone https://github.com/Wartybix/GNOME-Auto-Accent-Colour
 ```
 
-Recompile schemas:
-```
-glib-compile-schemas ./schemas
-```
-
-Then, either restart or create a nested gnome shell; see [](https://gjs.guide/extensions/development/creating.html#testing-the-extension).
+To install locally, run `install.sh`. For changes to apply, log out and back in again, or if on X11, restart GNOME shell by entering Alt+F2, then 'r'.
+Alternatively, run `test.sh`, which will install the application and open it in an embedded GNOME shell -- this works on both Wayland and X11.
