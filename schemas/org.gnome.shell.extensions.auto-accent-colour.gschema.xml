@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <enum id="org.gnome.shell.extensions.auto-accent-colour.accents">
-    <value nick="blue" value="0"/>
-    <value nick="teal" value="1"/>
-    <value nick="green" value="2"/>
-    <value nick="yellow" value="3"/>
-    <value nick="orange" value="4"/>
-    <value nick="red" value="5"/>
-    <value nick="pink" value="6"/>
-    <value nick="purple" value="7"/>
-    <value nick="slate" value="8"/>
-  </enum>
-
   <schema id="org.gnome.shell.extensions.auto-accent-colour" path="/org/gnome/shell/extensions/auto-accent-colour/">
     <key name="hide-indicator" type="b">
       <default>false</default>
@@ -27,12 +15,6 @@
     </key>
     <key name="disable-cache" type="b">
       <default>false</default>
-    </key>
-    <key name="light-dominant-accent" enum="org.gnome.shell.extensions.auto-accent-colour.accents">
-      <default>'blue'</default>
-    </key>
-    <key name="light-highlight-accent" enum="org.gnome.shell.extensions.auto-accent-colour.accents">
-      <default>'blue'</default>
     </key>
   </schema>
 </schemalist>
