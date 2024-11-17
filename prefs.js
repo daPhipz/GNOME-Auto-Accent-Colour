@@ -180,6 +180,12 @@ increase performance'
             valign: Gtk.Align.CENTER,
             label: _('View')
         })
+
+        const cacheFile = Gio.File.new_for_path(getExtensionCacheDir())
+        viewCacheBtn.connect('clicked', () => {
+            Gio.AppInfo.launch_default_for_uri(cacheFile.get_uri(), null)
+        })
+
         const clearCacheBtn = new Gtk.Button({
             valign: Gtk.Align.CENTER,
             label: _('Clear'),
@@ -233,6 +239,14 @@ into JPG format"
             label: _('View'),
             valign: Gtk.Align.CENTER
         })
+
+        const convertedImgFile = Gio.File.new_for_path(
+            `${getExtensionCacheDir()}/converted_bg.jpg`
+        )
+        viewImageBtn.connect('clicked', () => {
+            Gio.AppInfo.launch_default_for_uri(convertedImgFile.get_uri(), null)
+        })
+
         keepConversionRow.add_suffix(viewImageBtn)
         keepConversionRow.add_suffix(keepConversionSwitch)
 
