@@ -187,16 +187,16 @@ increase performance'
             label: _('Clear'),
             css_classes: ['destructive-action']
         })
-        const clearCacheRow = new Adw.ActionRow({
+        const cacheCountRow = new Adw.ActionRow({
             title: _('Files in Cache'),
             css_classes: ['property']
         });
         clearCacheBtn.connect('clicked', () => {
             cache.clear();
         })
-        clearCacheRow.add_suffix(viewCacheBtn)
-        clearCacheRow.add_suffix(clearCacheBtn);
-        cacheGroup.add(clearCacheRow);
+        cacheCountRow.add_suffix(viewCacheBtn)
+        cacheCountRow.add_suffix(clearCacheBtn);
+        cacheGroup.add(cacheCountRow);
 
         const disableCacheRow = new Adw.SwitchRow({
             title: _('Disable Cache'),
@@ -248,7 +248,7 @@ into JPG format"
 
         function refreshDebugDetails() {
             const cachedCount = cache.keys().length;
-            clearCacheRow.subtitle = cachedCount.toString()
+            cacheCountRow.subtitle = cachedCount.toString()
             viewCacheBtn.sensitive = cacheDir.query_exists(null)
             clearCacheBtn.sensitive = cachedCount > 0
             viewImageBtn.sensitive = convertedImgFile.query_exists(null)
@@ -518,7 +518,7 @@ into JPG format"
         )
         window._settings.bind(
             'disable-cache',
-            clearCacheRow,
+            cacheCountRow,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
