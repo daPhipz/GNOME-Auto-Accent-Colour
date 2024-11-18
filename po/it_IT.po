@@ -28,20 +28,19 @@ msgstr "Preferenze"
 
 #: extension.js:569
 msgid "Optional dependencies required for this background"
-msgstr ""
+msgstr "Dipendenze opzionali necessarie per questo sfondo"
 
 #: extension.js:570
 msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr ""
+msgstr "Visita la pagina delle preferenze di Auto Accent Color per saperne di più"
 
 #: extension.js:577
 msgid "Background format not supported"
-msgstr ""
+msgstr "Formato dello sfondo non supportato"
 
 #: extension.js:578
-#, fuzzy
 msgid "Auto Accent Colour will not run on this background"
-msgstr "Estensione colore di accento automatico"
+msgstr "Auto Accent Colour non funziona con questo sfondo"
 
 #: prefs.js:27
 msgid "Setup"
@@ -52,9 +51,8 @@ msgid "Refresh"
 msgstr "Aggiorna"
 
 #: prefs.js:40
-#, fuzzy
 msgid "Optional Dependencies"
-msgstr "Dipendenze di sistema"
+msgstr "Dipendenze opzionali"
 
 #: prefs.js:43
 msgid ""
@@ -64,16 +62,23 @@ msgid ""
 "alternative for SVG files only. This extension will still function without "
 "either dependency, but it won't work on SVG and JXL files."
 msgstr ""
+"ImageMagick v7+ è necessario per analizzare i dati sui colori da sfondi SVG e "
+"JXL. Deve essere installato tramite il gestore di pacchetti del sistema. Se sono "
+"disponibili solo versioni precedenti di ImageMagick, rsvg-convert può essere "
+"utilizzato come alternativa solo per i file SVG. Questa estensione funziona "
+"anche senza le due dipendenze, ma non sarà compatibile con file SVG e JXL.”
 
 #: prefs.js:66
 msgid "Example Install Commands"
-msgstr ""
+msgstr "Esempi di comandi di installazione"
 
 #: prefs.js:68
 msgid ""
 "Commands to enable support for optional file types in popular Linux "
 "distributions"
 msgstr ""
+"Comandi per abilitare il supporto per tipi di file opzionali in distribuzioni 
+"Linux popolari"
 
 #: prefs.js:103
 msgid "Settings"
@@ -120,43 +125,43 @@ msgstr ""
 
 #: prefs.js:159
 msgid "Debug"
-msgstr ""
+msgstr "Debug"
 
 #: prefs.js:165
 msgid "Palette Cache"
-msgstr ""
+msgstr "Cache della tavolozza"
 
 #: prefs.js:167
-#, fuzzy
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
 msgstr ""
-"Le informazioni sugli sfondi e sui colori di accento derivati sono "
-"memorizzatenella cache per aumentare le prestazioni."
+"La tavolozza dei colori di ogni sfondo applicato è memorizzata nella cache per "
+aumentare le prestazioni."
 
 #: prefs.js:177
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #: prefs.js:187
 msgid "Clear"
 msgstr "Svuota"
 
 #: prefs.js:191
-#, fuzzy
 msgid "Files in Cache"
-msgstr "Hash del File"
+msgstr "File nella cache"
 
 #: prefs.js:202
 msgid "Disable Cache"
-msgstr ""
+msgstr "Disabilita cache"
 
 #: prefs.js:204
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
 msgstr ""
+"Analizza sempre i colori dallo sfondo, anche se la tavolozza per uno sfondo "
+"specifico è nella cache. Non memorizzare nella cache le tavolozze calcolate.".
 
 #: prefs.js:211
 msgid "Developer Tools"
@@ -175,17 +180,16 @@ msgid "Keep Converted Background Image"
 msgstr "Mantienere l'immagine di sfondo convertita"
 
 #: prefs.js:224
-#, fuzzy
 msgid ""
 "Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
 "format"
 msgstr ""
-"Non cancella automaticamente le conversioni temporanee degli sfondi SVG eJXL "
-"in formato JPG. Questi file si trovano in ~/.cache/auto-accent-colour/."
+"Non cancellare automaticamente le conversioni temporanee degli sfondi SVG e JXL "
+"nel formato JPG"
 
 #: prefs.js:241
 msgid "Open Image"
-msgstr ""
+msgstr "Apri immagine"
 
 #: prefs.js:279
 msgid "About"
@@ -193,17 +197,17 @@ msgstr "Informazioni"
 
 #: prefs.js:288
 msgid "Auto Accent Colour"
-msgstr "Colore di accento automatico"
+msgstr "Auto Accent Colour"
 
 #: prefs.js:294
 #, javascript-format
 msgid "Created by %s and contributors"
-msgstr ""
+msgstr "Creato da %s e contributori"
 
 #: prefs.js:301
 #, javascript-format
 msgid "Version %d"
-msgstr ""
+msgstr "Versione %d"
 
 #: prefs.js:308
 msgid "Special Thanks"
@@ -235,7 +239,7 @@ msgstr "Segnala un problema"
 
 #: prefs.js:366
 msgid "Contributors"
-msgstr ""
+msgstr "Contributori"
 
 #: prefs.js:378
 msgid "Licenses"
@@ -243,7 +247,7 @@ msgstr "Licenze"
 
 #: prefs.js:392
 msgid "Auto Accent Colour Extension"
-msgstr "Estensione colore di accento automatico"
+msgstr "Estensione Auto Accent Colour"
 
 #: prefs.js:393
 msgid "GNU General Public License v3.0"
@@ -267,7 +271,7 @@ msgstr "Sii gentile con i piccioni locali!"
 
 #: prefs.js:444
 msgid "Not Needed"
-msgstr ""
+msgstr "Non richiesto"
 
 #: prefs.js:452
 msgid "Installed"
@@ -279,11 +283,11 @@ msgstr "Non installato"
 
 #: prefs.js:463
 msgid "Available"
-msgstr ""
+msgstr "Disponibile"
 
 #: prefs.js:464
 msgid "Unavailable"
-msgstr ""
+msgstr "Non disponibile"
 
 #~ msgid "Cache"
 #~ msgstr "Cache"
@@ -309,8 +313,6 @@ msgstr ""
 #~ msgid "Blue"
 #~ msgstr "Blu"
 
-#, fuzzy
-#~ msgctxt "The colour"
 #~ msgid "Teal"
 #~ msgstr "Verde acqua"
 
@@ -320,7 +322,6 @@ msgstr ""
 #~ msgid "Yellow"
 #~ msgstr "Giallo"
 
-#~ msgctxt "The colour"
 #~ msgid "Orange"
 #~ msgstr "Arancione"
 
@@ -333,7 +334,6 @@ msgstr ""
 #~ msgid "Purple"
 #~ msgstr "Viola"
 
-#~ msgctxt "The colour"
 #~ msgid "Slate"
 #~ msgstr "Grigio ardesia"
 
@@ -341,15 +341,14 @@ msgstr ""
 #~ msgstr "ImageMagick non installato"
 
 #~ msgid "ImageMagick is required to set an accent colour from this background"
-#~ msgstr ""
-#~ "ImageMagick è necessario per impostare un colore di accento dallo sfondo"
+#~ msgstr "ImageMagick è necessario per impostare un colore di accento dallo sfondo"
 
 #~ msgid ""
 #~ "ImageMagick is required to parse colour data from SVG and JXL "
 #~ "backgrounds. It must be installed via the system package manager."
 #~ msgstr ""
 #~ "ImageMagick è necessario per analizzare i dati di colore dagli sfondi SVG "
-#~ "e JXL.Deve essere installato tramite il gestote di pacchetti di sistema."
+#~ "e JXL. Deve essere installato tramite il gestote di pacchetti di sistema."
 
 #~ msgid "Created by Wartybix"
 #~ msgstr "Creato da Wartybix"
