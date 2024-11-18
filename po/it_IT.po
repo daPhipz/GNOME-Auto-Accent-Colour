@@ -32,7 +32,7 @@ msgstr "Dipendenze opzionali necessarie per questo sfondo"
 
 #: extension.js:570
 msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr "Visita la pagina delle preferenze di Auto Accent Color per saperne di più"
+msgstr "Visita la pagina delle preferenze di Auto Accent Colour per saperne di più"
 
 #: extension.js:577
 msgid "Background format not supported"
