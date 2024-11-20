@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
 "POT-Creation-Date: 2024-11-17 21:41+0000\n"
-"PO-Revision-Date: 2024-11-14 22:46+0100\n"
+"PO-Revision-Date: 2024-11-20 00:53+0100\n"
 "Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
 "Language-Team: \n"
 "Language: de\n"
@@ -34,10 +34,9 @@ msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
 
-#: extension.js:577
-#, fuzzy
+#: extension.js:580
 msgid "Background format not supported"
-msgstr "XML-Hintergründe nicht unterstützt"
+msgstr "Format des Hintergrunds nicht unterstützt"
 
 #: extension.js:578
 msgid "Auto Accent Colour will not run on this background"
@@ -125,47 +124,44 @@ msgstr ""
 
 #: prefs.js:159
 msgid "Debug"
-msgstr ""
+msgstr "Debug"
 
 #: prefs.js:165
 msgid "Palette Cache"
-msgstr ""
+msgstr "Paletten-Zwischenspeicher"
 
 #: prefs.js:167
-#, fuzzy
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
 msgstr ""
-"Informationen über Hintergründe und ihre abgeleiteten Akzentfarben wird "
+"Die Farbpalette jedes angewendeten Hintergrundbildes wird "
 "zwischengespeichert, um die Performance zu erhöhen"
 
 #: prefs.js:177
 msgid "View"
-msgstr ""
+msgstr "Ansicht"
 
 #: prefs.js:187
 msgid "Clear"
 msgstr "Löschen"
 
 #: prefs.js:191
-#, fuzzy
 msgid "Files in Cache"
-msgstr "Datei-Hash"
+msgstr "Dateien im Zwischenspeicher"
 
 #: prefs.js:202
 msgid "Disable Cache"
-msgstr ""
+msgstr "Zwischenspeicher deaktivieren"
 
 #: prefs.js:204
-#, fuzzy
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
 msgstr ""
-"Farben immer aus dem Hintergrundbild berechnen, selbst wenn die Akzentfarben "
-"eines Hintergrundbildes bereits berechnet und zwischengespeichert wurden. "
-"Diese Einstellung reduziert die Performance."
+"Farben immer aus dem Hintergrundbild berechnen, selbst wenn die Palette "
+"eines Hintergrundbildes bereits zwischengespeichert wurde. Berechnete "
+"Farbpaletten werden nicht zwischengespeichert."
 
 #: prefs.js:211
 msgid "Developer Tools"
@@ -184,17 +180,16 @@ msgid "Keep Converted Background Image"
 msgstr "Konvertiertes Hintergrundbild behalten"
 
 #: prefs.js:224
-#, fuzzy
 msgid ""
 "Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
 "format"
 msgstr ""
 "Temporäre Konvertierungen von SVG- und JXL-Hintergrundbildern nicht "
-"automatisch löschen. Diese Dateien können unter %s gefunden werden."
+"automatisch löschen"
 
 #: prefs.js:241
 msgid "Open Image"
-msgstr ""
+msgstr "Bild öffnen"
 
 #: prefs.js:279
 msgid "About"
