@@ -12,8 +12,13 @@ xgettext --msgid-bugs-address="34974060+Wartybix@users.noreply.github.com" \
          --output="$POTFILE" \
          ./*.js
 
-# Refresh the po files if desired
-read -p "Do you want to refresh the existing translations? [y|N] " -r response
+# Refresh the po files if desired. Do this always when run in a GitHub Action.
+if [ -n "$CI" ]; then
+    response="y"
+else
+    read -p "Do you want to refresh the existing translations? [y|N] " -r response
+fi
+
 if [[ "$response" == "y" || "$response" == "Y" ]]; then
     for file in po/*.po; do
         echo "Refreshing $file..."
