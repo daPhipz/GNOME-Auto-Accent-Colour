@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-17 21:41+0000\n"
+"POT-Creation-Date: 2024-11-20 17:38+0000\n"
 "PO-Revision-Date: 2024-11-17 21:47+0000\n"
 "Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
 "Language-Team: en_US\n"
@@ -18,27 +18,27 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: extension.js:535
+#: extension.js:539
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:540
+#: extension.js:544
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:569
+#: extension.js:572
 msgid "Optional dependencies required for this background"
 msgstr ""
 
-#: extension.js:570
+#: extension.js:573
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr "Visit Auto Accent Color's preferences page to learn more"
 
-#: extension.js:577
+#: extension.js:580
 msgid "Background format not supported"
 msgstr ""
 
-#: extension.js:578
+#: extension.js:581
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Color will not run on this background"
 

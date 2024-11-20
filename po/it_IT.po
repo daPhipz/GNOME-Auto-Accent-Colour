@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-17 21:41+0000\n"
+"POT-Creation-Date: 2024-11-20 17:54+0000\n"
 "PO-Revision-Date: 2024-11-20 08:07+0100\n"
 "Last-Translator: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
 "Language-Team: \n"
@@ -18,27 +18,28 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.5\n"
 
-#: extension.js:535
+#: extension.js:539
 msgid "Force Refresh"
 msgstr "Forza aggiornamento"
 
-#: extension.js:540
+#: extension.js:544
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: extension.js:569
+#: extension.js:572
 msgid "Optional dependencies required for this background"
 msgstr "Dipendenze opzionali necessarie per questo sfondo"
 
-#: extension.js:570
+#: extension.js:573
 msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr "Visita la pagina delle preferenze di Auto Accent Colour per saperne di più"
+msgstr ""
+"Visita la pagina delle preferenze di Auto Accent Colour per saperne di più"
 
-#: extension.js:577
+#: extension.js:580
 msgid "Background format not supported"
 msgstr "Formato dello sfondo non supportato"
 
-#: extension.js:578
+#: extension.js:581
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Colour non funziona con questo sfondo"
 
@@ -56,17 +57,18 @@ msgstr "Dipendenze opzionali"
 
 #: prefs.js:43
 msgid ""
-"ImageMagick v7+ is required to parse colour data from SVG and JXL backgrounds. It "
-"must be installed via the system package manager. If only older versions of "
-"ImageMagick are available, rsvg-convert can be used as an alternative for SVG "
-"files only. This extension will still function without either dependency, but it "
-"won't work on SVG and JXL files."
+"ImageMagick v7+ is required to parse colour data from SVG and JXL "
+"backgrounds. It must be installed via the system package manager. If only "
+"older versions of ImageMagick are available, rsvg-convert can be used as an "
+"alternative for SVG files only. This extension will still function without "
+"either dependency, but it won't work on SVG and JXL files."
 msgstr ""
-"ImageMagick v7+ è necessario per analizzare i dati sui colori da sfondi SVG e "
-"JXL. Deve essere installato tramite il gestore di pacchetti del sistema. Se sono "
-"disponibili solo versioni precedenti di ImageMagick, rsvg-convert può essere "
-"utilizzato come alternativa solo per i file SVG. Questa estensione funzionerà "
-"senza queste dipendenze, ma non sarà in grado di usare file SVG e JXL."
+"ImageMagick v7+ è necessario per analizzare i dati sui colori da sfondi SVG "
+"e JXL. Deve essere installato tramite il gestore di pacchetti del sistema. "
+"Se sono disponibili solo versioni precedenti di ImageMagick, rsvg-convert "
+"può essere utilizzato come alternativa solo per i file SVG. Questa "
+"estensione funzionerà senza queste dipendenze, ma non sarà in grado di usare "
+"file SVG e JXL."
 
 #: prefs.js:66
 msgid "Example Install Commands"
@@ -74,10 +76,11 @@ msgstr "Esempi di comandi di installazione"
 
 #: prefs.js:68
 msgid ""
-"Commands to enable support for optional file types in popular Linux distributions"
+"Commands to enable support for optional file types in popular Linux "
+"distributions"
 msgstr ""
-"Comandi per abilitare il supporto per tipi di file opzionali in distribuzioni "
-"Linux popolari"
+"Comandi per abilitare il supporto per tipi di file opzionali in "
+"distribuzioni Linux popolari"
 
 #: prefs.js:103
 msgid "Settings"
@@ -96,7 +99,8 @@ msgid "Colour Palette"
 msgstr "Tavolozza dei colori"
 
 #: prefs.js:121
-msgid "Choose the type of background colour to base the shell accent colour from"
+msgid ""
+"Choose the type of background colour to base the shell accent colour from"
 msgstr ""
 "Sceglie il tipo di colore di sfondo su cui basare il colore di accento "
 "dell'interfaccia"
@@ -118,8 +122,8 @@ msgid ""
 "Use a contrasting yet complimentary colour from the background. This may "
 "sometimes be the same as the dominant colour."
 msgstr ""
-"Usa un colore contrastante ma complementare dallo sfondo. Questo potrebbe essere "
-"lo stesso del colore dominante."
+"Usa un colore contrastante ma complementare dallo sfondo. Questo potrebbe "
+"essere lo stesso del colore dominante."
 
 #: prefs.js:159
 msgid "Debug"
@@ -131,10 +135,11 @@ msgstr "Cache della tavolozza"
 
 #: prefs.js:167
 msgid ""
-"The colour palette of each background applied is cached to increase performance"
+"The colour palette of each background applied is cached to increase "
+"performance"
 msgstr ""
-"La tavolozza dei colori di ogni sfondo applicato è memorizzata nella cache per "
-"aumentare la performance"
+"La tavolozza dei colori di ogni sfondo applicato è memorizzata nella cache "
+"per aumentare la performance"
 
 #: prefs.js:177
 msgid "View"
@@ -178,10 +183,11 @@ msgstr "Mantenere l'immagine di sfondo convertita"
 
 #: prefs.js:224
 msgid ""
-"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG format"
+"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
+"format"
 msgstr ""
-"Non cancellare automaticamente le conversioni temporanee degli sfondi SVG e JXL "
-"nel formato JPG"
+"Non cancellare automaticamente le conversioni temporanee degli sfondi SVG e "
+"JXL nel formato JPG"
 
 #: prefs.js:241
 msgid "Open Image"
@@ -211,11 +217,11 @@ msgstr "Ringraziamenti speciali"
 
 #: prefs.js:314
 msgid ""
-"For creating the ColorThief JavaScript module, used for extracting colours from "
-"the background image"
+"For creating the ColorThief JavaScript module, used for extracting colours "
+"from the background image"
 msgstr ""
-"Per la creazione del modulo JavaScript ColorThief, usato per estrarre i colori "
-"dall'immagine di sfondo"
+"Per la creazione del modulo JavaScript ColorThief, usato per estrarre i "
+"colori dall'immagine di sfondo"
 
 #: prefs.js:320
 msgid ""
@@ -337,14 +343,15 @@ msgstr "Non disponibile"
 #~ msgstr "ImageMagick non installato"
 
 #~ msgid "ImageMagick is required to set an accent colour from this background"
-#~ msgstr "ImageMagick è necessario per impostare un colore di accento dallo sfondo"
+#~ msgstr ""
+#~ "ImageMagick è necessario per impostare un colore di accento dallo sfondo"
 
 #~ msgid ""
-#~ "ImageMagick is required to parse colour data from SVG and JXL backgrounds. It "
-#~ "must be installed via the system package manager."
+#~ "ImageMagick is required to parse colour data from SVG and JXL "
+#~ "backgrounds. It must be installed via the system package manager."
 #~ msgstr ""
-#~ "ImageMagick è necessario per analizzare i dati di colore dagli sfondi SVG e "
-#~ "JXL. Deve essere installato tramite il gestote di pacchetti di sistema."
+#~ "ImageMagick è necessario per analizzare i dati di colore dagli sfondi SVG "
+#~ "e JXL. Deve essere installato tramite il gestote di pacchetti di sistema."
 
 #~ msgid "Created by Wartybix"
 #~ msgstr "Creato da Wartybix"

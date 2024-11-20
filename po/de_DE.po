@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-17 21:41+0000\n"
+"POT-Creation-Date: 2024-11-20 17:38+0000\n"
 "PO-Revision-Date: 2024-11-20 00:53+0100\n"
 "Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
 "Language-Team: \n"
@@ -18,19 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
-#: extension.js:535
+#: extension.js:539
 msgid "Force Refresh"
 msgstr "Aktualisierung erzwingen"
 
-#: extension.js:540
+#: extension.js:544
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: extension.js:569
+#: extension.js:572
 msgid "Optional dependencies required for this background"
 msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
 
-#: extension.js:570
+#: extension.js:573
 msgid "Visit Auto Accent Colour's preferences page to learn more"
 msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
 
@@ -38,7 +38,7 @@ msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
 msgid "Background format not supported"
 msgstr "Format des Hintergrunds nicht unterstützt"
 
-#: extension.js:578
+#: extension.js:581
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Colour funktioniert nicht mit diesem Hintergrund"
 
