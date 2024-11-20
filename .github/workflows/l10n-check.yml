@@ -1,0 +1,24 @@
+name: Update translations
+
+on:
+    push:
+        branches: [ 'main' ]
+    pull_request:
+      branches: [ 'main' ]
+
+jobs:
+  run-update-translations:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install gettext
+        run: sudo apt-get update && sudo apt-get install -y gettext
+
+      - name: Make script executable
+        run: chmod +x ./update-translations.sh
+
+      - name: Run update-translations script
+        run: ./update-translations.sh
