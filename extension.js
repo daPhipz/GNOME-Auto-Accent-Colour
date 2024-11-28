@@ -369,7 +369,7 @@ export default class AutoAccentColourExtension extends Extension {
             settings. They are exaggerated to add further distinction between them, so
             that a greater variety of accents can be returned from different backgrounds
             and their derived colours. */
-            new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+            new AccentColour('blue', 0, 0, 255, new HueRange(195, 300)),
             new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
             new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
             new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
@@ -377,11 +377,11 @@ export default class AutoAccentColourExtension extends Extension {
             new AccentColour('red', 230, 0, 26, new HueRange(300, 22)),
             new AccentColour('pink', 213, 0, 103, new HueRange(240, 0)),
             new AccentColour('purple', 145, 65, 172, new HueRange(240, 330)),
-            new AccentColour('slate', 166, 166, 166, new HueRange(180, 300))
+            new AccentColour('slate', 166, 166, 166, new HueRange(195, 300))
         ]
         const ubuntuAccents = [
             /* The same as above applies to these accents */
-            new AccentColour('blue', 0, 0, 255, new HueRange(180, 300)),
+            new AccentColour('blue', 0, 0, 255, new HueRange(195, 300)),
             new AccentColour('teal', 0, 255, 255, new HueRange(120, 240)),
             new AccentColour('green', 0, 191, 0, new HueRange(50, 180)),
             new AccentColour('yellow', 200, 150, 0, new HueRange(29, 70)),
