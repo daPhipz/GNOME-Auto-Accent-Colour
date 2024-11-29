@@ -23,7 +23,7 @@ fi
 
 ACCENT_ARRAY=$1
 
-HUE_RANGES=($(pcregrep -M "$ACCENT_ARRAY = \[(.|\n)*?\]" extension.js | \
+HUE_RANGES=($(pcre2grep -M "$ACCENT_ARRAY = \[(.|\n)*?\]" extension.js | \
     grep -Eo 'HueRange\(.*\)' | grep -o '[0-9]* *, *[0-9]*' | tr -d ' '))
 
 INTERVALS=($(seq 0 1 360))
