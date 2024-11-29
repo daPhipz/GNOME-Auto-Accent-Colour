@@ -124,8 +124,7 @@ Linux distributions'
         settingsPage.add(paletteGroup)
 
         const dominantColourRadio = new Gtk.CheckButton({
-            valign: Gtk.Align.CENTER,
-            action_target: new GLib.Variant('s', 'dominant')
+            valign: Gtk.Align.CENTER
         })
         const dominantColourRow = new Adw.ActionRow({
             title: _('Dominant'),
@@ -137,8 +136,7 @@ Linux distributions'
 
         const highlightColourRadio = new Gtk.CheckButton({
             valign: Gtk.Align.CENTER,
-            group: dominantColourRadio,
-            action_target: new GLib.Variant('s', 'highlight')
+            group: dominantColourRadio
         })
         const highlightColourRow = new Adw.ActionRow({
             title: _('Highlight'),
@@ -491,14 +489,14 @@ into JPG format"
             'highlight-mode',
             dominantColourRadio,
             'active',
-            Gio.SettingsBindFlags.INVERT_BOOLEAN
+            Gio.SettingsBindFlags.INVERT_BOOLEAN|Gio.SettingsBindFlags.GET
         )
 
         window._settings.bind(
             'highlight-mode',
             highlightColourRadio,
             'active',
-            Gio.SettingsBindFlags.DEFAULT
+            Gio.SettingsBindFlags.GET
         )
 
         window._settings.bind(
@@ -526,12 +524,9 @@ into JPG format"
             Gio.SettingsBindFlags.DEFAULT
         )
 
-        dominantColourRadio.connect('activate', () => {
-            settings.set_boolean('highlight-mode', false)
-        })
-
-        highlightColourRadio.connect('activate', () => {
-            settings.set_boolean('highlight-mode', true)
+        dominantColourRadio.connect('toggled', () => {
+            const isActive = dominantColourRadio.get_active()
+            settings.set_boolean('highlight-mode', !isActive)
         })
     }
 }
