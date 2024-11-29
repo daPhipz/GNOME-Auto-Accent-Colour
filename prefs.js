@@ -1,7 +1,6 @@
 import Gio from 'gi://Gio'
 import Adw from 'gi://Adw'
 import Gtk from 'gi://Gtk'
-import GLib from 'gi://GLib'
 import {
     ExtensionPreferences,
     gettext as _
