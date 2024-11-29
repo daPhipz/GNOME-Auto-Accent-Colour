@@ -7,7 +7,7 @@ on:
         branches: [ 'main' ]
 
 jobs:
-  run-update-translations:
+  run-validate-hues:
     runs-on: ubuntu-latest
 
     steps:
