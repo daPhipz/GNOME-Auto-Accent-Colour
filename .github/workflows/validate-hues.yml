@@ -2,7 +2,7 @@ name: Validate Hues
 
 on:
     push:
-        branches: [ 'main', 'wip' ]
+        branches: [ 'main' ]
     pull_request:
         branches: [ 'main' ]
 
