@@ -73,26 +73,71 @@ Linux distributions'
         const archRow = new Adw.ActionRow({
             title: 'Arch Linux',
             subtitle: 'sudo pacman -S imagemagick',
-            subtitle_selectable: true,
             css_classes: ['property', 'monospace']
         })
         examplesGroup.add(archRow)
 
+        const archCopy = new Gtk.Button({
+            icon_name: 'edit-copy-symbolic',
+            tooltip_text: _('Copy'),
+            valign: Gtk.Align.CENTER,
+            css_classes: ['flat']
+        })
+        archRow.add_suffix(archCopy)
+
+        function copyRow(row) {
+            const clipboard = row.get_clipboard()
+            clipboard.set(row.get_subtitle())
+
+            const toast = new Adw.Toast({
+                title: _(
+                    '%s install command copied to clipboard'
+                ).format(row.get_title())
+            })
+            window.add_toast(toast)
+        }
+
+        archCopy.connect('clicked', () => {
+            copyRow(archRow)
+        })
+
         const fedoraRow = new Adw.ActionRow({
             title: 'Fedora',
             subtitle: 'sudo dnf install ImageMagick',
-            subtitle_selectable: true,
             css_classes: ['property', 'monospace']
         })
         examplesGroup.add(fedoraRow)
 
+        const fedoraCopy = new Gtk.Button({
+            icon_name: 'edit-copy-symbolic',
+            tooltip_text: _('Copy'),
+            valign: Gtk.Align.CENTER,
+            css_classes: ['flat']
+        })
+        fedoraRow.add_suffix(fedoraCopy)
+
+        fedoraCopy.connect('clicked', () => {
+            copyRow(fedoraRow)
+        })
+
         const debianRow = new Adw.ActionRow({
             title: 'Debian/Ubuntu',
             subtitle: 'sudo apt install librsvg2-bin',
-            subtitle_selectable: true,
             css_classes: ['property', 'monospace']
         })
         examplesGroup.add(debianRow)
+
+        const debianCopy = new Gtk.Button({
+            icon_name: 'edit-copy-symbolic',
+            tooltip_text: _('Copy'),
+            valign: Gtk.Align.CENTER,
+            css_classes: ['flat']
+        })
+        debianRow.add_suffix(debianCopy)
+
+        debianCopy.connect('clicked', () => {
+            copyRow(debianRow)
+        })
 
         ////////////////////////////////////////////////////////////////////////
 
