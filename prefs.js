@@ -220,7 +220,7 @@ for a given background is in the cache. Do not cache computed palettes."
             subtitle: _(
                 "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
 into JPG format"
-            ).format(getExtensionCacheDir())
+            )
         })
         devToolsGroup.add(keepConversionRow)
 
