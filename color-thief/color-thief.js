@@ -32,22 +32,30 @@ function createPixelArray(imgData, pixelCount, quality) {
     const pixels = imgData;
     const pixelArray = [];
 
-    for (let i = 0, offset, r, g, b; i < pixelCount; i = i + quality) {
-        offset = i * 3;
+    //for (let i = 0; i < 10; i++) { console.log(pixels[i]) }
+
+    for (let i = 0, offset, r, g, b, a; i < pixelCount; i = i + quality) {
+        offset = i * 4;
         r = pixels[offset + 0];
         g = pixels[offset + 1];
         b = pixels[offset + 2];
+        a = pixels[offset + 3];
 
-        // If pixel is not white
-        if (!(r > 250 && g > 250 && b > 250)) {
-            pixelArray.push([r, g, b]);
+        // If pixel is mostly opaque and not white
+        if (typeof a === 'undefined' || a >= 125) {
+            if (!(r > 250 && g > 250 && b > 250)) {
+                pixelArray.push([r, g, b]);
+            }
         }
     }
+
+    //for (let i = 0; i < 10; i++) { console.log(pixelArray[i]) }
     return pixelArray;
 }
 
 function getPalette(sourceImage, colorCount = 5, quality = 1) {
     const image = GdkPixbuf.Pixbuf.new_from_file(sourceImage)
+        .add_alpha(false, 0, 0, 0)
     const imageData = image.get_pixels()
     const pixelCount = image.get_width() * image.get_height()
     const pixels = createPixelArray(imageData, pixelCount, quality)
