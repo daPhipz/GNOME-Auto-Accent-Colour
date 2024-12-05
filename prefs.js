@@ -5,7 +5,6 @@ import {
     ExtensionPreferences,
     gettext as _
 } from 'resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js'
-import { isCmdAvailable } from './utils.js'
 import { getExtensionCacheDir, fileBasedCache } from './cache.js'
 
 export default class AutoAccentColourPreferences extends ExtensionPreferences {
@@ -19,127 +18,6 @@ export default class AutoAccentColourPreferences extends ExtensionPreferences {
                 gicon: Gio.icon_new_for_string(`${iconsDir}/${iconName}.svg`)
             })
         }
-
-        // Dependencies page ///////////////////////////////////////////////////
-
-        const dependenciesPage = new Adw.PreferencesPage({
-            title: _('Setup'),
-            icon_name: 'package-x-generic-symbolic'
-        })
-        window.add(dependenciesPage)
-
-        const refreshButton = new Gtk.Button({
-            icon_name: 'view-refresh-symbolic',
-            tooltip_text: _('Refresh'),
-            valign: Gtk.Align.CENTER,
-            css_classes: ['flat']
-        })
-
-        const systemDependenciesGroup = new Adw.PreferencesGroup({
-            title: _('Optional Dependencies'),
-            header_suffix: refreshButton,
-            description: _(
-                'ImageMagick v7+ is required to parse colour data from SVG and JXL \
-backgrounds. It must be installed via the system package manager. If only older \
-versions of ImageMagick are available, rsvg-convert can be used as an alternative \
-for SVG files only. This extension will still function without either dependency, \
-but it won\'t work on SVG and JXL files.'
-            )
-        })
-        dependenciesPage.add(systemDependenciesGroup)
-
-        const imageMagickRow = new Adw.ActionRow({
-            title: 'ImageMagick v7+',
-            css_classes: ['property']
-        })
-        systemDependenciesGroup.add(imageMagickRow)
-
-        const rsvgConvertRow = new Adw.ActionRow({
-            title: 'rsvg-convert',
-            css_classes: ['property']
-        })
-        systemDependenciesGroup.add(rsvgConvertRow)
-
-
-        const examplesGroup = new Adw.PreferencesGroup({
-            title: _('Example Install Commands'),
-            description: _(
-                'Commands to enable support for optional file types in popular \
-Linux distributions'
-            )
-        })
-        dependenciesPage.add(examplesGroup)
-
-        const archRow = new Adw.ActionRow({
-            title: 'Arch Linux',
-            subtitle: 'sudo pacman -S imagemagick',
-            css_classes: ['property', 'monospace']
-        })
-        examplesGroup.add(archRow)
-
-        const archCopy = new Gtk.Button({
-            icon_name: 'edit-copy-symbolic',
-            tooltip_text: _('Copy'),
-            valign: Gtk.Align.CENTER,
-            css_classes: ['flat']
-        })
-        archRow.add_suffix(archCopy)
-
-        function copyRow(row) {
-            const clipboard = row.get_clipboard()
-            clipboard.set(row.get_subtitle())
-
-            const toast = new Adw.Toast({
-                title: _(
-                    '%s install command copied to clipboard'
-                ).format(row.get_title())
-            })
-            window.add_toast(toast)
-        }
-
-        archCopy.connect('clicked', () => {
-            copyRow(archRow)
-        })
-
-        const fedoraRow = new Adw.ActionRow({
-            title: 'Fedora',
-            subtitle: 'sudo dnf install ImageMagick',
-            css_classes: ['property', 'monospace']
-        })
-        examplesGroup.add(fedoraRow)
-
-        const fedoraCopy = new Gtk.Button({
-            icon_name: 'edit-copy-symbolic',
-            tooltip_text: _('Copy'),
-            valign: Gtk.Align.CENTER,
-            css_classes: ['flat']
-        })
-        fedoraRow.add_suffix(fedoraCopy)
-
-        fedoraCopy.connect('clicked', () => {
-            copyRow(fedoraRow)
-        })
-
-        const debianRow = new Adw.ActionRow({
-            title: 'Debian/Ubuntu',
-            subtitle: 'sudo apt install librsvg2-bin',
-            css_classes: ['property', 'monospace']
-        })
-        examplesGroup.add(debianRow)
-
-        const debianCopy = new Gtk.Button({
-            icon_name: 'edit-copy-symbolic',
-            tooltip_text: _('Copy'),
-            valign: Gtk.Align.CENTER,
-            css_classes: ['flat']
-        })
-        debianRow.add_suffix(debianCopy)
-
-        debianCopy.connect('clicked', () => {
-            copyRow(debianRow)
-        })
-
-        ////////////////////////////////////////////////////////////////////////
 
         // Settings page ///////////////////////////////////////////////////////
 
@@ -478,49 +356,6 @@ into JPG format"
         pigeonsGroup.add(pigeonsText)
 
         ////////////////////////////////////////////////////////////////////////
-
-        const magickTickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
-        const magickWarningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
-        const rsvgTickIcon = Gtk.Image.new_from_icon_name('emblem-ok-symbolic')
-        const rsvgWarningIcon = Gtk.Image.new_from_icon_name('dialog-warning-symbolic')
-        const notNeededLabel = new Gtk.Label({ label: _('Not Needed') })
-
-        let currentMagickIcon = magickTickIcon
-        let currentRsvgSuffix = rsvgTickIcon
-
-        function setDependencyRows() {
-            const magickInstalled = isCmdAvailable('magick')
-
-            const magickLabel = magickInstalled ? _('Installed') : _('Not Installed')
-
-            imageMagickRow.subtitle = magickLabel
-
-            imageMagickRow.remove(currentMagickIcon)
-            currentMagickIcon = magickInstalled ? magickTickIcon : magickWarningIcon
-            imageMagickRow.add_suffix(currentMagickIcon)
-
-            const rsvgConvertAvailable = isCmdAvailable('rsvg-convert')
-
-            const rsvgAvailableText = rsvgConvertAvailable
-                ? _('Available')
-                : _('Unavailable')
-
-            rsvgConvertRow.subtitle = rsvgAvailableText
-
-            rsvgConvertRow.remove(currentRsvgSuffix)
-
-            if (magickInstalled) {
-                currentRsvgSuffix = notNeededLabel
-            } else {
-                currentRsvgSuffix = rsvgConvertAvailable ? rsvgTickIcon : rsvgWarningIcon
-            }
-
-            rsvgConvertRow.add_suffix(currentRsvgSuffix)
-        }
-
-        setDependencyRows()
-
-        refreshButton.connect('clicked', () => { setDependencyRows() })
 
         window._settings.bind(
             'hide-indicator',

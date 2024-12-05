@@ -1,10 +1,3 @@
-import GLib from 'gi://GLib'
-
-function isCmdAvailable(cmd) {
-    const lookup = GLib.find_program_in_path(cmd)
-    return lookup !== null
-}
-
 let loggingEnabled = false
 
 function setLogging(value) {
@@ -18,7 +11,6 @@ function journal(msg) {
 }
 
 export {
-    isCmdAvailable,
     loggingEnabled,
     setLogging,
     journal

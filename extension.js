@@ -5,7 +5,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js'
 import { Extension, gettext as _ } from
     'resource:///org/gnome/shell/extensions/extension.js'
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js'
-import { isCmdAvailable, setLogging, journal } from './utils.js'
+import { setLogging, journal } from './utils.js'
 import { getExtensionCacheDir, noCache, fileBasedCache } from './cache.js'
 
 const INTERFACE_SCHEMA = 'org.gnome.desktop.interface'
@@ -159,39 +159,6 @@ async function clearConvertedBackground() {
     GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
 }
 
-async function convert(imagePath, conversionMethod) {
-    const cacheDirPath = getExtensionCacheDir()
-    GLib.mkdir_with_parents(cacheDirPath, 0o0755)
-
-    const convertedPath = `${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`
-    const convertedFile = Gio.File.new_for_path(convertedPath);
-
-    const conversionCommands = {
-        'magick': `magick ${imagePath} ${convertedPath}`,
-        'rsvg-convert': `rsvg-convert ${imagePath} > ${convertedPath}`
-    }
-
-    const conversionMethodValid =
-        Object.keys(conversionCommands).includes(conversionMethod)
-
-    if (!conversionMethodValid) {
-        throw new Error(`Invalid conversion method: ${conversionMethod}`)
-    }
-
-    const commandToUse = conversionCommands[conversionMethod]
-
-    try {
-        await execCommand(['sh', '-c', commandToUse])
-    } catch(e) {
-        throw new Error(e)
-    }
-
-    if (!convertedFile.query_exists(null)) {
-        throw new Error(`Conversion finished but ${convertedFile.get_path()} does not exist!`);
-    }
-    return convertedFile;
-}
-
 /*
 Crusty way of getting colorthief to run without blocking the main thread.
 I have no idea how to use multithreading in GJS, so I just spawn a new
@@ -266,76 +233,12 @@ async function applyClosestAccent(
         return
     }
 
-    /* These image formats need converting to JPG before colour data can be
-    parsed from them. */
-    const converterMap = {
-        'image/svg+xml': ['magick', 'rsvg-convert'],
-        'image/jxl': ['magick']
-    }
-
-    const conversionRequired =
-        Object.keys(converterMap).includes(backgroundImgFormat)
-    journal(`Conversion to JPG required: ${conversionRequired}`)
-
-    let rasterFile = backgroundFile;
-    let converterChanged = null;
-
-    if (conversionRequired) {
-        const availableCommands = converterMap[backgroundImgFormat]
-        let cmdToRun = null
-
-        for (const command of availableCommands) {
-            if (isCmdAvailable(command)) {
-                cmdToRun = command
-                journal(`Found converter command: ${cmdToRun}`)
-                break
-            }
-        }
-
-        if (cmdToRun === null) {
-            journal('Could not find an installed converter for this file :(')
-            onDependencyFail()
-            return
-        }
-
-        const converterVersion = await execCommand([cmdToRun, '--version'])
-        journal(`Converter version: ${converterVersion}`)
-
-        const conversionMetadataKey = `${backgroundHash}-conversion-metadata`
-
-        const cachedConverterVersion = cache.get(conversionMetadataKey)
-        journal(`Cached converter version: ${cachedConverterVersion}`)
-
-        converterChanged = converterVersion !== cachedConverterVersion
-        journal(`Converter changed: ${converterChanged}`)
-
-        if (converterChanged) {
-            if (cachedConverterVersion === null) {
-                journal('No cached converter version found')
-            }
-            try {
-                onWaitStart()
-                rasterFile = await convert(backgroundPath, cmdToRun)
-            } catch (err) {
-                console.error(`Failed to convert background: ${err}`);
-                onIncompatibleImg();
-                return;
-            }
-
-            cache.set(conversionMetadataKey, converterVersion)
-        }
-    }
-
-    if (backgroundPalette === null || converterChanged) {
+    if (backgroundPalette === null) {
         journal(`Cache miss: recomputing palette...`);
         onWaitStart()
 
-        const rasterPath = rasterFile.get_path();
+        const rasterPath = backgroundFile.get_path();
         backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
-
-        if (conversionRequired && !keepConversion) {
-            clearConvertedBackground()
-        }
 
         cache.set(backgroundHash, backgroundPalette);
     }
@@ -729,3 +632,4 @@ export default class AutoAccentColourExtension extends Extension {
         this._backgroundFileMonitor = null
     }
 }
+
