@@ -71,6 +71,27 @@ This may sometimes be the same as the dominant colour.'
         highlightColourRow.add_prefix(highlightColourRadio)
         paletteGroup.add(highlightColourRow)
 
+        window._settings.bind(
+            'hide-indicator',
+            indicatorRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+
+        window._settings.bind(
+            'highlight-mode',
+            dominantColourRadio,
+            'active',
+            Gio.SettingsBindFlags.INVERT_BOOLEAN|Gio.SettingsBindFlags.GET
+        )
+
+        window._settings.bind(
+            'highlight-mode',
+            highlightColourRadio,
+            'active',
+            Gio.SettingsBindFlags.GET
+        )
+
         ////////////////////////////////////////////////////////////////////////
 
         // Debug page //////////////////////////////////////////////////////////
@@ -157,6 +178,24 @@ for a given background is in the cache. Do not cache computed palettes."
                 refreshDebugDetails()
             }
         )
+
+        window._settings.bind(
+            'debug-logging',
+            debugLoggingRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+        window._settings.bind(
+            'disable-cache',
+            disableCacheRow,
+            'active',
+            Gio.SettingsBindFlags.DEFAULT
+        )
+
+        dominantColourRadio.connect('toggled', () => {
+            const isActive = dominantColourRadio.get_active()
+            settings.set_boolean('highlight-mode', !isActive)
+        })
 
         // About page //////////////////////////////////////////////////////////
 
@@ -319,53 +358,6 @@ for a given background is in the cache. Do not cache computed palettes."
             label: _('Be kind to your local pigeons!')
         })
         pigeonsGroup.add(pigeonsText)
-
-        ////////////////////////////////////////////////////////////////////////
-
-        window._settings.bind(
-            'hide-indicator',
-            indicatorRow,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-
-        window._settings.bind(
-            'highlight-mode',
-            dominantColourRadio,
-            'active',
-            Gio.SettingsBindFlags.INVERT_BOOLEAN|Gio.SettingsBindFlags.GET
-        )
-
-        window._settings.bind(
-            'highlight-mode',
-            highlightColourRadio,
-            'active',
-            Gio.SettingsBindFlags.GET
-        )
-
-        window._settings.bind(
-            'debug-logging',
-            debugLoggingRow,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-        window._settings.bind(
-            'disable-cache',
-            disableCacheRow,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-        window._settings.bind(
-            'disable-cache',
-            cacheCountRow,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-
-        dominantColourRadio.connect('toggled', () => {
-            const isActive = dominantColourRadio.get_active()
-            settings.set_boolean('highlight-mode', !isActive)
-        })
     }
 }
 
