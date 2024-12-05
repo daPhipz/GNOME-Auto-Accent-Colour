@@ -16,8 +16,6 @@ const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 const SLATE_INDEX = 8
 
-const CONVERTED_BACKGROUND_FILENAME = 'converted_bg.jpg'
-
 function getHueFromRGB(r, g, b) {
     const maxColour = Math.max(r, g, b)
     const minColour = Math.min(r, g, b)
@@ -154,11 +152,6 @@ function getClosestAccentColour(accentColours, r, g, b) {
     return closestAccentIndex
 }
 
-async function clearConvertedBackground() {
-    const cacheDirPath = getExtensionCacheDir()
-    GLib.remove(`${cacheDirPath}/${CONVERTED_BACKGROUND_FILENAME}`)
-}
-
 /*
 Crusty way of getting colorthief to run without blocking the main thread.
 I have no idea how to use multithreading in GJS, so I just spawn a new
@@ -204,9 +197,7 @@ async function applyClosestAccent(
     backgroundUri,
     cache,
     highlightMode,
-    keepConversion,
     onWaitStart,
-    onDependencyFail,
     onIncompatibleImg,
     onFinish
 ) {
@@ -341,10 +332,6 @@ export default class AutoAccentColourExtension extends Extension {
             return getDisableCache() ? noCache() : fileBasedCache(getExtensionCacheDir())
         }
 
-        function getKeepConversion() {
-            return extensionSettings.get_boolean('keep-conversion')
-        }
-
         function applyYaruTheme() {
             const iconTheme = getIconTheme()
             const gtkTheme = getGtkTheme()
@@ -468,16 +455,7 @@ export default class AutoAccentColourExtension extends Extension {
                 backgroundUri,
                 getCache(),
                 highlightMode,
-                getKeepConversion(),
                 function() { changeIndicatorIcon(waitIcon) },
-                function() {
-                    Main.notifyError(
-                        _('Optional dependencies required for this background'),
-                        _('Visit Auto Accent Colour\'s preferences page to learn more')
-                    )
-                    changeIndicatorIcon(alertIcon)
-                    running = false
-                },
                 function() {
                     Main.notifyError(
                         _('Background format not supported'),
@@ -578,16 +556,6 @@ export default class AutoAccentColourExtension extends Extension {
                 journal(`${key} = ${settings.get_value(key).print(true)}`)
             }
         )
-        this._keepConversionHandler = this._settings.connect(
-            'changed::keep-conversion',
-            (settings, key) => {
-                const value = settings.get_boolean(key)
-                journal(`${key} = ${value}`)
-                if (value === false) {
-                    clearConvertedBackground()
-                }
-            }
-        )
     }
 
     disable() {
@@ -618,10 +586,6 @@ export default class AutoAccentColourExtension extends Extension {
         if (this._debugModeHandler) {
             this._settings.disconnect(this._debugModeHandler)
             this._debugModeHandler = null
-        }
-        if (this._keepConversionHandler) {
-            this._settings.disconnect(this._keepConversionHandler)
-            this._keepConversionHandler = null
         }
 
         this._indicator?.destroy()

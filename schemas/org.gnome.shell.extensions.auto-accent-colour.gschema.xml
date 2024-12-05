@@ -10,9 +10,6 @@
     <key name="debug-logging" type="b">
       <default>false</default>
     </key>
-    <key name="keep-conversion" type="b">
-      <default>false</default>
-    </key>
     <key name="disable-cache" type="b">
       <default>false</default>
     </key>
