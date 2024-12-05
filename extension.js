@@ -15,6 +15,7 @@ const BACKGROUND_SCHEMA = 'org.gnome.desktop.background'
 const PICTURE_URI = 'picture-uri'
 const PICTURE_URI_DARK = 'picture-uri-dark'
 const SLATE_INDEX = 8
+const PARSER_VERSION = 2
 
 function getHueFromRGB(r, g, b) {
     const maxColour = Math.max(r, g, b)
@@ -206,6 +207,13 @@ async function applyClosestAccent(
     const bytes = backgroundFile.load_bytes(null)[0];
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
+
+    const cachedParserVer = cache.get('parser-version')
+    if (cachedParserVer !== PARSER_VERSION) {
+        cache.clear()
+        cache.set('parser-version', PARSER_VERSION)
+    }
+
     let backgroundPalette = cache.get(backgroundHash)
 
     const backgroundFileInfo = await backgroundFile.query_info_async(
