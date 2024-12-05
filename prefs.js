@@ -138,43 +138,11 @@ for a given background is in the cache. Do not cache computed palettes."
         })
         devToolsGroup.add(debugLoggingRow)
 
-        const keepConversionRow = new Adw.SwitchRow({
-            title: _('Keep Converted Background Image'),
-            subtitle: _(
-                "Don't auto-clear temporary conversions of SVG and JXL backgrounds \
-into JPG format"
-            )
-        })
-        devToolsGroup.add(keepConversionRow)
-
-        const keepConversionSeparator = new Gtk.Separator({
-            orientation: Gtk.Orientation.VERTICAL,
-            margin_top: 12,
-            margin_bottom: 12
-        })
-
-        const convertedImgFile = Gio.File.new_for_path(
-            `${getExtensionCacheDir()}/converted_bg.jpg`
-        )
-        const viewImageBtn = new Gtk.Button({
-            valign: Gtk.Align.CENTER,
-            tooltip_text: _('Open Image'),
-            css_classes: ['flat'],
-            sensitive: convertedImgFile.query_exists(null)
-        })
-        const viewImageIcon = getIcon('external-link-symbolic')
-        viewImageBtn.set_child(viewImageIcon)
-
-        viewImageBtn.connect('clicked', () => {
-            Gio.AppInfo.launch_default_for_uri(convertedImgFile.get_uri(), null)
-        })
-
         function refreshDebugDetails() {
             const cachedCount = cache.keys().length;
             cacheCountRow.subtitle = cachedCount.toString()
             viewCacheBtn.sensitive = cacheDir.query_exists(null)
             clearCacheBtn.sensitive = cachedCount > 0
-            viewImageBtn.sensitive = convertedImgFile.query_exists(null)
         }
 
         refreshDebugDetails()
@@ -189,9 +157,6 @@ into JPG format"
                 refreshDebugDetails()
             }
         )
-
-        keepConversionRow.add_suffix(keepConversionSeparator)
-        keepConversionRow.add_suffix(viewImageBtn)
 
         // About page //////////////////////////////////////////////////////////
 
@@ -381,12 +346,6 @@ into JPG format"
         window._settings.bind(
             'debug-logging',
             debugLoggingRow,
-            'active',
-            Gio.SettingsBindFlags.DEFAULT
-        )
-        window._settings.bind(
-            'keep-conversion',
-            keepConversionRow,
             'active',
             Gio.SettingsBindFlags.DEFAULT
         )
