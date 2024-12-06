@@ -22,7 +22,6 @@ function noCache() {
 }
 
 // simple file-based cache
-// TODO: make it async? I'm not great at this and the docs seem a little off?
 function fileBasedCache(cachedir) {
     function _setup() {
         journal(`Ensuring cache directory ${cachedir} exists...`);
@@ -55,10 +54,10 @@ function fileBasedCache(cachedir) {
         const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
         stream.write_bytes(bytes, null);
     }
-    function remove(key) {
+    async function remove(key) {
         const file = _file(key);
         try {
-            file.delete(null);
+            await file.delete_async(GLib.PRIORITY_DEFAULT, null, null);
         } catch { return }
     }
     function keys() {
