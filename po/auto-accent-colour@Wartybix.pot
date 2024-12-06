@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-12-06 21:58+0000\n"
+"POT-Creation-Date: 2024-12-06 23:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: extension.js:446
+#: extension.js:463
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:451
+#: extension.js:468
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:478
+#: extension.js:492
 msgid "Background format not supported"
 msgstr ""
 
-#: extension.js:479
+#: extension.js:493
 msgid "Auto Accent Colour will not run on this background"
 msgstr ""
 
