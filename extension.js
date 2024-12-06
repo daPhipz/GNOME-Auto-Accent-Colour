@@ -219,7 +219,7 @@ async function applyClosestAccent(
     journal(`Cached parser version: ${cachedParserVer}`)
     journal(`Current parser version: ${PARSER_VERSION}`)
     if (cachedParserVer !== PARSER_VERSION) {
-        cache.clear()
+        await cache.clear()
         await cache.set('parser-version', PARSER_VERSION)
     }
 

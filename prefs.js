@@ -159,8 +159,8 @@ for a given background is in the cache. Do not cache computed palettes."
         })
         devToolsGroup.add(debugLoggingRow)
 
-        function refreshDebugDetails() {
-            const cachedCount = cache.keys().length;
+        async function refreshDebugDetails() {
+            const cachedCount = (await cache.keys().length;
             cacheCountRow.subtitle = cachedCount.toString()
             viewCacheBtn.sensitive = cacheDir.query_exists(null)
             clearCacheBtn.sensitive = cachedCount > 0

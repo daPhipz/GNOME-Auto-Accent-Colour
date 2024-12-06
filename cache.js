@@ -83,13 +83,27 @@ function fileBasedCache(cachedir) {
             await file.delete_async(GLib.PRIORITY_DEFAULT, null, null);
         } catch { return }
     }
-    function keys() {
+    async function keys() {
         const dir = Gio.File.new_for_path(cachedir);
-        const files = dir.enumerate_children('standard::*', Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS, null);
+        const files = await new Promise((resolve, reject) => {
+            dir.enumerate_children_async(
+                'standard::*',
+                Gio.FileQueryInfoFlags.NOFOLLOW_SYMLINKS,
+                GLib.PRIORITY_DEFAULT,
+                null,
+                (_file, res) => {
+                    try {
+                        resolve(dir.enumerate_children_finish(res))
+                    } catch (e) {
+                        reject(e)
+                    }
+                }
+            );
+        })
         return Array.from(files).map((finfo) => finfo.get_name());
     }
-    function clear() {
-        for (const key of keys()) {
+    async function clear() {
+        for (const key of await keys()) {
             remove(key);
         }
     }
