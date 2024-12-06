@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-30 21:59+0000\n"
+"POT-Creation-Date: 2024-12-06 01:25+0000\n"
 "PO-Revision-Date: 2024-11-20 00:53+0100\n"
 "Last-Translator: Philipp Kiemle <l10n@prly.mozmail.com>\n"
 "Language-Team: \n"
@@ -18,103 +18,58 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
-#: extension.js:539
+#: extension.js:444
 msgid "Force Refresh"
 msgstr "Aktualisierung erzwingen"
 
-#: extension.js:544
+#: extension.js:449
 msgid "Preferences"
 msgstr "Einstellungen"
 
-#: extension.js:572
-msgid "Optional dependencies required for this background"
-msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
-
-#: extension.js:573
-msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
-
-#: extension.js:580
+#: extension.js:476
 msgid "Background format not supported"
 msgstr "Format des Hintergrunds nicht unterstützt"
 
-#: extension.js:581
+#: extension.js:477
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Colour funktioniert nicht mit diesem Hintergrund"
 
-#: prefs.js:26
-msgid "Setup"
-msgstr "Einrichtung"
-
-#: prefs.js:33
-msgid "Refresh"
-msgstr "Aktualisieren"
-
-#: prefs.js:39
-msgid "Optional Dependencies"
-msgstr "Optionale Abhängigkeiten"
-
-#: prefs.js:42
-msgid ""
-"ImageMagick v7+ is required to parse colour data from SVG and JXL "
-"backgrounds. It must be installed via the system package manager. If only "
-"older versions of ImageMagick are available, rsvg-convert can be used as an "
-"alternative for SVG files only. This extension will still function without "
-"either dependency, but it won't work on SVG and JXL files."
-msgstr ""
-"Um Farbdaten von SVG- und JXL-Bildern zu verarbeiten, ist ImageMagick v7+ "
-"erforderlich. Bitte installieren Sie das Programm über die Paketverwaltung "
-"Ihres Systems. Falls nur ältere Versionen von ImageMagick verfügbar sind, "
-"kann für SVGs »rsvg-convert« als Alternative verwendet werden."
-
-#: prefs.js:65
-msgid "Example Install Commands"
-msgstr "Beispiele für Installationsbefehle"
-
-#: prefs.js:67
-msgid ""
-"Commands to enable support for optional file types in popular Linux "
-"distributions"
-msgstr ""
-"Befehle, um die Unterstützung für optionale Dateitypen auf beliebten Linux-"
-"Distributionen zu aktivieren"
-
-#: prefs.js:102
+#: prefs.js:25
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: prefs.js:108
+#: prefs.js:31
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: prefs.js:113
+#: prefs.js:36
 msgid "Hide Indicator"
 msgstr "Indikator ausblenden"
 
-#: prefs.js:118
+#: prefs.js:41
 msgid "Colour Palette"
 msgstr "Farbpalette"
 
-#: prefs.js:120
+#: prefs.js:43
 msgid ""
 "Choose the type of background colour to base the shell accent colour from"
 msgstr ""
 "Wählen Sie die Art der Hintergrundfarbe, auf der die Shell-Akzentfarbe "
 "basieren soll"
 
-#: prefs.js:129
+#: prefs.js:52
 msgid "Dominant"
 msgstr "Dominant"
 
-#: prefs.js:130
+#: prefs.js:53
 msgid "Use the most frequent colour from the background"
 msgstr "Die häufigste Farbe des Hintergrundes wählen"
 
-#: prefs.js:141
+#: prefs.js:64
 msgid "Highlight"
 msgstr "Highlight"
 
-#: prefs.js:143
+#: prefs.js:66
 msgid ""
 "Use a contrasting yet complimentary colour from the background. This may "
 "sometimes be the same as the dominant colour."
@@ -122,15 +77,15 @@ msgstr ""
 "Verwenden Sie eine kontrastreiche, aber dennoch passende Farbe aus dem "
 "Hintergrundbild. Diese kann manchmal gleich der dominanten Farbe sein."
 
-#: prefs.js:156
+#: prefs.js:100
 msgid "Debug"
 msgstr "Debug"
 
-#: prefs.js:162
+#: prefs.js:106
 msgid "Palette Cache"
 msgstr "Paletten-Zwischenspeicher"
 
-#: prefs.js:164
+#: prefs.js:108
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
@@ -138,23 +93,23 @@ msgstr ""
 "Die Farbpalette jedes angewendeten Hintergrundbildes wird "
 "zwischengespeichert, um die Performance zu erhöhen"
 
-#: prefs.js:174
+#: prefs.js:118
 msgid "View"
 msgstr "Ansicht"
 
-#: prefs.js:184
+#: prefs.js:128
 msgid "Clear"
 msgstr "Löschen"
 
-#: prefs.js:188
+#: prefs.js:132
 msgid "Files in Cache"
 msgstr "Dateien im Zwischenspeicher"
 
-#: prefs.js:199
+#: prefs.js:143
 msgid "Disable Cache"
 msgstr "Zwischenspeicher deaktivieren"
 
-#: prefs.js:201
+#: prefs.js:145
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
@@ -163,57 +118,41 @@ msgstr ""
 "eines Hintergrundbildes bereits zwischengespeichert wurde. Berechnete "
 "Farbpaletten werden nicht zwischengespeichert."
 
-#: prefs.js:208
+#: prefs.js:152
 msgid "Developer Tools"
 msgstr "Entwicklerwerkzeuge"
 
-#: prefs.js:213
+#: prefs.js:157
 msgid "Debug Logging"
 msgstr "Debug-Logging"
 
-#: prefs.js:214
+#: prefs.js:158
 msgid "Print debug messages to the system journal"
 msgstr "Debug-Nachrichten in das System-Journal ausgeben"
 
-#: prefs.js:219
-msgid "Keep Converted Background Image"
-msgstr "Konvertiertes Hintergrundbild behalten"
-
-#: prefs.js:221
-msgid ""
-"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
-"format"
-msgstr ""
-"Temporäre Konvertierungen von SVG- und JXL-Hintergrundbildern nicht "
-"automatisch löschen"
-
-#: prefs.js:238
-msgid "Open Image"
-msgstr "Bild öffnen"
-
-#: prefs.js:276
+#: prefs.js:203
 msgid "About"
 msgstr "Info"
 
-#: prefs.js:285
+#: prefs.js:212
 msgid "Auto Accent Colour"
 msgstr "Automatische Akzentfarbe"
 
-#: prefs.js:291
+#: prefs.js:218
 #, javascript-format
 msgid "Created by %s and contributors"
 msgstr "Programmiert von %s und Beitragenden"
 
-#: prefs.js:298
+#: prefs.js:225
 #, javascript-format
 msgid "Version %d"
 msgstr "Version %d"
 
-#: prefs.js:305
+#: prefs.js:232
 msgid "Special Thanks"
 msgstr "Besonderer Dank"
 
-#: prefs.js:311
+#: prefs.js:238
 msgid ""
 "For creating the ColorThief JavaScript module, used for extracting colours "
 "from the background image"
@@ -221,7 +160,7 @@ msgstr ""
 "Für das Erstellen des JavaScript-Moduls »ColorThief«, genutzt um Farben aus "
 "dem Hintergrundbild zu erhalten"
 
-#: prefs.js:317
+#: prefs.js:244
 msgid ""
 "For creating the Quantize JavaScript module, used by ColorThief for colour "
 "quantization"
@@ -229,65 +168,112 @@ msgstr ""
 "Für das Erstellen des JavaScript-Moduls »Quantize«, von »ColorThief« für die "
 "Farbreduktion verwendet"
 
-#: prefs.js:331
+#: prefs.js:258
 msgid "Project Repository"
 msgstr "Projekt-Repository"
 
-#: prefs.js:347
+#: prefs.js:274
 msgid "Submit an Issue"
 msgstr "Einen Fehler melden"
 
-#: prefs.js:363
+#: prefs.js:290
 msgid "Contributors"
 msgstr "Beitragende"
 
-#: prefs.js:375
+#: prefs.js:302
 msgid "Licenses"
 msgstr "Lizenzen"
 
-#: prefs.js:389
+#: prefs.js:316
 msgid "Auto Accent Colour Extension"
 msgstr "Auto Accent Colour-Extension"
 
-#: prefs.js:390
+#: prefs.js:317
 msgid "GNU General Public License v3.0"
 msgstr "GNU General Public License v3.0"
 
-#: prefs.js:404
+#: prefs.js:331
 msgid "ColorThief Module"
 msgstr "ColorThief-Modul"
 
-#: prefs.js:405 prefs.js:420
+#: prefs.js:332 prefs.js:347
 msgid "MIT License"
 msgstr "MIT-Lizenz"
 
-#: prefs.js:419
+#: prefs.js:346
 msgid "Quantize Module"
 msgstr "Quantize-Modul"
 
-#: prefs.js:431
+#: prefs.js:358
 msgid "Be kind to your local pigeons!"
 msgstr "Seien Sie nett zu Ihren Tauben!"
 
-#: prefs.js:441
-msgid "Not Needed"
-msgstr "Nicht benötigt"
+#~ msgid "Optional dependencies required for this background"
+#~ msgstr "Für diesen Hintergrund werden optionale Abhängigkeiten benötigt"
 
-#: prefs.js:449
-msgid "Installed"
-msgstr "Installiert"
+#~ msgid "Visit Auto Accent Colour's preferences page to learn more"
+#~ msgstr ""
+#~ "Öffnen Sie die Auto Accent Colour-Einstellungen, um mehr zu erfahren"
 
-#: prefs.js:449
-msgid "Not Installed"
-msgstr "Nicht installiert"
+#~ msgid "Setup"
+#~ msgstr "Einrichtung"
 
-#: prefs.js:460
-msgid "Available"
-msgstr "Verfügbar"
+#~ msgid "Refresh"
+#~ msgstr "Aktualisieren"
 
-#: prefs.js:461
-msgid "Unavailable"
-msgstr "Nicht verfügbar"
+#~ msgid "Optional Dependencies"
+#~ msgstr "Optionale Abhängigkeiten"
+
+#~ msgid ""
+#~ "ImageMagick v7+ is required to parse colour data from SVG and JXL "
+#~ "backgrounds. It must be installed via the system package manager. If only "
+#~ "older versions of ImageMagick are available, rsvg-convert can be used as "
+#~ "an alternative for SVG files only. This extension will still function "
+#~ "without either dependency, but it won't work on SVG and JXL files."
+#~ msgstr ""
+#~ "Um Farbdaten von SVG- und JXL-Bildern zu verarbeiten, ist ImageMagick v7+ "
+#~ "erforderlich. Bitte installieren Sie das Programm über die "
+#~ "Paketverwaltung Ihres Systems. Falls nur ältere Versionen von ImageMagick "
+#~ "verfügbar sind, kann für SVGs »rsvg-convert« als Alternative verwendet "
+#~ "werden."
+
+#~ msgid "Example Install Commands"
+#~ msgstr "Beispiele für Installationsbefehle"
+
+#~ msgid ""
+#~ "Commands to enable support for optional file types in popular Linux "
+#~ "distributions"
+#~ msgstr ""
+#~ "Befehle, um die Unterstützung für optionale Dateitypen auf beliebten "
+#~ "Linux-Distributionen zu aktivieren"
+
+#~ msgid "Keep Converted Background Image"
+#~ msgstr "Konvertiertes Hintergrundbild behalten"
+
+#~ msgid ""
+#~ "Don't auto-clear temporary conversions of SVG and JXL backgrounds into "
+#~ "JPG format"
+#~ msgstr ""
+#~ "Temporäre Konvertierungen von SVG- und JXL-Hintergrundbildern nicht "
+#~ "automatisch löschen"
+
+#~ msgid "Open Image"
+#~ msgstr "Bild öffnen"
+
+#~ msgid "Not Needed"
+#~ msgstr "Nicht benötigt"
+
+#~ msgid "Installed"
+#~ msgstr "Installiert"
+
+#~ msgid "Not Installed"
+#~ msgstr "Nicht installiert"
+
+#~ msgid "Available"
+#~ msgstr "Verfügbar"
+
+#~ msgid "Unavailable"
+#~ msgstr "Nicht verfügbar"
 
 #~ msgid "Ignore Caches"
 #~ msgstr "Zwischenspeicher ignorieren"

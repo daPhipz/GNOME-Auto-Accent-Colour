@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-30 21:59+0000\n"
+"POT-Creation-Date: 2024-12-06 01:25+0000\n"
 "PO-Revision-Date: 2024-11-20 08:07+0100\n"
 "Last-Translator: Jimmy Scionti <jimmy.scionti@gmail.com>\n"
 "Language-Team: \n"
@@ -18,106 +18,58 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.5\n"
 
-#: extension.js:539
+#: extension.js:444
 msgid "Force Refresh"
 msgstr "Forza aggiornamento"
 
-#: extension.js:544
+#: extension.js:449
 msgid "Preferences"
 msgstr "Preferenze"
 
-#: extension.js:572
-msgid "Optional dependencies required for this background"
-msgstr "Dipendenze opzionali necessarie per questo sfondo"
-
-#: extension.js:573
-msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr ""
-"Visita la pagina delle preferenze di Auto Accent Colour per saperne di più"
-
-#: extension.js:580
+#: extension.js:476
 msgid "Background format not supported"
 msgstr "Formato dello sfondo non supportato"
 
-#: extension.js:581
+#: extension.js:477
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Colour non funziona con questo sfondo"
 
-#: prefs.js:26
-msgid "Setup"
-msgstr "Configurazione"
-
-#: prefs.js:33
-msgid "Refresh"
-msgstr "Aggiorna"
-
-#: prefs.js:39
-msgid "Optional Dependencies"
-msgstr "Dipendenze opzionali"
-
-#: prefs.js:42
-msgid ""
-"ImageMagick v7+ is required to parse colour data from SVG and JXL "
-"backgrounds. It must be installed via the system package manager. If only "
-"older versions of ImageMagick are available, rsvg-convert can be used as an "
-"alternative for SVG files only. This extension will still function without "
-"either dependency, but it won't work on SVG and JXL files."
-msgstr ""
-"ImageMagick v7+ è necessario per analizzare i dati sui colori da sfondi SVG "
-"e JXL. Deve essere installato tramite il gestore di pacchetti del sistema. "
-"Se sono disponibili solo versioni precedenti di ImageMagick, rsvg-convert "
-"può essere utilizzato come alternativa solo per i file SVG. Questa "
-"estensione funzionerà senza queste dipendenze, ma non sarà in grado di usare "
-"file SVG e JXL."
-
-#: prefs.js:65
-msgid "Example Install Commands"
-msgstr "Esempi di comandi di installazione"
-
-#: prefs.js:67
-msgid ""
-"Commands to enable support for optional file types in popular Linux "
-"distributions"
-msgstr ""
-"Comandi per abilitare il supporto per tipi di file opzionali in "
-"distribuzioni Linux popolari"
-
-#: prefs.js:102
+#: prefs.js:25
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: prefs.js:108
+#: prefs.js:31
 msgid "Appearance"
 msgstr "Aspetto"
 
-#: prefs.js:113
+#: prefs.js:36
 msgid "Hide Indicator"
 msgstr "Nascondere indicatore"
 
-#: prefs.js:118
+#: prefs.js:41
 msgid "Colour Palette"
 msgstr "Tavolozza dei colori"
 
-#: prefs.js:120
+#: prefs.js:43
 msgid ""
 "Choose the type of background colour to base the shell accent colour from"
 msgstr ""
 "Sceglie il tipo di colore di sfondo su cui basare il colore di accento "
 "dell'interfaccia"
 
-#: prefs.js:129
+#: prefs.js:52
 msgid "Dominant"
 msgstr "Dominante"
 
-#: prefs.js:130
+#: prefs.js:53
 msgid "Use the most frequent colour from the background"
 msgstr "Usa il colore più frequente dallo sfondo"
 
-#: prefs.js:141
+#: prefs.js:64
 msgid "Highlight"
 msgstr "Evidenziatura"
 
-#: prefs.js:143
+#: prefs.js:66
 msgid ""
 "Use a contrasting yet complimentary colour from the background. This may "
 "sometimes be the same as the dominant colour."
@@ -125,15 +77,15 @@ msgstr ""
 "Usa un colore contrastante ma complementare dallo sfondo. Questo potrebbe "
 "essere lo stesso del colore dominante."
 
-#: prefs.js:156
+#: prefs.js:100
 msgid "Debug"
 msgstr "Debug"
 
-#: prefs.js:162
+#: prefs.js:106
 msgid "Palette Cache"
 msgstr "Cache della tavolozza"
 
-#: prefs.js:164
+#: prefs.js:108
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
@@ -141,23 +93,23 @@ msgstr ""
 "La tavolozza dei colori di ogni sfondo applicato è memorizzata nella cache "
 "per aumentare la performance"
 
-#: prefs.js:174
+#: prefs.js:118
 msgid "View"
 msgstr "Vista"
 
-#: prefs.js:184
+#: prefs.js:128
 msgid "Clear"
 msgstr "Svuota"
 
-#: prefs.js:188
+#: prefs.js:132
 msgid "Files in Cache"
 msgstr "File nella cache"
 
-#: prefs.js:199
+#: prefs.js:143
 msgid "Disable Cache"
 msgstr "Disabilita cache"
 
-#: prefs.js:201
+#: prefs.js:145
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
@@ -165,57 +117,41 @@ msgstr ""
 "Analizza sempre i colori dallo sfondo, anche se la tavolozza per uno sfondo "
 "specifico è nella cache. Non memorizzare nella cache le tavolozze calcolate."
 
-#: prefs.js:208
+#: prefs.js:152
 msgid "Developer Tools"
 msgstr "Strumenti per sviluppatori"
 
-#: prefs.js:213
+#: prefs.js:157
 msgid "Debug Logging"
 msgstr "Registrazione debug"
 
-#: prefs.js:214
+#: prefs.js:158
 msgid "Print debug messages to the system journal"
 msgstr "Stampa i messaggi di debug nel registro di sistema"
 
-#: prefs.js:219
-msgid "Keep Converted Background Image"
-msgstr "Mantenere l'immagine di sfondo convertita"
-
-#: prefs.js:221
-msgid ""
-"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
-"format"
-msgstr ""
-"Non cancellare automaticamente le conversioni temporanee degli sfondi SVG e "
-"JXL nel formato JPG"
-
-#: prefs.js:238
-msgid "Open Image"
-msgstr "Apri immagine"
-
-#: prefs.js:276
+#: prefs.js:203
 msgid "About"
 msgstr "Informazioni"
 
-#: prefs.js:285
+#: prefs.js:212
 msgid "Auto Accent Colour"
 msgstr "Auto Accent Colour"
 
-#: prefs.js:291
+#: prefs.js:218
 #, javascript-format
 msgid "Created by %s and contributors"
 msgstr "Creato da %s e contributori"
 
-#: prefs.js:298
+#: prefs.js:225
 #, javascript-format
 msgid "Version %d"
 msgstr "Versione %d"
 
-#: prefs.js:305
+#: prefs.js:232
 msgid "Special Thanks"
 msgstr "Ringraziamenti speciali"
 
-#: prefs.js:311
+#: prefs.js:238
 msgid ""
 "For creating the ColorThief JavaScript module, used for extracting colours "
 "from the background image"
@@ -223,7 +159,7 @@ msgstr ""
 "Per la creazione del modulo JavaScript ColorThief, usato per estrarre i "
 "colori dall'immagine di sfondo"
 
-#: prefs.js:317
+#: prefs.js:244
 msgid ""
 "For creating the Quantize JavaScript module, used by ColorThief for colour "
 "quantization"
@@ -231,65 +167,113 @@ msgstr ""
 "Per la creazione del modulo JavaScript Quantize, usato da ColorThief per la "
 "quantizzazione del colore"
 
-#: prefs.js:331
+#: prefs.js:258
 msgid "Project Repository"
 msgstr "Repository del progetto"
 
-#: prefs.js:347
+#: prefs.js:274
 msgid "Submit an Issue"
 msgstr "Segnala un problema"
 
-#: prefs.js:363
+#: prefs.js:290
 msgid "Contributors"
 msgstr "Contributori"
 
-#: prefs.js:375
+#: prefs.js:302
 msgid "Licenses"
 msgstr "Licenze"
 
-#: prefs.js:389
+#: prefs.js:316
 msgid "Auto Accent Colour Extension"
 msgstr "Estensione Auto Accent Colour"
 
-#: prefs.js:390
+#: prefs.js:317
 msgid "GNU General Public License v3.0"
 msgstr "Licenza pubblica generale GNU v3.0"
 
-#: prefs.js:404
+#: prefs.js:331
 msgid "ColorThief Module"
 msgstr "Modulo ColorThief"
 
-#: prefs.js:405 prefs.js:420
+#: prefs.js:332 prefs.js:347
 msgid "MIT License"
 msgstr "Licenza MIT"
 
-#: prefs.js:419
+#: prefs.js:346
 msgid "Quantize Module"
 msgstr "Modulo Quantize"
 
-#: prefs.js:431
+#: prefs.js:358
 msgid "Be kind to your local pigeons!"
 msgstr "Sii gentile con i piccioni locali!"
 
-#: prefs.js:441
-msgid "Not Needed"
-msgstr "Non richiesto"
+#~ msgid "Optional dependencies required for this background"
+#~ msgstr "Dipendenze opzionali necessarie per questo sfondo"
 
-#: prefs.js:449
-msgid "Installed"
-msgstr "Installato"
+#~ msgid "Visit Auto Accent Colour's preferences page to learn more"
+#~ msgstr ""
+#~ "Visita la pagina delle preferenze di Auto Accent Colour per saperne di più"
 
-#: prefs.js:449
-msgid "Not Installed"
-msgstr "Non installato"
+#~ msgid "Setup"
+#~ msgstr "Configurazione"
 
-#: prefs.js:460
-msgid "Available"
-msgstr "Disponibile"
+#~ msgid "Refresh"
+#~ msgstr "Aggiorna"
 
-#: prefs.js:461
-msgid "Unavailable"
-msgstr "Non disponibile"
+#~ msgid "Optional Dependencies"
+#~ msgstr "Dipendenze opzionali"
+
+#~ msgid ""
+#~ "ImageMagick v7+ is required to parse colour data from SVG and JXL "
+#~ "backgrounds. It must be installed via the system package manager. If only "
+#~ "older versions of ImageMagick are available, rsvg-convert can be used as "
+#~ "an alternative for SVG files only. This extension will still function "
+#~ "without either dependency, but it won't work on SVG and JXL files."
+#~ msgstr ""
+#~ "ImageMagick v7+ è necessario per analizzare i dati sui colori da sfondi "
+#~ "SVG e JXL. Deve essere installato tramite il gestore di pacchetti del "
+#~ "sistema. Se sono disponibili solo versioni precedenti di ImageMagick, "
+#~ "rsvg-convert può essere utilizzato come alternativa solo per i file SVG. "
+#~ "Questa estensione funzionerà senza queste dipendenze, ma non sarà in "
+#~ "grado di usare file SVG e JXL."
+
+#~ msgid "Example Install Commands"
+#~ msgstr "Esempi di comandi di installazione"
+
+#~ msgid ""
+#~ "Commands to enable support for optional file types in popular Linux "
+#~ "distributions"
+#~ msgstr ""
+#~ "Comandi per abilitare il supporto per tipi di file opzionali in "
+#~ "distribuzioni Linux popolari"
+
+#~ msgid "Keep Converted Background Image"
+#~ msgstr "Mantenere l'immagine di sfondo convertita"
+
+#~ msgid ""
+#~ "Don't auto-clear temporary conversions of SVG and JXL backgrounds into "
+#~ "JPG format"
+#~ msgstr ""
+#~ "Non cancellare automaticamente le conversioni temporanee degli sfondi SVG "
+#~ "e JXL nel formato JPG"
+
+#~ msgid "Open Image"
+#~ msgstr "Apri immagine"
+
+#~ msgid "Not Needed"
+#~ msgstr "Non richiesto"
+
+#~ msgid "Installed"
+#~ msgstr "Installato"
+
+#~ msgid "Not Installed"
+#~ msgstr "Non installato"
+
+#~ msgid "Available"
+#~ msgstr "Disponibile"
+
+#~ msgid "Unavailable"
+#~ msgstr "Non disponibile"
 
 #~ msgid "Cache"
 #~ msgstr "Cache"

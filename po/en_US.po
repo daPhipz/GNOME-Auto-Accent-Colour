@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1\n"
 "Report-Msgid-Bugs-To: 34974060+Wartybix@users.noreply.github.com\n"
-"POT-Creation-Date: 2024-11-30 21:59+0000\n"
+"POT-Creation-Date: 2024-12-06 01:25+0000\n"
 "PO-Revision-Date: 2024-11-17 21:47+0000\n"
 "Last-Translator: Wartybix <34974060+Wartybix@users.noreply.github.com>\n"
 "Language-Team: en_US\n"
@@ -18,101 +18,57 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 46.1\n"
 
-#: extension.js:539
+#: extension.js:444
 msgid "Force Refresh"
 msgstr ""
 
-#: extension.js:544
+#: extension.js:449
 msgid "Preferences"
 msgstr ""
 
-#: extension.js:572
-msgid "Optional dependencies required for this background"
-msgstr ""
-
-#: extension.js:573
-msgid "Visit Auto Accent Colour's preferences page to learn more"
-msgstr "Visit Auto Accent Color's preferences page to learn more"
-
-#: extension.js:580
+#: extension.js:476
 msgid "Background format not supported"
 msgstr ""
 
-#: extension.js:581
+#: extension.js:477
 msgid "Auto Accent Colour will not run on this background"
 msgstr "Auto Accent Color will not run on this background"
 
-#: prefs.js:26
-msgid "Setup"
-msgstr ""
-
-#: prefs.js:33
-msgid "Refresh"
-msgstr ""
-
-#: prefs.js:39
-msgid "Optional Dependencies"
-msgstr ""
-
-#: prefs.js:42
-msgid ""
-"ImageMagick v7+ is required to parse colour data from SVG and JXL "
-"backgrounds. It must be installed via the system package manager. If only "
-"older versions of ImageMagick are available, rsvg-convert can be used as an "
-"alternative for SVG files only. This extension will still function without "
-"either dependency, but it won't work on SVG and JXL files."
-msgstr ""
-"ImageMagick v7+ is required to parse color data from SVG and JXL "
-"backgrounds. It must be installed via the system package manager. If only "
-"older versions of ImageMagick are available, rsvg-convert can be used as an "
-"alternative for SVG files only. This extension will still function without "
-"either dependency, but it won't work on SVG and JXL files."
-
-#: prefs.js:65
-msgid "Example Install Commands"
-msgstr ""
-
-#: prefs.js:67
-msgid ""
-"Commands to enable support for optional file types in popular Linux "
-"distributions"
-msgstr ""
-
-#: prefs.js:102
+#: prefs.js:25
 msgid "Settings"
 msgstr ""
 
-#: prefs.js:108
+#: prefs.js:31
 msgid "Appearance"
 msgstr ""
 
-#: prefs.js:113
+#: prefs.js:36
 msgid "Hide Indicator"
 msgstr ""
 
-#: prefs.js:118
+#: prefs.js:41
 msgid "Colour Palette"
 msgstr "Color Palette"
 
-#: prefs.js:120
+#: prefs.js:43
 msgid ""
 "Choose the type of background colour to base the shell accent colour from"
 msgstr ""
 "Choose the type of background color to base the shell accent color from"
 
-#: prefs.js:129
+#: prefs.js:52
 msgid "Dominant"
 msgstr ""
 
-#: prefs.js:130
+#: prefs.js:53
 msgid "Use the most frequent colour from the background"
 msgstr "Use the most frequent color from the background"
 
-#: prefs.js:141
+#: prefs.js:64
 msgid "Highlight"
 msgstr ""
 
-#: prefs.js:143
+#: prefs.js:66
 msgid ""
 "Use a contrasting yet complimentary colour from the background. This may "
 "sometimes be the same as the dominant colour."
@@ -120,15 +76,15 @@ msgstr ""
 "Use a contrasting yet complimentary color from the background. This may "
 "sometimes be the same as the dominant color."
 
-#: prefs.js:156
+#: prefs.js:100
 msgid "Debug"
 msgstr ""
 
-#: prefs.js:162
+#: prefs.js:106
 msgid "Palette Cache"
 msgstr ""
 
-#: prefs.js:164
+#: prefs.js:108
 msgid ""
 "The colour palette of each background applied is cached to increase "
 "performance"
@@ -136,23 +92,23 @@ msgstr ""
 "The color palette of each background applied is cached to increase "
 "performance"
 
-#: prefs.js:174
+#: prefs.js:118
 msgid "View"
 msgstr ""
 
-#: prefs.js:184
+#: prefs.js:128
 msgid "Clear"
 msgstr ""
 
-#: prefs.js:188
+#: prefs.js:132
 msgid "Files in Cache"
 msgstr ""
 
-#: prefs.js:199
+#: prefs.js:143
 msgid "Disable Cache"
 msgstr ""
 
-#: prefs.js:201
+#: prefs.js:145
 msgid ""
 "Always parse colours from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
@@ -160,55 +116,41 @@ msgstr ""
 "Always parse colors from the background, even if the palette for a given "
 "background is in the cache. Do not cache computed palettes."
 
-#: prefs.js:208
+#: prefs.js:152
 msgid "Developer Tools"
 msgstr ""
 
-#: prefs.js:213
+#: prefs.js:157
 msgid "Debug Logging"
 msgstr ""
 
-#: prefs.js:214
+#: prefs.js:158
 msgid "Print debug messages to the system journal"
 msgstr ""
 
-#: prefs.js:219
-msgid "Keep Converted Background Image"
-msgstr ""
-
-#: prefs.js:221
-msgid ""
-"Don't auto-clear temporary conversions of SVG and JXL backgrounds into JPG "
-"format"
-msgstr ""
-
-#: prefs.js:238
-msgid "Open Image"
-msgstr ""
-
-#: prefs.js:276
+#: prefs.js:203
 msgid "About"
 msgstr ""
 
-#: prefs.js:285
+#: prefs.js:212
 msgid "Auto Accent Colour"
 msgstr "Auto Accent Color"
 
-#: prefs.js:291
+#: prefs.js:218
 #, javascript-format
 msgid "Created by %s and contributors"
 msgstr ""
 
-#: prefs.js:298
+#: prefs.js:225
 #, javascript-format
 msgid "Version %d"
 msgstr ""
 
-#: prefs.js:305
+#: prefs.js:232
 msgid "Special Thanks"
 msgstr ""
 
-#: prefs.js:311
+#: prefs.js:238
 msgid ""
 "For creating the ColorThief JavaScript module, used for extracting colours "
 "from the background image"
@@ -216,7 +158,7 @@ msgstr ""
 "For creating the ColorThief JavaScript module, used for extracting colors "
 "from the background image"
 
-#: prefs.js:317
+#: prefs.js:244
 msgid ""
 "For creating the Quantize JavaScript module, used by ColorThief for colour "
 "quantization"
@@ -224,65 +166,61 @@ msgstr ""
 "For creating the Quantize JavaScript module, used by ColorThief for color "
 "quantization"
 
-#: prefs.js:331
+#: prefs.js:258
 msgid "Project Repository"
 msgstr ""
 
-#: prefs.js:347
+#: prefs.js:274
 msgid "Submit an Issue"
 msgstr ""
 
-#: prefs.js:363
+#: prefs.js:290
 msgid "Contributors"
 msgstr ""
 
-#: prefs.js:375
+#: prefs.js:302
 msgid "Licenses"
 msgstr ""
 
-#: prefs.js:389
+#: prefs.js:316
 msgid "Auto Accent Colour Extension"
 msgstr "Auto Accent Color Extension"
 
-#: prefs.js:390
+#: prefs.js:317
 msgid "GNU General Public License v3.0"
 msgstr ""
 
-#: prefs.js:404
+#: prefs.js:331
 msgid "ColorThief Module"
 msgstr ""
 
-#: prefs.js:405 prefs.js:420
+#: prefs.js:332 prefs.js:347
 msgid "MIT License"
 msgstr ""
 
-#: prefs.js:419
+#: prefs.js:346
 msgid "Quantize Module"
 msgstr ""
 
-#: prefs.js:431
+#: prefs.js:358
 msgid "Be kind to your local pigeons!"
 msgstr ""
 
-#: prefs.js:441
-msgid "Not Needed"
-msgstr ""
+#~ msgid "Visit Auto Accent Colour's preferences page to learn more"
+#~ msgstr "Visit Auto Accent Color's preferences page to learn more"
 
-#: prefs.js:449
-msgid "Installed"
-msgstr ""
-
-#: prefs.js:449
-msgid "Not Installed"
-msgstr ""
-
-#: prefs.js:460
-msgid "Available"
-msgstr ""
-
-#: prefs.js:461
-msgid "Unavailable"
-msgstr ""
+#~ msgid ""
+#~ "ImageMagick v7+ is required to parse colour data from SVG and JXL "
+#~ "backgrounds. It must be installed via the system package manager. If only "
+#~ "older versions of ImageMagick are available, rsvg-convert can be used as "
+#~ "an alternative for SVG files only. This extension will still function "
+#~ "without either dependency, but it won't work on SVG and JXL files."
+#~ msgstr ""
+#~ "ImageMagick v7+ is required to parse color data from SVG and JXL "
+#~ "backgrounds. It must be installed via the system package manager. If only "
+#~ "older versions of ImageMagick are available, rsvg-convert can be used as "
+#~ "an alternative for SVG files only. This extension will still function "
+#~ "without either dependency, but it won't work on SVG and JXL files."
 
 #~ msgid "ImageMagick is required to set an accent colour from this background"
 #~ msgstr "ImageMagick is required to set an accent color from this background"
