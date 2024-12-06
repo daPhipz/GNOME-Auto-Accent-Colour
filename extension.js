@@ -193,6 +193,8 @@ async function getBackgroundPalette(extensionPath, backgroundPath) {
 }
 
 async function applyClosestAccent(
+    thisRun,
+    getCurrentRun,
     extensionPath,
     accentColours,
     backgroundUri,
@@ -261,7 +263,18 @@ async function applyClosestAccent(
     const closestAccent = accentColours[closestAccentIndex]
 
     journal(`Accent to apply: ${closestAccent.name}`)
-    onFinish(closestAccent)
+
+    /* Checking the instance run against the current run prevents a race
+    condition where an earlier calling of this function may execute faster than,
+    and therefore overwrite the result of, a newer calling of this function */
+
+    const currentRun = getCurrentRun()
+    journal(`Instance run: ${thisRun}, current run: ${currentRun}`)
+    if (thisRun === currentRun) {
+        onFinish(closestAccent)
+    } else {
+        journal(`Aborting due to newer run`)
+    }
 }
 
 export default class AutoAccentColourExtension extends Extension {
@@ -438,7 +451,11 @@ export default class AutoAccentColourExtension extends Extension {
             indicator.add_child(currentIcon)
         }
 
-        let running = false
+        let run = 0
+
+        function getCurrentRun() {
+            return run
+        }
 
         Main.panel.addToStatusArea(this.uuid, this._indicator)
 
@@ -453,12 +470,7 @@ export default class AutoAccentColourExtension extends Extension {
         )
 
         function setAccent() {
-            if (running) {
-                journal(`Already running...`)
-                return
-            }
-
-            running = true
+            run++
 
             const backgroundUri = getColorScheme() === PREFER_DARK
                 ? getDarkBackgroundUri()
@@ -467,6 +479,8 @@ export default class AutoAccentColourExtension extends Extension {
             const highlightMode = extensionSettings.get_boolean('highlight-mode')
 
             applyClosestAccent(
+                run,
+                getCurrentRun,
                 extensionPath,
                 accentColours,
                 backgroundUri,
@@ -479,14 +493,12 @@ export default class AutoAccentColourExtension extends Extension {
                         _('Auto Accent Colour will not run on this background')
                     )
                     changeIndicatorIcon(alertIcon)
-                    running = false
                 },
                 function(newAccent) {
                     setAccentColor(newAccent.name)
                     applyYaruTheme(),
                     journal(`New accent: ${getAccentColor()}`)
                     changeIndicatorIcon(normalIcon)
-                    running = false
                 }
             )
         }
