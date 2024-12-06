@@ -160,7 +160,7 @@ for a given background is in the cache. Do not cache computed palettes."
         devToolsGroup.add(debugLoggingRow)
 
         async function refreshDebugDetails() {
-            const cachedCount = (await cache.keys().length;
+            const cachedCount = (await cache.keys()).length;
             cacheCountRow.subtitle = cachedCount.toString()
             viewCacheBtn.sensitive = cacheDir.query_exists(null)
             clearCacheBtn.sensitive = cachedCount > 0
