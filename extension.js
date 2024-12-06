@@ -216,6 +216,8 @@ async function applyClosestAccent(
     journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
 
     const cachedParserVer = await cache.get('parser-version')
+    journal(`Cached parser version: ${cachedParserVer}`)
+    journal(`Current parser version: ${PARSER_VERSION}`)
     if (cachedParserVer !== PARSER_VERSION) {
         cache.clear()
         await cache.set('parser-version', PARSER_VERSION)
