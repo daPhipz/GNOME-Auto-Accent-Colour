@@ -215,13 +215,13 @@ async function applyClosestAccent(
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
 
-    const cachedParserVer = cache.get('parser-version')
+    const cachedParserVer = await cache.get('parser-version')
     if (cachedParserVer !== PARSER_VERSION) {
         cache.clear()
         cache.set('parser-version', PARSER_VERSION)
     }
 
-    let backgroundPalette = cache.get(backgroundHash)
+    let backgroundPalette = await cache.get(backgroundHash)
 
     const backgroundFileInfo = await backgroundFile.query_info_async(
         'standard::*',

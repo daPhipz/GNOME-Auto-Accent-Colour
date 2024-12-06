@@ -27,16 +27,24 @@ function fileBasedCache(cachedir) {
         journal(`Ensuring cache directory ${cachedir} exists...`);
         GLib.mkdir_with_parents(cachedir, 0o0755);
     }
-    function _file(key) {
+    function _fetchFile(key) {
         return Gio.File.new_for_path(`${cachedir}/${key}`);
     }
-    function get(key) {
-        const file = _file(key);
+    async function get(key) {
+        const file = _fetchFile(key);
         if (!file.query_exists(null)) {
             return null;
         }
         journal(`Reading cache entry from ${file.get_path()}...`);
-        const [_ok, contents, _etag] = file.load_contents(null);
+        const [_ok, contents, _etag] = await new Promise((resolve, reject) => {
+            file.load_contents_async(null, (_file, res) => {
+                try {
+                    resolve(file.load_contents_finish(res))
+                } catch (e) {
+                    reject(e)
+                }
+            })
+        })
         const decoder = new TextDecoder('utf-8');
         const contentsString = decoder.decode(contents);
         try {
@@ -47,7 +55,7 @@ function fileBasedCache(cachedir) {
         }
     }
     function set(key, data) {
-        const file = _file(key);
+        const file = _fetchFile(key);
         journal(`Writing cache entry to ${file.get_path()}...`);
         const cereal = JSON.stringify(data);
         const bytes = new GLib.Bytes(cereal);
@@ -55,7 +63,7 @@ function fileBasedCache(cachedir) {
         stream.write_bytes(bytes, null);
     }
     async function remove(key) {
-        const file = _file(key);
+        const file = _fetchFile(key);
         try {
             await file.delete_async(GLib.PRIORITY_DEFAULT, null, null);
         } catch { return }
