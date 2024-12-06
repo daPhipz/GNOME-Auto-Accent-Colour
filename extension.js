@@ -204,7 +204,14 @@ async function applyClosestAccent(
 ) {
     const backgroundFile = Gio.File.new_for_uri(backgroundUri);
     const backgroundPath = backgroundFile.get_path()
-    const bytes = backgroundFile.load_bytes(null)[0];
+    let bytes = null
+    try {
+        bytes = backgroundFile.load_bytes(null)[0];
+    } catch(e) {
+        console.error(e)
+        onIncompatibleImg()
+    }
+
     const backgroundHash = bytes.hash();
     journal(`Hash of background in ${backgroundPath} is ${backgroundHash}...`);
 
