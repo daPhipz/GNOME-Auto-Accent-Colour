@@ -218,7 +218,7 @@ async function applyClosestAccent(
     const cachedParserVer = await cache.get('parser-version')
     if (cachedParserVer !== PARSER_VERSION) {
         cache.clear()
-        cache.set('parser-version', PARSER_VERSION)
+        await cache.set('parser-version', PARSER_VERSION)
     }
 
     let backgroundPalette = await cache.get(backgroundHash)
@@ -246,7 +246,7 @@ async function applyClosestAccent(
         const rasterPath = backgroundFile.get_path();
         backgroundPalette = await getBackgroundPalette(extensionPath, rasterPath)
 
-        cache.set(backgroundHash, backgroundPalette);
+        await cache.set(backgroundHash, backgroundPalette);
     }
     journal(`Palette: ${backgroundPalette}...`);
 

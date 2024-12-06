@@ -54,12 +54,27 @@ function fileBasedCache(cachedir) {
             return null;
         }
     }
-    function set(key, data) {
+    async function set(key, data) {
         const file = _fetchFile(key);
         journal(`Writing cache entry to ${file.get_path()}...`);
         const cereal = JSON.stringify(data);
         const bytes = new GLib.Bytes(cereal);
-        const stream = file.replace(null, false, Gio.FileCreateFlags.NONE, null);
+        const stream = await new Promise((resolve, reject) => {
+            file.replace_async(
+                null,
+                false,
+                Gio.FileCreateFlags.NONE,
+                GLib.PRIORITY_DEFAULT,
+                null,
+                (_file, res) => {
+                    try {
+                        resolve(file.replace_finish(res))
+                    } catch (e) {
+                        reject(e)
+                    }
+                }
+            );
+        })
         stream.write_bytes(bytes, null);
     }
     async function remove(key) {
